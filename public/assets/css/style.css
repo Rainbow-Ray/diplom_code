@@ -1,0 +1,620 @@
+@property --backpage-color {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #DDE6ED;
+}
+@property --bright-color {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #526D82;
+}
+
+@property --highlight-color {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #27374D;
+}
+
+@property --light-font {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #919191;
+}
+
+@property --white-font {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #ffffff;
+}
+
+
+
+
+
+html{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    padding: 0;
+    background-color: var(--logo-color);
+}
+body{
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.2fr;
+    grid-template-rows: max-content max-content max-content auto ;
+    column-gap: 10px;
+    grid-template-areas:
+    "header header header"
+    "main_nav main_nav main_nav"
+    "side_nav main ."
+    "footer footer footer";
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+}
+
+header{
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.5fr;
+    grid-template-rows: 1fr 1fr;
+    grid-auto-flow: row;
+    grid-template-areas:
+    "logo . login"
+    ". . newOrder";
+    column-gap: 10px;
+    grid-area: header;
+    background-color: var(--bright-color);
+    color: var(--white-font);
+    font-size: 14pt;
+    padding: 20px 40px;
+    /* border-bottom: 1px black solid; */
+}
+
+h3{
+    margin-bottom: 0.5em;
+}
+.logo{
+    grid-area: logo;
+
+}
+
+.logData{
+    grid-area: login;
+}
+
+.new_order{
+    grid-area: newOrder;
+}
+
+
+.main_nav{
+    grid-area: main_nav;
+    display: grid;
+    grid-template-rows: auto;
+    grid-auto-columns: auto;
+    background-color: var(--bright-color);
+    color: var(--white-font);
+    border-top: 1px var(--highlight-color) solid;
+
+    box-shadow: 0 5px 15px -5px #00000075    ;
+
+
+}
+.main_nav ul{
+    display: grid;
+    grid-auto-columns: inherit;
+    grid-auto-flow: column;
+    margin: 0;
+}
+
+.main_nav li{
+    list-style: none;
+    border-right: black 1px solid;
+    text-align: center;
+    padding: 10px 0;
+}
+.main_nav li:last-child{
+    border-right: none;
+
+}
+
+
+/* .side_nav .selected_dict{
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.side_nav .selected_dict::before{
+    content: "•";
+    margin: 0;
+    padding-right: 5px;
+} */
+
+.side_nav{
+    grid-area: side_nav;
+}
+.side_nav_main_ul{
+    margin-top: 1.6em;
+    padding-top: 0;
+
+}
+.side_nav ul{
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 14pt;
+
+}
+.side_nav li{
+    border-bottom: 1px black solid;
+    padding: 5px;
+    font-weight: normal;
+    font-size: 12pt;
+
+}
+
+.sec_ul{
+    padding-left: 1em;
+}
+
+main{
+    grid-area: main;
+    box-shadow: #00000075 0px 15px 15px -10px;
+    padding: 0 30px;
+}
+.mainHeader{
+    display: grid;
+    grid-template-columns: auto 15em;
+    grid-template-rows: auto;
+    align-items: baseline;
+    padding: 1em 0;
+}
+.mainHeader h1 {
+    margin: 0;
+    padding: 0;
+    align-self: center;
+}
+
+.addButtonLink{
+    height: fit-content;
+    justify-self: right;
+    align-self: center;
+}
+
+button,
+input[type=submit]{
+    cursor: pointer;
+}
+
+.beautyButton{
+    border-radius: 0.2em;
+    border: 0;
+    font-size: 1em;
+    padding: 0.5em 1em;  
+}
+
+.addButton{
+  background: var(--backpage-color);
+}
+
+.submitButton{
+    background: var(--bright-color);
+    color: white;
+}
+
+.filter{
+    background: var(--backpage-color);
+    border: 0;
+    padding: 0.5em 1em;
+   
+}
+
+.receiptForm{
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(9, max-content);
+}
+form{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-flow: row;
+    row-gap: 1em;
+    column-gap: 1em;
+}
+
+.labelLeft{
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-template-rows: max-content;
+    column-gap: 0.2em;
+}
+
+form h2{
+    grid-column: 1/4;
+}
+
+.noMargin{
+    margin: 0;
+}
+
+
+
+
+.addMaterial{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* padding: 0 1em; */
+}
+
+.underline{
+    border-bottom: #27374D 1px solid;
+}
+.receiptData .orderData,
+.receiptData .dates
+
+{
+    display: none;
+}
+.filterBox{
+    display: grid;
+    grid-template-columns: repeat(7, auto);
+}
+.columns3{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+}
+.start1{
+    grid-column-start: 1;
+}
+.start2{
+    grid-column-start: 2;
+}
+.start3{
+    grid-column-start: 3;
+}
+.start4{
+    grid-column-start: 4;
+}
+.start5{
+    grid-column-start: 5;
+}
+.end2{
+    grid-column-end: 2;
+}
+.end3{
+    grid-column-end: 3;
+}
+.end4{
+    grid-column-end: 4;
+}
+.end5{
+    grid-column-end: 5;
+}
+.end6{
+    grid-column-end: 6;
+}
+.end7{
+    grid-column-end: 7;
+}
+
+.rstart9{
+    grid-row-start: 9;
+
+}
+.rstart10{
+    grid-row-start: 10;
+}
+.rend12{
+    grid-row-end: 12;
+
+}
+
+.rstart11{
+    grid-row-start: 11;
+}
+
+.col1-5{
+    grid-column: 1/5;
+  
+}
+.col1-6{
+    grid-column: 1/6;
+  
+}
+.col1-7{
+    grid-column: 1/7;
+  
+}
+.receiptForm .divcustomer,
+.receiptForm .divservice,
+.receiptForm .divcost,
+.col1-4{
+    grid-column: 1/4;
+}
+
+.receiptForm .divdatePlan,
+.receiptForm .divworker,
+.receiptForm .divisUrgent,
+.receiptForm .divisPaid,
+.col1-2
+{
+    grid-column: 1/2;
+
+}
+
+.receiptForm .divitem,
+.col1-3
+{
+    grid-column: 1/3;
+
+}
+
+.receiptForm .divdateOut,
+.col2-3
+{
+    grid-column: 2/3;
+}
+.col2-4
+{
+    grid-column: 2/4;
+}
+.receiptForm .divCount,
+.col3-4
+{
+    grid-column: 3/4;
+}
+.col4-7
+{
+    grid-column: 4/7;
+}
+
+.col1-5{
+    grid-column: 1/5;
+ 
+}
+
+.hide{
+    display: none;
+}
+.receiptForm .divCount input[type=number]{
+    width: 5em;
+
+}
+.centerButton{
+    justify-self: right;
+    align-self: center;
+}
+
+.leftButton{
+    align-self: end;
+    justify-self: left;
+}
+
+.deleteButton{
+    height: 30px;
+    width: 40px;
+}
+
+.formButton{
+    height: 30px;
+    width: 150px;
+} 
+
+form button{
+    justify-self: left;
+}
+form input[type=number]{
+    width: max-content;
+} 
+
+form .divDiscount{
+    grid-template-columns: max-content max-content min-content;
+
+}
+
+.bdInfo{
+    display: none;
+}
+
+.receiptForm input[type=submit]{
+    grid-row: 11;
+} 
+.receiptForm input[type=checkbox]{
+    justify-self: left;
+} 
+
+table.itemTable{
+    width: 100%;
+}
+.divPayment{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1/4;
+}
+.divPaymentMethod{
+    display: none;
+}
+
+.selected td{
+    background-color: #aac9e1;
+    border-top: 1px var(--bright-color) solid;
+    border-bottom: 1px var(--bright-color) solid;
+}
+
+
+
+.checkDate{
+    width: 12em;
+    text-align: center;
+}
+
+.checkAmount{
+    text-align: end;
+    
+}
+.checkNumber{
+    text-align: end;
+    width: 60%;
+}
+td.checkNumber {
+    font-size: 0.8em;
+}
+.divKassa{
+    grid-column: 1/3;
+    width: 100%;
+}
+.divKassa table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.urgent{
+    background-color: #ff000020;
+}
+
+.hide{
+    display: none;
+}
+
+.card{
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto 8em;
+    grid-auto-flow: column;
+    grid-column: 1/3;
+    box-shadow: #00000075 0 1px 0 0;
+}
+.card a {
+    text-decoration: none;
+    color: inherit;
+}
+.orderDetailLabel{
+    grid-column: 1/3;
+    grid-row: 2;
+}
+.orderDetail{
+    display: none;
+}
+
+.orderDetailLabel .buttonDetail::after{
+    content: "▽";
+}
+
+.orderDetailLabel:hover .buttonDetail::after{
+    content: "△";
+}
+
+
+.orderDetailLabel:hover .orderDetail{
+    display: block;
+}
+.itemInfo{
+    display: grid;
+    grid-template-rows: repeat(2, max-content);
+    grid-template-columns: auto;
+    grid-auto-flow: column;
+    column-gap: 1em;
+    padding: 0 1em 0 1em;
+}
+.itemInfo.customerInfo{
+    display: grid;
+    grid-template-columns: auto 10em 5em;
+}
+.itemInfo.receiptInfo{
+    display: grid;
+    grid-template-columns: auto 9em 12em 6em 6em 3em;
+}
+.card .orderInfo{
+    grid-template-columns: auto 7em 4em 4em 5em 7em 7em;
+}
+.orderInfo{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, max-content);
+    row-gap: 1em;
+}
+.orderData{
+    display: grid;
+    grid-template-rows: repeat(2, max-content);
+}
+
+.labelTop{
+    display: grid;
+    grid-template-rows: repeat(2, max-content);
+    grid-auto-flow: column;
+}
+.col3{
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    column-gap: 1em;
+
+}
+.orderCount {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 1em;
+    /* grid-column: 1/3; */
+    box-shadow: var(--bright-color) 0 -1px 0 0;
+}
+
+
+.workerFIO{
+    grid-template-columns: max-content max-content auto max-content;
+}
+
+#surname, #patronym{
+    width: 20em;
+}
+
+#skill{
+    max-width: 40em;
+}
+
+.deleteSkill{
+
+}
+
+.isDone{
+    justify-self: center;
+    text-align: center;
+}
+.done{
+    color:green;
+}
+
+.notDone{
+    color:maroon;
+}
+
+.cardLabel{
+    color: var(--light-font);
+    font-size: 12pt;
+}
+
+.cardData{
+    font-size: 16pt;
+}
+
+.card a{
+    align-self: center;
+    justify-self: right;
+    width: fit-content;
+    height: fit-content;
+}
+.card button{
+    width: 10em;
+}
+
+.card p{
+    margin: 0.5em 0;
+}
+
+footer{
+    grid-area: footer;
+    background-color: var(--bright-color);
+
+}
+
