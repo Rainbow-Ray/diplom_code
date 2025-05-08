@@ -3,9 +3,16 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChecksApiController;
+use App\Http\Controllers\Controller;
+use App\Http\Helpers\Item;
 use App\Http\Controllers\EquipController;
+use App\Http\Controllers\MainMenuController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialTypeController;
+use App\Http\Controllers\RequestController;
+use App\Http\Helpers\PurchasedItem;
+use GuzzleHttp\Promise\Create;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +37,113 @@ Route::get("types", [MaterialTypeController::class, 'apiAll']);
 
 Route::get("materials", [MaterialController::class, 'apiIndex']);
 Route::get("equips", [EquipController::class, 'apiIndex']);
+
+
+
+
+
+
+
+Route::post('items', function (Request $request) {
+
+    $data = $request->all();
+    $rules = [
+        'name' => 'required|string',
+        'id' => 'required|numeric',
+        'count' => 'required|numeric',
+        'ei' => 'nullable|string',
+        'type' => 'required|in:material,equip,other',
+    ];
+    if($request['isPurch']){
+        $rules['price'] = 'required|numeric';
+    }
+
+    $messages = [
+        'name.required' => 'Имя обязательно к заполнению',
+        'count.required' => 'Количество товара обязательно к заполнению',
+        'price.required' => 'Цена обязательна к заполнению',
+    ];
+    
+    $validator = Validator::make($data, $rules, $messages);
+
+
+    if ($validator->fails()) {
+        $errors = ['hasErrors'=> true, 'errors'=> $validator->errors() ];
+        return $json = json_encode($errors, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+    }
+
+    $validated = $validator->validated();
+
+    if($request['isPurch']){
+        $item = PurchasedItem::create($validated);
+    }
+    else{
+        $item = Item::create($validated);
+    }
+
+    $json = json_encode($item, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+    return $json;
+
+    // return response()->json($item); // Возвращаем JSON, а не HTML
+
+
+});
+
+// /api/a
+Route::get('/', function(){
+    return view('/', [MainMenuController::class, 'index']);
+});
+
+Route::get('a', function(){
+    $request = array(
+        'name' => 'assss',
+        'id' => '1',
+        'count' => '12',
+        'ei' => '1',
+        'type' => 'other',
+        'price' => null,
+
+    );
+    $r = new Request([],$request);
+
+    $validated = $r->validate([
+        'name' => 'required|numeric',
+        'id' => 'required|numeric',
+        'count' => 'required|numeric',
+        'ei' => 'nullable|string',
+        'type' => 'required|in:material,equip,other',
+        'price' => 'required|numeric',
+    ]);
+
+    $item = PurchasedItem::create($validated);
+
+
+    return  $json = json_encode($item, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+
+});
+
+
+
+Route::get('items', function () {
+    if( $_GET['item_type'] == 'material'){
+        return MaterialController::class::apiIndex();
+    }
+    else if($_GET['item_type'] == 'equip'){
+        return EquipController::class::apiIndex();
+    }
+
+    // $validated = $request->validate([
+    //     'name' => 'required|string',
+    //     'id' => 'required|numeric',
+    //     'count' => 'required|numeric',
+    //     'ei' => 'nullable|string',
+    //     'type' => 'required|in:material,equip,other'
+    // ]);
+
+    // $item = Item::create($validated);
+    // return response()->json($item); // Возвращаем JSON, а не HTML
+});
+
+
+
+

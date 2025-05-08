@@ -18,7 +18,7 @@ class Purchase extends Model
     ];
 
     public function rows(){
-        return $this->hasMany(PurchaseRow::class);
+        return $this->hasMany(PurchaseRow::class, 'purch_id');
 
     }
 }

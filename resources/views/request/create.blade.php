@@ -54,7 +54,7 @@
                 <label for="equipRadio">Оборудование</label>
             </div>
             <div>
-                <input type="radio" class="itemType" name="itemType" value="text" id="textRadio">
+                <input type="radio" class="itemType" name="itemType" value="other" id="textRadio">
                 <label for="textRadio">Ввод наименования вручную</label>
             </div>
 
@@ -169,3 +169,8 @@
         <input type="submit" class="beautyButton submitButton end7 rstart11" value="Отправить">
     </form>
 @endsection
+
+
+@if($errors->any())
+<h4>{{$errors->first()}}</h4>
+@endif

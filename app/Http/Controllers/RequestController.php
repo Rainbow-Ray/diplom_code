@@ -15,26 +15,8 @@ use App\Models\Request as ModelRequest;
 use App\Models\RequestRow;
 use Illuminate\Http\Request;
 use Symfony\Component\Routing\RequestContext;
+use App\Http\Helpers\Item;
 
-class item{
-
-    public $itemType;
-    public $mat_id;
-    public $equip_id;
-    public $name;
-    public $count ;
-    public $ei;
-
-public function set_item_id($id_name){
-    if ($this->itemType == "I") {
-        $this->name = $id_name;
-    } elseif ($this->itemType == "M") {
-        $this->mat_id = $id_name;
-    } elseif ($this->itemType == "F") {
-        $this->equip_id = $id_name;
-    }
-}
-}
 
 class RequestController extends Controller
 {
@@ -61,17 +43,17 @@ class RequestController extends Controller
         ]);
     }
 
-    public function closeRequest($id) {
+    public function closeRequest($id)
+    {
         $req = ModelRequest::findOrFail($id);
-        if(!is_null($req)){
+        if (!is_null($req)) {
             $req->isDone = 1;
             $time = Utils::timeNow();
             $req->dateClosed = $time;
             $req->save();
         }
 
-        return redirect(RequestController::rootURL.'/'.$id);
-        
+        return redirect(RequestController::rootURL . '/' . $id);
     }
 
     /**
@@ -97,33 +79,6 @@ class RequestController extends Controller
     }
 
 
-    public function getItems($request){
-        $items = [];
-        for ($i = 0; $i < count($request['itemCheck']) - 1; $i += 2) {
-            $itemType = $request['itemCheck'][$i][0];
-            $id_name = substr($request['itemCheck'][$i], 1);
-            $itemsCountPrice = explode('|', $request['itemCheck'][$i + 1]);
-
-            $count = $itemsCountPrice[0];
-            $ei = '';
-
-            if (count($itemsCountPrice)>1) {
-                $ei = $itemsCountPrice[1];
-            }
-            if($ei==''|| $ei=='null'){
-                $ei = null;
-            }
-
-            $item = new item();
-            $item->itemType = $itemType;
-            $item->set_item_id($id_name);
-            $item->count = $count;
-            $item->ei = $ei;
-
-            $items[]=$item;
-        }
-        return $items;
-    }
 
 
     /**
@@ -142,8 +97,8 @@ class RequestController extends Controller
 
 
         if ($request['itemCheck'] != null) {
-            $arr = RequestController::getItems($request);
-            foreach($arr as $item){
+            $arr = Item::getItems($request);
+            foreach ($arr as $item) {
                 $row = new RequestRow();
 
                 $row->count = $item->count;
@@ -211,7 +166,8 @@ class RequestController extends Controller
      * Update the specified resource in storage.
      */
 
-     static function tableRowsToArray($rows) {
+    static function tableRowsToArray($rows)
+    {
         $arr = [];
         for ($i = 0; $i < count($rows) - 1; $i += 2) {
             $itemType = $rows[$i][0];
@@ -223,56 +179,53 @@ class RequestController extends Controller
                 $ei = explode(' ', $rows[$i + 1])[1];
             }
 
-            $arr[$itemType.$id_name] = [$count, $ei];
+            $arr[$itemType . $id_name] = [$count, $ei];
         }
-return $arr;
-        
-     }
+        return $arr;
+    }
 
     public function update(Request $request, string $id)
     {
         $req = ModelRequest::findOrFail($id);
 
-        if (!is_null($req)){
+        if (!is_null($req)) {
 
             $request['isUrgent'] = Normalization::normalize_checkbox($request['isUrgent']);
 
             $req->dateCreated = $request['dateCreated'];
             $req->isUrgent = $request['isUrgent'];
             $req->worker_id = $request['worker'];
-    
+
 
             $old = [];
             foreach ($req->rows as $i) {
-                $old[]=$i;
+                $old[] = $i;
             }
             $new = [];
 
             if (is_null($request['itemCheck'])) {
-            }
-            else{
+            } else {
 
-                $arr = RequestController::getItems($request);
+                $arr = Item::getItems($request);
 
-                foreach($arr as $item){
+                foreach ($arr as $item) {
                     $row = new RequestRow();
-    
+
                     $row->count = $item->count;
                     $row->name = $item->name;
                     $row->mat_id = $item->mat_id;
                     $row->equip_id = $item->equip_id;
                     $row->ei_id =  $item->ei;
                     $row->req_id = $req->id;
-                    $new[]= $row;
+                    $new[] = $row;
                 }
             }
-            $this::UpdateItems($old, $new);
+            Utils::UpdateItems($old, $new);
         }
-        return redirect( $this::rootURL);
-
+        return redirect($this::rootURL);
     }
 
-    
+
     // public function update(Request $request, string $id)
     // {
     //     $req = ModelRequest::findOrFail($id);
@@ -284,7 +237,7 @@ return $arr;
     //         $req->dateCreated = $request['dateCreated'];
     //         $req->isUrgent = $request['isUrgent'];
     //         $req->worker_id = $request['worker'];
-    
+
 
     //         $old = [];
     //         foreach ($req->rows as $i) {
@@ -296,9 +249,9 @@ return $arr;
     //         }
     //         else{
 
-                
+
     //             for ($i = 0; $i < count($request['itemCheck']) - 1; $i += 2) {
-    
+
     //                 $itemType = $request['itemCheck'][$i][0];
     //                 $id_name = substr($request['itemCheck'][$i], 1);
     //                 $count = $request['itemCheck'][$i + 1];
@@ -307,9 +260,9 @@ return $arr;
     //                     $count = explode(' ', $request['itemCheck'][$i + 1])[0];
     //                     $ei = explode(' ', $request['itemCheck'][$i + 1])[1];
     //                 }
-    
+
     //                 $row = new RequestRow();
-    
+
     //                 $row->count = $count;
     //                 if ($itemType == "I") {
     //                     $row->name = $id_name;
@@ -318,12 +271,12 @@ return $arr;
     //                 } elseif ($itemType == "F") {
     //                     $row->equip_id = $id_name;
     //                 }
-    
+
     //                 $row->ei_id = $ei;
     //                 $row->req_id = $req->id;
 
     //                 $new[]= $row;
-    
+
     //             }
     //         }
     //         $this::UpdateItems($old, $new);
@@ -332,14 +285,16 @@ return $arr;
 
     // }
 
-    static function printArray($arr){
+    static function printArray($arr)
+    {
         foreach ($arr as $i) {
             echo $i;
             echo '<br>';
         }
         echo '---------------<br>';
     }
-    static function printItemsArray($arr){
+    static function printItemsArray($arr)
+    {
         foreach ($arr as $i) {
             echo $i->print();
             echo '<br>';
@@ -347,67 +302,9 @@ return $arr;
         echo '---------------<br>';
     }
 
-    static function UpdateItems($oldItems, $newItems){
-
-        $arrDiff = RequestController::arrInter($oldItems, $newItems);
-        $oldKeysFound = $arrDiff[0];
-        $newKeysFound = $arrDiff[1];
-
-        $delete = array_diff_key($oldItems, $oldKeysFound);
-        $add = array_diff_key($newItems, $newKeysFound);
-
-        foreach($delete as $i){
-            $i->delete();
-        }
-
-        foreach($add as $i){
-            $i->save();
-        }
-
-    }
 
 
-    static function itemsEqual($a, $b){
-        if(
-            $a->name == $b->name 
-            &&
-            $a->mat_id == $b->mat_id 
-            &&
-            $a->equip_id == $b->equip_id 
-            &&
-            $a->count == $b->count 
-            &&
-            $a->ei_id == $b->ei_id 
-            &&
-            $a->req_id == $b->req_id         
-        ){
-            return true;
-        }
-        return false;
-    }
 
-    static function arrInter($arr1, $arr2){
-        $inter = [];
-        $newKeysFound = [];
-        $oldKeysFound = [];
-
-        foreach ($arr1 as $oldKey=>$a) {
-            // echo '  new old item <br>';
-            foreach ($arr2 as $newKey=>$b) {
-                if(!array_key_exists($newKey, $newKeysFound)){
-                    // echo '  new new item <br>';
-                    if(RequestController::itemsEqual($a, $b)){
-                        $inter[]= $a;
-                        $newKeysFound[$newKey]= 1;
-                        $oldKeysFound[$oldKey]= 1;
-                        // echo '  found <br>';
-                        break;
-                    }    
-                }
-            }
-        }
-        return [$oldKeysFound,$newKeysFound];
-    }
 
 
     /**
@@ -417,8 +314,7 @@ return $arr;
     {
         $req = ModelRequest::findOrFail($id);
         $req->delete();
-        return redirect( $this::rootURL);
-
+        return redirect($this::rootURL);
     }
 }
 

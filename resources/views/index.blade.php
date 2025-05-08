@@ -64,6 +64,9 @@
             <a href="http://127.0.0.1:8000/request">
                 <li>Запросы на закупку</li>
             </a>
+            <a href="http://127.0.0.1:8000/purchase">
+                <li>Закупки</li>
+            </a>
   
             <ul class="sec_ul">Материалы 
                 <a href="http://127.0.0.1:8000/materials">
@@ -160,8 +163,16 @@
                 </a>
         </div> --}}
 
-
-
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
     </main>
     <footer>
         <p>ИП А.Апакидзе</p>

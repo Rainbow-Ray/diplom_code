@@ -14,6 +14,7 @@ class PurchaseRow extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'name',
         'price',
         'count',
         'purch_id',
@@ -24,13 +25,19 @@ class PurchaseRow extends Model
 
     public function item(){
         if($this->mat_id == null){
-            return $this->hasOne(Equip::class);
+            
+            return Equip::findOrFail($this->equip_id)->name;
         }
-        return $this->hasOne(Material::class);
+        return Material::findOrFail($this->mat_id)->name;
     }
 
     public function purchase(){
-        return $this->hasOne(Purchase::class);
+        return $this->belongsTo(Purchase::class, 'purch_id')->withDefault();
     }
+
+    public function ei(){
+        return $this->BelongsTo(Ei::class)->withDefault();
+    }
+
 
 }

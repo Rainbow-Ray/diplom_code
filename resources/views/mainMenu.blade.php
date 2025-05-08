@@ -11,9 +11,25 @@
 @section('main')
 <div class="mainHeader">  
     <h1>Главное меню</h1>  
+
+
+
 </div>
 <div>
     <h2>Готовы к выдаче</h2>
+
+    
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
 
     @foreach ($receipt as $item)
     {{-- {{$receipt}} --}}

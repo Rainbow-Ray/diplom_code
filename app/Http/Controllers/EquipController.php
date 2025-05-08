@@ -16,7 +16,7 @@ class EquipController extends Controller
     const editFormHeader = "Оборудование";
 
 
-    public function apiIndex(){
+    public static function apiIndex(){
         $type =  $_GET['type'];
 
         if($type == null){

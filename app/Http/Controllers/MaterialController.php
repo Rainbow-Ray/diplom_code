@@ -46,7 +46,7 @@ class MaterialController extends Controller
         return view('material.card', ['title'=> 'Фурнитура', 'createURL'=>'furniture','items'=> $columns, 'rootURL' => $this::rootURL]);
     }
 
-    public function apiIndex(){
+    public static function apiIndex(){
         $type =  $_GET['type'];
         $cat =  $_GET['cat'];
 
@@ -61,6 +61,7 @@ class MaterialController extends Controller
         else{
             $mat = Material::where('type_id', $type)->get();
         }
+        
         return json_encode($mat, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 

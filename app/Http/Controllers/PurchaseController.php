@@ -10,10 +10,13 @@ use App\Models\MaterialType;
 use App\Models\Purchase;
 use App\Models\Request as ModelRequest;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Item;
+use App\Http\Helpers\PurchasedItem;
+use App\Http\Utils\Utils;
+use App\Models\PurchaseRow;
 
 class PurchaseController extends Controller
 {
-
     const rootURL = "purchase";
     const storeTitle = "Новая закупка";
     const storeFormHeader = "Закупка";
@@ -84,34 +87,18 @@ class PurchaseController extends Controller
 
 
         if ($request['itemCheck'] != null) {
-            for ($i = 0; $i < count($request['itemCheck']) - 1; $i += 2) {
+            $arr = PurchasedItem::getItems($request);
+            foreach ($arr as $item) {
+                $row = new PurchaseRow();
 
-                $itemType = $request['itemCheck'][$i][0];
-                $id_name = substr($request['itemCheck'][$i], 1);
-                $count = $request['itemCheck'][$i + 1];
-                $ei = null;
-                $price = null;
-                if (str_contains($request['itemCheck'][$i + 1], " ")) {
-                    $arrCountPrice = explode(' ', $request['itemCheck'][$i + 1]);
-                    
-                    $count = [0];
-                    $ei = explode(' ', $request['itemCheck'][$i + 1])[1];
-                    $price = explode(' ', $request['itemCheck'][$i + 1])[2];
-                }
+                $row->count = $item->count;
+                $row->name = $item->name;
+                $row->mat_id = $item->mat_id;
+                $row->equip_id = $item->equip_id;
+                $row->ei_id =  $item->ei;
+                $row->price = $item->price;
 
-                $row = new RequestRow();
-
-                $row->count = $count;
-                if ($itemType == "I") {
-                    $row->name = $id_name;
-                } elseif ($itemType == "M") {
-                    $row->mat_id = $id_name;
-                } elseif ($itemType == "F") {
-                    $row->equip_id = $id_name;
-                }
-
-                $row->ei_id = $ei;
-                $row->req_id = $req->id;
+                $row->purch_id = $purch->id;
 
                 $row->save();
             }
@@ -125,7 +112,13 @@ class PurchaseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $request = Purchase::findOrFail($id);
+
+        return view('purchase.data', [
+            'item' => $request,
+            'rootURL' => $this::rootURL
+        ]);
+
     }
 
     /**
@@ -133,7 +126,32 @@ class PurchaseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $purchase = Purchase::findOrFail($id);
+        $cats = MaterialCat::all();
+        $types = MaterialType::all();
+        $eis = Ei::all();
+        $equipCat = EquipType::all();
+
+        if (!is_null($purchase)) {
+            return view("purchase/edit", [
+                'item' => $purchase,
+                'cats' => $cats,
+                'types' => $types,
+                'eis' => $eis,
+                'equipCat' => $equipCat,
+                'req'=> null,
+                'rootURL' => $this::rootURL
+            ]);
+        }
+        return view("purchase/create", [
+            'cats' => $cats,
+            'types' => $types,
+            'eis' => $eis,
+            'equipCat' => $equipCat,
+            'req'=> null,
+            'rootURL' => $this::rootURL
+        ]);
+
     }
 
     /**
@@ -141,7 +159,40 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $pur = Purchase::findOrFail($id);
+
+        if (!is_null($pur)) {
+            $pur->date = $request['date'];
+
+            $old = [];
+            foreach ($pur->rows as $i) {
+                $old[] = $i;
+            }
+            $new = [];
+
+            if (is_null($request['itemCheck'])) {
+            } else {
+
+                $arr = PurchasedItem::getItems($request);
+
+                foreach ($arr as $item) {
+                    $row = new PurchaseRow();
+
+                    $row->count = $item->count;
+                    $row->name = $item->name;
+                    $row->mat_id = $item->mat_id;
+                    $row->equip_id = $item->equip_id;
+                    $row->ei_id =  $item->ei;
+                    $row->price = $item->price;
+
+                    $row->purch_id = $pur->id;
+                    $new[] = $row;
+                }
+            }
+            Utils::UpdateItems($old, $new);
+        }
+        return redirect($this::rootURL);
+
     }
 
     /**
@@ -149,6 +200,8 @@ class PurchaseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pur = Purchase::findOrFail($id);
+        $pur->delete();
+        return redirect($this::rootURL);
     }
 }

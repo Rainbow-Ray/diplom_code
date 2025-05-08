@@ -161,6 +161,11 @@ h3{
     padding-left: 1em;
 }
 
+.error{
+    color: red;
+    font-size: large;
+}
+
 main{
     grid-area: main;
     box-shadow: #00000075 0px 15px 15px -10px;
@@ -543,7 +548,7 @@ td.checkNumber {
 
 .labelTop{
     display: grid;
-    grid-template-rows: repeat(2, max-content);
+    grid-template-rows: repeat(3, max-content);
     grid-auto-flow: column;
 }
 .col3{

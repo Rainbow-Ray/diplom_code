@@ -125,8 +125,13 @@
             </select>
         </div>
         <div class="labelTop start6">
-            <label for="count">Цена</label>
+            <label for="count">Цена 1 ед.</label>
             <input type="money" name="price" id="price" min="0" value="1">  руб.
+        </div>
+        <div class="start6 end7">
+            <p class="noMargin">Сумма</p>
+            <span class="summ"> 1</span>
+            <span class="">руб.</span>
         </div>
 
         <input type="button" class="formButton leftButton start5 hide" value="Отмена" id="cancelEdit">
