@@ -29,6 +29,31 @@ use DateTimeZone;
             return new DateTime('now', new DateTimeZone("Asia/Yekaterinburg"));    
         }
 
+        public static function dateSubMonth(int $monthCount){
+            $now = Utils::timeNow();
+            $month = new DateInterval("P".$monthCount."M");
+            $now_min_month = $now->sub($month);
+            return $now_min_month;    
+        }
+
+        public static function formatDate(DateTime $date, $format){
+            return $date->format($format);
+        }
+
+        public static function dateDifference($date1, $date2) {
+            $date1 = new DateTime($date1);
+            $date2 = new DateTime($date2);
+
+            
+            return $date2->diff($date1);
+            
+        }
+
+        public static function formatDateFromStr($date, $format){
+            $date = new DateTime($date);
+            return $date->format($format);
+        }
+
         // UpdateItems, arrInter, itemsEqual - методы для редактирования строк закупки и запроса на закупку
         static function UpdateItems($oldItems, $newItems)
         {

@@ -9,7 +9,7 @@ class OrderOut extends Model
 {
     use HasFactory;
 
-    protected $table = 'Order out';
+    protected $table = 'OrderOut';
     public $timestamps = false;
     protected $primaryKey = 'id';
 

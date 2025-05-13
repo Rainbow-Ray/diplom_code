@@ -11,7 +11,7 @@ const prefixes = {
     other: 'I',
 };
 
-class ApiClient {
+export class ApiClient {
     static async fetchItems(item_type, filters = {}) {
         const url = `/api/items?${new URLSearchParams({ item_type, ...filters })}`;
         const response = await fetch(url);
@@ -38,19 +38,22 @@ class item {
     }
 }
 
-class ItemStore{
+export class ItemStore{
     items = Array();
     itemID = 1;
 
     getItems(){
         var prefixId = $('.check');
+        var items = Array();
         if(prefixId.length){
-            prefixId.forEach(itemPrId => {
+            prefixId.each(function(k, obj) {                
+                const itemPrId = $(this).val();
                 var prefix = itemPrId[0];
                 var id = itemPrId.substr(1);
                 var i = new item(prefix, id);
-                this.items.push(i);
-            });
+                items.push(i);
+            } );
+            this.items = items;
         }
 
     }
@@ -104,7 +107,7 @@ function removeErrors(){
     $('.error').remove();
 }
 
-function addItem(itemStore) {
+export function addItem(itemStore) {
 
     removeErrors();
 
@@ -132,7 +135,7 @@ function addItem(itemStore) {
         }
     }
     else {
-        var id = itemID;
+        var id = itemStore.itemID;
         var name = $('#name').val();
         $('#name').val('');
         itemStore.itemID += 1;
@@ -238,7 +241,7 @@ function appendOption(select_id, element) {
     );
 }
 
-function categoryChanged() {
+export function categoryChanged() {
     var cat_id = $("#cat").find(':selected').val();
     if (cat_id == null) {
         get_types("")
@@ -248,7 +251,7 @@ function categoryChanged() {
     }
 }
 
-function selectSearchItem() {
+export function selectSearchItem() {
     var item_id = $("#searchItem").find(':selected').val();
     if (item_id != undefined) {
         var selected_tr_item = $('.searchItemsTbody').find('#' + item_id).parent().parent();
@@ -275,7 +278,7 @@ function populateSelectWithDefault(selectId, json) {
     });
 }
 
-function populateSearchItemTable() {
+export function populateSearchItemTable() {
     if ($('.itemType:checked').val() == 'material') {
         var cat_id = $("#cat").find(':selected').val();
         var type_id = $("#type").find(':selected').val();
@@ -292,7 +295,7 @@ function updateTable(data) {
     appendItem(data);
 }
 
-function deleteItem() {
+export function deleteItem() {
     $('.itemTbody > .selected').remove();
     $('.itemPurchasedTbody > .selected').remove();
     $('#itemName').val('');
@@ -311,7 +314,7 @@ function hideFilterBox() {
 
 }
 
-function selectItemType() {
+export function selectItemType() {
     $('.searchItemsTbody').empty();
     if ($('.itemType:checked').val() == 'material') {
         showFilterBox();
@@ -338,7 +341,7 @@ function emptySearchTab() {
     $('#searchItem').empty();
 }
 
-function editPurchasedItem() {
+export function editPurchasedItem() {
     if (!$('.itemPurchasedTbody .selected .tItemCount').length) {
         resetEditFields();
         return;
@@ -377,7 +380,7 @@ function prepareTextBoxsToEdit(name, count, ei, price) {
     $('#itemName').show();
 }
 
-function editItem() {
+export function editItem() {
     var prevCount = $('.itemPurchasedTbody .selected .tItemCount')[0].innerText.split('/')[1];
     var count = $('#count').val();
     var price = $('#price').val();
@@ -400,7 +403,7 @@ function editItem() {
 
 }
 
-function resetEditFields() {
+export function resetEditFields() {
     $('.editHeader').addClass('hide');
     $('#cancelEdit').addClass('hide');
     $('#editSave').addClass('hide');
@@ -420,7 +423,7 @@ function bindEditingFunc(selector) {
     })
 }
 
-function summ() {
+export function summ() {
 
     var a = Number($('#count').val()) *  Number($('#price').val());
     if(isNaN(a)){
@@ -429,58 +432,8 @@ function summ() {
     $('.summ')[0].innerText = a;    
 }
 
-$(document).ready(function () {
-
-    var itemStore = new ItemStore();
-    itemStore.getItems();
-
-    $(".select2").select2();
-
-    $('.itemType').on('change', function () {
-        selectItemType();
-    })
-
-    $("#cat").on('change', function () {
-        categoryChanged();
-        populateSearchItemTable();
-    });
-
-    $("#type").on('change', function () {
-        populateSearchItemTable();
-    });
-    $("#equipCat").on('change', function () {
-        populateSearchItemTable();
-    });
-
-    $("#searchItem").on('change', function () {
-        selectSearchItem();
-    });
-
-    $('#itemAdd').on('click', function () {
-        addItem(itemStore);
-    });
-
-    $('#deleteItem').on('click', function () {
-        deleteItem();
-        resetEditFields();
-    })
-    $('#cancelEdit').on('click', function () {
-        resetEditFields();
-    })
-    $('#editSave').on('click', function () {
-        editItem();
-    })
-    HighlightElement("itemTbody");
-    HighlightElement("itemPurchasedTbody");
-    selectItemType();
-
-    $('.itemPurchasedTbody tr').on('click', function () {
-        editPurchasedItem();
-    })
+export default {ItemStore, selectItemType, summ, ApiClient, addItem, categoryChanged, populateSearchItemTable, selectSearchItem,
+    deleteItem, resetEditFields, editItem, editPurchasedItem
 
 
-    $("#price").on('input', summ);
-    $("#count").on('input', summ);
-
-});
-
+}

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Normalizators\Normalization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,6 +58,11 @@ class Order extends Model
         $this -> isDone = 1;
         $this->countDone = $this->count;
         $this->save();
+    }
+
+    public function beauty_date() {
+        return Normalization::beautify_date_from_str($this->receipt->dateIn);
+        
     }
 
 

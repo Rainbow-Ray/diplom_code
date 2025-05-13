@@ -23,7 +23,7 @@ class Equip extends Model
 
     public function equipType(): BelongsTo
     {
-        return $this->BelongsTo(EquipType::class, 'type_id');
+        return $this->BelongsTo(EquipType::class, 'type_id')->withDefault();
     }
 
 

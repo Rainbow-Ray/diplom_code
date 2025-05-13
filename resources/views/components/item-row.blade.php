@@ -13,4 +13,7 @@
     @else 
     <td class="tItemCount"> {{ $item->count }}</td>
     @endif
+    
+    <td> {{ $item->ei->name }}</td>
+
 </tr>

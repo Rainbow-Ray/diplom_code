@@ -90,6 +90,7 @@ class ReceiptController extends Controller
             else if($request['payment']==2){
                 IncomeController::UpdateExternal($request, $receipt->id);
             }
+            $receipt->cost = $request['amount'];
         }
 
         return redirect($this::rootURL);
@@ -137,6 +138,7 @@ class ReceiptController extends Controller
 
     public static function closeReceipt($id){
         $receipt = Receipt::findOrFail($id);
+
         if(!is_null($receipt)){
             $time = Utils::timeNow();
             if(!$receipt->order->isHandedOver()){
@@ -144,10 +146,15 @@ class ReceiptController extends Controller
                 OrderOutController::storeClosed($time, $count, $receipt->order->id);
             }
             $receipt->order->receiptClose();
-            $receipt->dateOut = Normalization::beautify_date_from_str($time);
+            $receipt->dateOut = $time;
+            $pred = is_null($receipt->costPred) ? 0 : $receipt->costPred;
+            $add = is_null($receipt->costAdd) ? 0 : $receipt->costAdd;
+            $receipt->cost = $pred + $add;
+            
             $receipt->save();
         }
-        return redirect("receipt/".$id);
+
+        return;
     }
 
     public function update(Request $request, string $id)

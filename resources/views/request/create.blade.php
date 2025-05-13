@@ -9,7 +9,7 @@
     <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src=" {{ asset('assets/js/select2.min.js') }}"></script>
     <script src=" {{ asset('assets/js/select2.min.js') }}"></script>
-    <script src=" {{ asset('assets/js/request.purchase/itemTable.js') }}" type="module"></script>
+    <script src=" {{ asset('assets/js/request.purchase/requestCreate.js') }}" type="module"></script>
 @endsection
 @section('main')
     <form action="/{{ $rootURL }}" method="POST">
@@ -155,6 +155,7 @@
                 <thead>
                     <th>Материал/Фурнитура</th>
                     <th>Количество</th>
+                    <th>Ед. изм.</th>
                 </thead>
                 <tbody class="itemTbody">
 

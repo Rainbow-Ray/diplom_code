@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\AccController;
 use App\Http\Controllers\CategoryFurnController;
@@ -26,11 +27,13 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderOutController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\WorkerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +45,17 @@ use App\Http\Controllers\WorkerController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 
 
 
@@ -94,6 +108,8 @@ Route::resource(OrderController::class::rootURL, OrderController::class)->only([
 Route::get('/orderOut/{id}/edit', [OrderOutController::class, '']);
 Route::get('/receipt/{id}/hand_over', [OrderOutController::class, 'hand_over']);
 Route::post('/receipt/{id}/hand_over', [OrderOutController::class, 'hand_over_done']);
+Route::post('receipt/{id}/done', [ReceiptController::class, 'closeReceipt']);
+
 
 Route::get('accessories', [MaterialController::class, 'show_accessories']);
 Route::get('key_auto', [MaterialController::class, 'show_key_auto']);
@@ -113,10 +129,35 @@ Route::get('key_door/{id}/edit', [KeyTypeController::class, 'edit_material_d']);
 Route::get('locks/{id}/edit', [LockTypeController::class, 'edit_material']);
 Route::get('furniture/{id}/edit', [CategoryFurnController::class, 'edit_material']);
 
-Route::post('receipt/{id}/done', [ReceiptController::class, 'closeReceipt']);
 
 Route::post('request/{id}/done', [RequestController::class, 'closeRequest']);
 Route::get('request/{id}/purchased', [PurchaseController::class, 'createWithReq']);
+
+
+
+//Отчеты
+Route::get('report', [ReportController::class, 'index']);
+
+Route::get('report/incomes', [ReportController::class, 'incomeAndExpense']);
+Route::post('report/incomes', [ReportController::class, 'incomeAndExpenseForm']);
+
+Route::get('report/orderIncome', [ReportController::class, 'orderIncome']);
+Route::post('report/orderIncome', [ReportController::class, 'orderIncomeForm']);
+
+Route::get('report/orderMaterial', [ReportController::class, 'orderMaterial']);
+Route::post('report/orderMaterial', [ReportController::class, 'orderMaterialForm']);
+
+
+Route::get('report/worker', [ReportController::class, 'worker']);
+Route::post('report/worker', [ReportController::class, 'workerForm']);
+
+Route::get('report/customer', [ReportController::class, 'customer']);
+Route::post('report/customer', [ReportController::class, 'customerForm']);
+
+Route::get('report/incomeMedian', [ReportController::class, 'incomeMedian']);
+Route::post('report/incomeMedian', [ReportController::class, 'incomeMedianForm']);
+
+
 
 
 Route::get('/clear',[ConfigController::class, 'clearRoute']);
@@ -129,3 +170,11 @@ Route::get('/clear',[ConfigController::class, 'clearRoute']);
 //     KeyTypeController::class::rootURL => KeyTypeController::class,
 // LockTypeController::class::rootURL => LockTypeController::class,
 // MatTypeController::class::rootURL => MatTypeController::class,
+
+
+
+
+
+
+
+require __DIR__.'/auth.php';

@@ -9,7 +9,7 @@
     <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src=" {{ asset('assets/js/select2.min.js') }}"></script>
     <script src=" {{ asset('assets/js/select2.min.js') }}"></script>
-    <script src=" {{ asset('assets/js/request.purchase/itemTable.js') }}" type="module"></script>
+    <script src=" {{ asset('assets/js/request.purchase/purchaseCreate.js') }}" type="module"></script>
 @endsection
 @section('main')
     <form action="/{{ $rootURL }}" method="POST">
@@ -34,7 +34,7 @@
                 <label for="equipRadio">Оборудование</label>
             </div>
             <div>
-                <input type="radio" class="itemType" name="itemType" value="text" id="textRadio">
+                <input type="radio" class="itemType" name="itemType" value="other" id="textRadio">
                 <label for="textRadio">Ввод наименования вручную</label>
             </div>
         </div>
@@ -147,6 +147,7 @@
                     <th>Материал/Фурнитура</th>
                     <th>Количество</th>
                     <th>Цена</th>
+                    <th>Ед. изм.</th>
                 </thead>
                 <tbody class="itemPurchasedTbody">
 

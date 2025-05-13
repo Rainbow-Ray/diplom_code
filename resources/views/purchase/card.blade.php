@@ -23,7 +23,7 @@
                 <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
                     <div class="itemInfo orderInfo">
                         <span class="cardLabel">Дата создания:</span>
-                        <span class="cardData">{{ $item->dateCreated }}</span>
+                        <span class="cardData">{{ $item->date }}</span>
                     </div>
                 </a>
             </div>

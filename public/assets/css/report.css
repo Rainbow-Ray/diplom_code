@@ -1,0 +1,18 @@
+main{
+    width: max-content;
+    margin: auto;
+}
+
+.itog{
+    font-weight: bold;
+}
+
+table, th, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+
+}
+
+.italic{
+    font-style: italic;
+}

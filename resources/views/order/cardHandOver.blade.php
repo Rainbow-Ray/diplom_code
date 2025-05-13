@@ -7,7 +7,7 @@
 
 @section('scripts')
 <script src=" {{asset('assets/js/jquery-3.7.1.min.js')}}"></script>
-<script src=" {{asset('assets/js/payment/paymentScripts.js')}}"></script>
+<script src=" {{asset('assets/js/payment/paymentScripts.js')}}" type="module"></script>
 @endsection
 @section('main')
 <h2>Выдать заказ</h2>

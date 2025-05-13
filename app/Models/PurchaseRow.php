@@ -24,12 +24,27 @@ class PurchaseRow extends Model
     ];
 
     public function item(){
-        if($this->mat_id == null){
-            
+        if($this->mat_id != null){
+            return Material::findOrFail($this->mat_id)->name;
+        }
+        elseif( $this->equip_id != null)
+        {
             return Equip::findOrFail($this->equip_id)->name;
         }
-        return Material::findOrFail($this->mat_id)->name;
+            return $this->name;
     }
+    public function category(){
+        if($this->mat_id != null){
+            return Material::findOrFail($this->mat_id)->type->name;
+        }
+        elseif( $this->equip_id != null)
+        {
+            return Equip::findOrFail($this->equip_id)->equipType->name;
+        }
+            return '';
+    }
+
+
 
     public function purchase(){
         return $this->belongsTo(Purchase::class, 'purch_id')->withDefault();

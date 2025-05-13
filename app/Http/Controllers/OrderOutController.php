@@ -26,9 +26,14 @@ class OrderOutController extends Controller
 
     public function hand_over_done(Request $request, string $id){
         $receipt = Receipt::findOrFail($id);
+
         if (!is_null($receipt)){
+
             $this::store($request, $receipt);
-            return redirect( ReceiptController::rootURL);
+
+            if($request['isHanded'] == 1){
+                $var = ReceiptController::closeReceipt($id);
+            }
         }
         return redirect( ReceiptController::rootURL);
     }
