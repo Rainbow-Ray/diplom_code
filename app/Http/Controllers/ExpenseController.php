@@ -17,6 +17,12 @@ class ExpenseController extends Controller
     const editTitle = "Редактировать расход";
     const editFormHeader = "расход";
 
+
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $columns = Expense::all();

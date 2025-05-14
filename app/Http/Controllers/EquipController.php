@@ -68,7 +68,9 @@ class EquipController extends Controller
     public function show(string $id)
     {
         $equip = Equip::findOrFail($id);
-        return [$equip->name, $equip->count];
+        return view('equip/data', ["rootURL" => $this::rootURL,
+            "item"=> $equip, 
+            'title'=>$this::editTitle, "formHeader"=>$this::editFormHeader]);
     }
 
     /**

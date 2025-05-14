@@ -1,22 +1,37 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @yield("title")
-    <link rel="stylesheet" type="text/css" href="{{asset("assets/css/style.css")}}">
+    @yield('title')
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 
-    @yield("scripts")
+    @yield('scripts')
 
 </head>
+
 <body>
     <header>
         <div class="logo">ИС "КлючСервис+"</div>
-        {{-- <div class="logData">
-            <span class="username">А.А.Иванов</span>
-            <span class="logOut">Выход</span>
-        </div>
-        <div class="new_order">Новый заказ</div> --}}
+
+        @guest
+        <a href="http://127.0.0.1:8000/login">Вход</a>
+        <a href="http://127.0.0.1:8000/register">Регистрация</a>
+        @endguest
+        
+        @auth
+            <div class="logData">
+                <span class="username">А.А.Иванов</span>
+                <form action="http://127.0.0.1:8000/logout" method="POST">
+                    @csrf
+                    <input type="submit" value="Выход">
+                </form>
+            </div>
+        @endauth
+
+
+        <div class="new_order">Новый заказ</div>
     </header>
     <nav class="main_nav">
         <ul>
@@ -67,8 +82,8 @@
             <a href="http://127.0.0.1:8000/purchase">
                 <li>Закупки</li>
             </a>
-  
-            <ul class="sec_ul">Материалы 
+
+            <ul class="sec_ul">Материалы
                 <a href="http://127.0.0.1:8000/materials">
                     <li class="selected_dict">Все</li>
                 </a>
@@ -89,7 +104,7 @@
                     <li>Фурнитура</li>
                 </a>
             </ul>
-            <ul class="sec_ul">Справочники характеристик материала 
+            <ul class="sec_ul">Справочники характеристик материала
                 <a href="http://127.0.0.1:8000/country">
                     <li>Страна производства</li>
                 </a>
@@ -164,18 +179,19 @@
         </div> --}}
 
         @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
     </main>
     <footer>
         <p>ИП А.Апакидзе</p>
     </footer>
 </body>
+
 </html>

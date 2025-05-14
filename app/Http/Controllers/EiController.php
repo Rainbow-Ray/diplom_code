@@ -15,6 +15,11 @@ class EiController extends DictController
     const editTitle = "Редактировать единицу измерения";
     const editFormHeader = "Единица измерения";
 
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */

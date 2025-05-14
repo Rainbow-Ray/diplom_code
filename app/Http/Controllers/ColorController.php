@@ -15,6 +15,11 @@ class ColorController extends DictController
     const editTitle = "Редактировать цветовую гамму";
     const editFormHeader = "Цветовая гамма";
 
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */

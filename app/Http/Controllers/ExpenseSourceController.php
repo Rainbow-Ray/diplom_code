@@ -13,6 +13,12 @@ class ExpenseSourceController extends DictController
     const editTitle = "Редактировать источник расхода";
     const editFormHeader = "Источник расхода";
 
+
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $columns = ExpenseSource::all();

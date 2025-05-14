@@ -13,6 +13,13 @@ class SkillController extends DictController
     const storeFormHeader = "Навык сотрудника";
     const editTitle = "Редактировать навык сотрудника";
     const editFormHeader = "Навык сотрудника";
+
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
+
     public function index()
     {
         $columns = Skill::orderBy('name')->get();

@@ -1,4 +1,4 @@
-@extends('List')
+@extends('index')
 @section('title')
 <title>Оборудование</title>
 @endsection
@@ -7,20 +7,11 @@
 @endsection
 
 @section('addButton')
-<a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
-    <button class="addButton">
-        Добавить оборудование
-    </button>
-</a>
 @endsection
 
 
-@section('dictCard')
-@foreach ($items as $item)
+@section('main')
         <div class="card">
-
-            <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
 
 <div class="itemInfo">
 
@@ -34,15 +25,11 @@
     <span class="cardData">{{$item->count}}</span>
     <span class="cardLabel">Состояние:</span>
     <span class="cardData">{{$item->state()}}</span>
-
-</div>
-</div>
-                </a>
-
     <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}">
         <button>Редактировать</button>
         </a>
-
 </div>
-@endforeach
+</div>
+
+<a href="{{ url('equip_check/'.strval($item->id).'/create', []) }}"><button>Оценка состояния оборудования</button></a>
 @endsection

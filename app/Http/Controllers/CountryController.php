@@ -13,6 +13,11 @@ class CountryController extends DictController
     const storeFormHeader = "Страна производства";
     const editTitle = "Редактировать страну";
     const editFormHeader = "Страна производства";
+    
+    public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
 
     /**
      * Display a listing of the resource.

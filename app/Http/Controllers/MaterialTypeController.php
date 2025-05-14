@@ -14,6 +14,11 @@ class MaterialTypeController extends Controller
     const editTitle = "Редактировать тип материала";
     const editFormHeader = "Тип материала";
 
+    public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */

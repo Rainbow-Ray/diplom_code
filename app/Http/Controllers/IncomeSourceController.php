@@ -13,6 +13,11 @@ class IncomeSourceController extends DictController
     const editTitle = "Редактировать источник дохода";
     const editFormHeader = "Источник дохода";
 
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $columns = IncomeSource::all();

@@ -20,28 +20,32 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 use PhpParser\Node\Expr\Cast\Array_;
 
 
-
-
-
 class ReportController extends Controller
 {
-
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/mainPage');
     }
 
     public function incomeAndExpense()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/reportForm', [
             'title' => 'Доходы и расходы предприятия за период',
             'url' => 'incomes'
@@ -50,6 +54,10 @@ class ReportController extends Controller
 
     public function orderIncome()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/reportForm', [
             'title' => 'Доход за заказы ',
             'url' => 'orderIncome'
@@ -58,6 +66,10 @@ class ReportController extends Controller
 
     public function orderMaterial()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/reportForm', [
             'title' => 'Затраченные материалы за период ',
             'url' => 'orderMaterial'
@@ -65,6 +77,10 @@ class ReportController extends Controller
     }
     public function worker()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/reportForm', [
             'title' => 'Количество выполненных заказов на мастера  ',
             'url' => 'worker'
@@ -72,14 +88,22 @@ class ReportController extends Controller
     }
     public function customer()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/reportForm', [
             'title' => 'Постоянные клиенты',
             'url' => 'customer'
         ]);
     }
-    
+
     public function incomeMedian()
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         return view('report/reportForm', [
             'title' => 'Изменение прибыли предприятия за период',
             'url' => 'incomeMedian'
@@ -89,6 +113,10 @@ class ReportController extends Controller
 
     public function incomeAndExpenseForm(Request $request)
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
@@ -125,6 +153,10 @@ class ReportController extends Controller
 
     public function orderIncomeForm(Request $request)
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
@@ -147,6 +179,10 @@ class ReportController extends Controller
 
     public function orderMaterialForm(Request $request)
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
@@ -177,6 +213,10 @@ class ReportController extends Controller
 
     public function workerForm(Request $request)
     {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
@@ -210,18 +250,22 @@ sum( case when isnull(cost) THEN costPred ELSE cost END) as sum')
 
 
     public function customerForm(Request $request)
-    {        
+    {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
-        
-        
+
+
         $customer = Receipt::selectRaw('customer_id, 
         Customer.name,Customer.surname,Customer.patronym,  count(Receipt.id) as countOrder, 
         avg( case when isnull(cost) THEN costPred ELSE cost END) as avg, 
 Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
-->where('dateIn', '>=', $dateStart)->where('dateOut', '<=', $dateEnd)->whereNotNull('customer_id')
-->groupBy('customer_id')
-->havingRaw('count(Receipt.id) > 1')-> get();
+            ->where('dateIn', '>=', $dateStart)->where('dateOut', '<=', $dateEnd)->whereNotNull('customer_id')
+            ->groupBy('customer_id')
+            ->havingRaw('count(Receipt.id) > 1')->get();
 
         $custPost = $customer->count('customer_id');
         $custAll = Customer::count();
@@ -240,12 +284,15 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
             'rpr' => $rpr,
             'avgSum' => $avgSum,
         ]));
-
     }
 
 
     public function incomeMedianForm(Request $request)
-    { 
+    {
+        if (!Gate::allows('report-forming')) {
+            abort(403);
+        }
+
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
@@ -254,8 +301,8 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
 
         $data = ReportController::computeProfit($labels);
 
-        for ($i=0; $i < count($labels); $i++) { 
-            $labels[$i] = Normalization::beautify_date_from_str($labels[$i] );
+        for ($i = 0; $i < count($labels); $i++) {
+            $labels[$i] = Normalization::beautify_date_from_str($labels[$i]);
         }
 
         $labels = array_slice($labels, 1);
@@ -265,7 +312,7 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $avgProfit =  $itog / count($data);
 
         $st = $data[0];
-        $en =  $data[count($data)-1];
+        $en =  $data[count($data) - 1];
 
         $seDiff = ReportController::diffPercent($st, $en);
         $avgeDiff = ReportController::diffPercent($avgProfit, $en);
@@ -273,12 +320,6 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         // return(count($data));
         // return(count($labels));
         // return(($labels));
-
-        $user = new User();
-        $tableName = $user->getTable();
-
-        $columns = Schema::getColumnListing($tableName);
-        return($user->getConnection()->getSchemaBuilder()->getColumnListing($user->getTable()));
 
         return (view('report/incomeMedian', [
             'dateS' => Normalization::beautify_date_from_str($dateStart),
@@ -293,33 +334,34 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
             'end' => $en,
             'seDiff' => $seDiff,
             'avgeDiff' => $avgeDiff,
-            
+
             // 'avgSum' => $avgSum,
         ]));
-
     }
 
-    public static function diffPercent($a, $b)  {
-        $a = is_null($a)|| $a ==0 ? $b : $a;
-        $diff = ($a-$b)/($a/100);
+    public static function diffPercent($a, $b)
+    {
+        $a = is_null($a) || $a == 0 ? $b : $a;
+        $diff = ($a - $b) / ($a / 100);
         return $diff;
-        
     }
 
-    public static function encodeToJson($arr)  {
+    public static function encodeToJson($arr)
+    {
         $s = '[';
         foreach ($arr as  $value) {
-            $s = $s.'`'.$value.'`';
-            $s = $s.',';
+            $s = $s . '`' . $value . '`';
+            $s = $s . ',';
         }
-        $s = substr($s, 0, strlen($s)-1);
-        $s = $s.']';
+        $s = substr($s, 0, strlen($s) - 1);
+        $s = $s . ']';
         return $s;
     }
 
 
 
-    public static function getInterval($dateS, $dateE){
+    public static function getInterval($dateS, $dateE)
+    {
         $diff = Utils::dateDifference($dateS, $dateE);
 
         $dateStart = new DateTime($dateS);
@@ -329,62 +371,59 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $date = $dateStart;
         $inervalArr[] = $dateStart->format('Y-m-d');
 
-        if($diff->days >= (365*2)){
+        if ($diff->days >= (365 * 2)) {
             $dayDiff = intval($diff->days / 10);
-            $dayInterval = new DateInterval('P'.$dayDiff.'D');
+            $dayInterval = new DateInterval('P' . $dayDiff . 'D');
             $inervalArr = ReportController::addInterval($date, $dayInterval, 9);
-        }
-        elseif($diff->days > 120 && $diff->days < (365*2)){
+        } elseif ($diff->days > 120 && $diff->days < (365 * 2)) {
             $dayDiff = intval($diff->days / 30) - 1;
             $dayInterval = new DateInterval('P1M');
             $inervalArr = ReportController::addInterval($date, $dayInterval, $dayDiff);
-
-        }
-        else{
-            $dayDiff = intval($diff->days / 7)-1;
-            $dayInterval = new DateInterval('P'.$dayDiff.'D');
+        } else {
+            $dayDiff = intval($diff->days / 7) - 1;
+            $dayInterval = new DateInterval('P' . $dayDiff . 'D');
             $inervalArr = ReportController::addInterval($date, $dayInterval, 7);
-
         }
-        $inervalArr[]=$dateEnd->format('Y-m-d');
+        $inervalArr[] = $dateEnd->format('Y-m-d');
         return $inervalArr;
     }
 
 
-    public static function computeProfit($inervalArr){
-    
+    public static function computeProfit($inervalArr)
+    {
+
         $profitArr = array();
 
-        for ($i=0; $i < count($inervalArr)-1; $i++) { 
+        for ($i = 0; $i < count($inervalArr) - 1; $i++) {
             $ds = $inervalArr[$i];
-            $de = $inervalArr[$i+1];
+            $de = $inervalArr[$i + 1];
             $income = Income::select('amount')->where('date', '>=', $ds)
-            ->where('date', '<', $de)->get()->sum('amount');
+                ->where('date', '<', $de)->get()->sum('amount');
 
             $expense = PurchaseRow::selectRaw('sum(count * price) as sum')
-            ->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')
-            ->where('date', '>=', $ds)
-            ->where('date', '<', $de)
-            ->union( Expense::selectRaw('sum(amount) as sum')
-            ->where('date', '>=', $ds)
-            ->where('date', '<', $de))->get()->sum('sum');
+                ->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')
+                ->where('date', '>=', $ds)
+                ->where('date', '<', $de)
+                ->union(Expense::selectRaw('sum(amount) as sum')
+                    ->where('date', '>=', $ds)
+                    ->where('date', '<', $de))->get()->sum('sum');
 
             $profit = $income - $expense;
-            $profitArr[]=$profit;
+            $profitArr[] = $profit;
         }
         return $profitArr;
     }
 
 
-    public static function addInterval($date, $inter, $count){
+    public static function addInterval($date, $inter, $count)
+    {
         $inervalArr = array();
-        for ($i=0; $i < $count; $i++) { 
+        for ($i = 0; $i < $count; $i++) {
             $date->add($inter);
-            $inervalArr[]= $date->format('Y-m-d');
+            $inervalArr[] = $date->format('Y-m-d');
         }
 
         return $inervalArr;
-
     }
 
 

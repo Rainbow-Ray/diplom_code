@@ -33,7 +33,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\WorkerController;
-
+use App\Models\Purchase;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +79,6 @@ Route::resources([
 
     EquipTypeController::class::rootURL => EquipTypeController::class,
     StateController::class::rootURL => StateController::class,
-    EquipController::class::rootURL => EquipController::class,
 
     IncomeSourceController::class::rootURL => IncomeSourceController::class,
     IncomeController::class::rootURL => IncomeController::class,
@@ -87,24 +86,108 @@ Route::resources([
     ExpenseController::class::rootURL => ExpenseController::class,
 
     CustomerController::class::rootURL => CustomerController::class,
-    WorkerController::class::rootURL => WorkerController::class,
     JobTitleController::class::rootURL => JobTitleController::class,
     SkillController::class::rootURL => SkillController::class,
 
-    ReceiptController::class::rootURL => ReceiptController::class,
     ServiceController::class::rootURL => ServiceController::class,
 
-    RequestController::class::rootURL => RequestController::class,
-    PurchaseController::class::rootURL => PurchaseController::class,
 ]);
 
+
+// Сотрудники. Роли.
+
+Route::resource(WorkerController::class::rootURL, WorkerController::class)
+->only(['create', 'store', 'edit', 'update'])
+->middleware('can:create, App\Models\Worker');
+
+Route::resource(WorkerController::class::rootURL, WorkerController::class)
+->only(['destroy'])
+->middleware('can:delete, App\Models\Worker');
+
+Route::resource(WorkerController::class::rootURL, WorkerController::class)
+->only(['index', 'show']);
+
+// Закупка. Роли.
+Route::resource(PurchaseController::class::rootURL, PurchaseController::class)
+->only(['create', 'store', 'edit', 'update', 'destroy'])
+->middleware('can:create, App\Models\Worker');
+
+Route::resource(PurchaseController::class::rootURL, PurchaseController::class)
+->only(['index', 'show']);
+Route::get('request/{id}/purchased', [PurchaseController::class, 'createWithReq'])
+->middleware('can:create, App\Models\Worker');
+
+
+// Запрос о закупке. Роли.
+
+Route::resource(RequestController::class::rootURL, RequestController::class)->only([
+    'create', 'store', 
+])->middleware('can:create, App\Models\Request');
+Route::resource(RequestController::class::rootURL, RequestController::class)->only([
+     'edit', 'update', 'destroy'
+])->middleware('can:update, App\Models\Request');
+
+Route::post('request/{id}/done', [RequestController::class, 'closeRequest'])
+->middleware('can:update, App\Models\Request');
+
+Route::resource(RequestController::class::rootURL, RequestController::class)
+->only(['index', 'show']);
+
+
+
+
+// Оборудование. Роли.
+Route::resource(EquipController::class::rootURL, EquipController::class)
+->only(['index', 'show']);
+Route::resource(EquipController::class::rootURL, EquipController::class)
+->only(['create', 'store', 'destroy'])
+->middleware('can:create, App\Models\Equip');
+Route::resource(EquipController::class::rootURL, EquipController::class)
+->only([ 'edit', 'update'])
+->middleware('can:update, App\Models\Equip');
+
+// Проверка состояния оборудования. Роли.
 Route::resource(EquipCheckController::class::rootURL, EquipCheckController::class)->only([
     'create', 'store', 'edit', 'update', 'destroy'
-]);
+])
+->middleware('can:create, App\Models\EquipCheck');
+Route::get('equip_check/{id}/create', [EquipCheckController::class, 'createWithEquipId'])
+->middleware('can:create, App\Models\EquipCheck');
 
+
+
+
+//Заказы. Роли.
 Route::resource(OrderController::class::rootURL, OrderController::class)->only([
-    'index', 'edit', 'update', 'show'
+     'index','show'
 ]);
+Route::resource(OrderController::class::rootURL, OrderController::class)->only([
+    'edit', 'update'
+])->middleware('can:update, App\Models\Order');
+
+
+
+
+
+//Квитанция. Роли.
+
+Route::resource(ReceiptController::class::rootURL, ReceiptController::class)->only([
+    'index','show'
+]);
+Route::resource(ReceiptController::class::rootURL, ReceiptController::class)->only([
+    'create', 'store', 'edit', 'update'
+])->middleware('can:create, App\Models\Receipt');
+Route::resource(ReceiptController::class::rootURL, ReceiptController::class)->only([
+    'destroy'
+])->middleware('can:delete, App\Models\Receipt');
+
+
+
+
+
+    
+
+
 Route::get('/orderOut/{id}/edit', [OrderOutController::class, '']);
 Route::get('/receipt/{id}/hand_over', [OrderOutController::class, 'hand_over']);
 Route::post('/receipt/{id}/hand_over', [OrderOutController::class, 'hand_over_done']);
@@ -130,8 +213,6 @@ Route::get('locks/{id}/edit', [LockTypeController::class, 'edit_material']);
 Route::get('furniture/{id}/edit', [CategoryFurnController::class, 'edit_material']);
 
 
-Route::post('request/{id}/done', [RequestController::class, 'closeRequest']);
-Route::get('request/{id}/purchased', [PurchaseController::class, 'createWithReq']);
 
 
 

@@ -18,6 +18,13 @@ class ServiceController extends Controller
     const editTitle = "Редактировать услугу";
     const editFormHeader = "Услуга";
 
+
+
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */

@@ -15,6 +15,11 @@ class IncomeController extends Controller
     const editTitle = "Редактировать доход";
     const editFormHeader = "Доход";
 
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */

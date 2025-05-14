@@ -1,14 +1,26 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Редактировать оборудование</title>
-</head>
-<body>
+@extends('index')
 
-    <form action="/{{$rootURL}}/{{$equip->id}}" method="POST">
+@section('title')
+<title>Добавить оборудование</title>
+@endsection
+
+@section('scripts')
+    <link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
+    <script src=" {{asset('assets/js/jquery-3.7.1.min.js')}}"></script>
+    <script src=" {{asset('assets/js/select2.min.js')}}"></script>
+    <script src=" {{asset('assets/js/select2.min.js')}}"></script>
+    <script>
+
+        $(document).ready(function () {
+           $("#equip_type").select2();  
+          
+            });
+        </script>  
+
+@endsection
+@section('main')
+
+    <form action="/{{$rootURL}}/{{$equip->id}}" method="POST" class="receiptForm">
         @csrf
         @method('PUT')
 
@@ -41,5 +53,4 @@
         <input type="submit" value="Удалить">
     </form>
 
-</body>
-</html>
+@endsection

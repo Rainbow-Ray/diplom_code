@@ -19,6 +19,11 @@ class MaterialController extends Controller
     const editTitle = "Редактировать материал";
     const editFormHeader = "Материал";
 
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
 
     static function getMaterialByCat($cat){
          return Material::join('MaterialType', 'Material.type_id', '=', 'MaterialType.id')->where('cat_id', $cat)->select('Material.*')->get();

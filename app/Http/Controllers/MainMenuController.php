@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MainMenuController extends Controller
 {
@@ -17,7 +18,7 @@ class MainMenuController extends Controller
         ->join('Customer', "customer_id", "Customer.id")
         ->select('*')->where('_Order.isDone', 1)->where("_Order.isHanded", 0)->get();
 
-        
+
 
         // $doneOrders = Order::where('isDone', 1);
         // foreach ($doneOrders as $order){

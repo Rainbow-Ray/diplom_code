@@ -14,6 +14,11 @@ class JobTitleController extends Controller
     const editTitle = "Редактировать должность";
     const editFormHeader = "Должность";
 
+        public function __construct()
+    {
+        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $columns = JobTitle::all();

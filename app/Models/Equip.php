@@ -26,6 +26,21 @@ class Equip extends Model
         return $this->BelongsTo(EquipType::class, 'type_id')->withDefault();
     }
 
+    public function checks() {
+        return $this->belongsToMany(EquipCheck::class, 'EquipCheck', 'equip_id', 'state_id');
+    }
+
+    public function state() {
+
+        $lastCheck = EquipCheck::where('equip_id',  $this->id)->get()->last();
+        if(!is_null($lastCheck)){
+            return $lastCheck->state->name;
+        }
+        return null;
+    }
+
+    
+
 
 
 }
