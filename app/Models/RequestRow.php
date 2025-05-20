@@ -45,6 +45,11 @@ class RequestRow extends Model
             return $this->name;
 
     }
+    public function material(){
+        if($this->mat_id != null){
+            return Material::findOrFail($this->mat_id);
+        }
+    }
 
     public function request(){
         return $this->BelongsTo(Request::class, 'req_id')->withDefault();

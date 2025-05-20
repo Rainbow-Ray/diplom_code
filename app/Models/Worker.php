@@ -35,9 +35,14 @@ class Worker extends Model
         return $this->BelongsTo(JobTitle::class, 'job_id')->withDefault();
     }
 
-    public function skills()
+    public function services()
     {
-        return $this->belongsToMany(Skill::class, 'WorkerSkill', 'worker_id', 'skill_id');
+        return $this->belongsToMany(Service::class, 'WorkerService', 'worker_id', 'service_id');
     }
+
+    // public function skills()
+    // {
+    //     return $this->belongsToMany(Skill::class, 'WorkerSkill', 'worker_id', 'skill_id');
+    // }
 
 }

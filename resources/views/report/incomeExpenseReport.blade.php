@@ -19,17 +19,15 @@
 
 <table>
     <thead>
-        <th>Доходы</th>
-        <th></th>
-        <th>Расходы</th>
-        <th></th>
-        <th>Выручка</th>
+        <th colspan=2>Доходы</th>
+        <th colspan=2>Расходы</th>
+        <th>Выручка, руб.</th>
     </thead>
     <thead >
         <th>Источник</th>
-        <th>Сумма</th>
+        <th>Сумма, руб.</th>
         <th>Источник</th>
-        <th>Сумма</th>
+        <th>Сумма, руб.</th>
         <th></th>
     </thead>
     <tbody>

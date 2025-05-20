@@ -1,4 +1,4 @@
-import HighlightElement from "../tableRowSelect/rowSelect.js";
+import {HighlightElement} from "../tableRowSelect/rowSelect.js";
 
 
 function addSkill(element){
@@ -29,7 +29,15 @@ function deleteSkill(){
 $(document).ready(function () {
     $("#job").select2();
     $("#skill").select2();
+    $("#worker").select2();
     HighlightElement("skills");
+
+    $(".addSkill").on('click', function(e){
+         addSkill(e);
+         HighlightElement("skills");
+
+     }
+ );
 
     $(".addSkill").on('click', function(e){
          addSkill(e);

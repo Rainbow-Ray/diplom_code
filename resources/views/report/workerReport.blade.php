@@ -24,10 +24,11 @@
 <table>
     <thead>
         <th>Мастер </th>
-        <th>Кол-во заказов</th>
-        <th>Заказов  за день</th>
-        <th>Процент брака</th>
-        <th>Сумма заказов</th>
+        <th>Кол-во заказов, шт.</th>
+        <th>Заказов  за день, шт.</th>
+        <th>Брак, шт.</th>
+        <th>Процент брака, %</th>
+        <th>Стоимость заказов, руб.</th>
     </thead>
     <tbody>
         @foreach($rows as $row)
@@ -37,8 +38,9 @@
                 {{$row->patronym}} 
             </td>
             <td>{{$row->orderCount}}</td>
-            <td>{{$row->orderDay}}</td>
-            <td>{{($row->fails)/($row->orderCount)*100}}</td>
+            <td>{{number_format($row->orderDay,  2, ',', '')}}</td>
+            <td>{{$row->fails}}</td>
+            <td>{{number_format(($row->fails)/($row->orderCount)*100,  2, ',', '')}}</td>
             <td>{{$row->sum}}</td>
         </tr>
 
@@ -49,6 +51,7 @@
             <td>{{$itog}}</td>
             <td></td>
             <td></td>
+            <td></td>
             <td>{{$sum}}</td>
         </tr>
 
@@ -56,8 +59,8 @@
 </table>
 
 
-<p>Средний процент брака: {{$avgFail}}%</p>
-<p>Среднее количество выполненных за день заказов: {{$avgOrder}}%</p>
+<p>Средний процент брака: {{number_format($avgFail, 2, ',', '')}}%</p>
+<p>Среднее количество выполненных за день заказов: {{number_format($avgOrder, 2, ',', '')}}%</p>
 
 @endsection
 

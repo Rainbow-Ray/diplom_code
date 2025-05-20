@@ -6,7 +6,8 @@ use App\Http\Utils\Utils;
 use App\Models\Service;
 use App\Models\ServiceSkill;
 use App\Models\Skill;
-
+use App\Models\Worker;
+use App\Models\WorkerService;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -18,9 +19,7 @@ class ServiceController extends Controller
     const editTitle = "Редактировать услугу";
     const editFormHeader = "Услуга";
 
-
-
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
     }
@@ -30,10 +29,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $columns = Service::all();
+        $columns = Service::all()->sortBy('name');
         return view("service/card", ['items' => $columns, 'rootURL' => $this::rootURL]);
-
-
     }
 
     /**
@@ -41,10 +38,18 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $skills = Skill::all();
+        $workers = Worker::all();
 
-        return view('service/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader, "skills"=>$skills]);
+        return view('service/createW', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            "workers" => $workers
+        ]);
+        // $skills = Skill::all();
+
+        // return view('service/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
+        // "formHeader"=> $this::storeFormHeader, "skills"=>$skills]);
 
     }
 
@@ -60,29 +65,36 @@ class ServiceController extends Controller
 
         $service->save();
 
-        if(!is_null($request['skill'])){
-            if(count($request['skill']) > 0){
-                foreach($request['skill'] as $skill){
-                    ServiceSkill::create($service->id, $skill);
+        if (!is_null($request['skill'])) {
+            if (count($request['skill']) > 0) {
+                foreach ($request['skill'] as $skill) {
+                    WorkerService::create($service->id, $skill);
                 }
-            }    
+            }
         }
+        // if(!is_null($request['skill'])){
+        //     if(count($request['skill']) > 0){
+        //         foreach($request['skill'] as $skill){
+        //             ServiceSkill::create($service->id, $skill);
+        //         }
+        //     }    
+        // }
 
         return redirect($this::rootURL);
-
     }
 
 
-    static function UpdateSkills($service,$oldSkills, $newSkills){
+    static function UpdateSkills($service, $oldSkills, $newSkills)
+    {
         $inter = array_intersect($oldSkills, $newSkills);
         $delete = array_diff($oldSkills, $inter);
         $add = array_diff($newSkills, $inter);
 
-        foreach($delete as $i){
-            ServiceSkill::where('service_id', $service->id)->where('skill_id', $i)->delete();
+        foreach ($delete as $i) {
+            WorkerService::where('service_id', $service->id)->where('worker_id', $i)->delete();
         }
 
-        foreach($add as $i){
+        foreach ($add as $i) {
             ServiceSkill::create($service->id, $i);
         }
     }
@@ -94,10 +106,10 @@ class ServiceController extends Controller
     public function show(string $id)
     {
         $service = Service::findOrFail($id);
-        return [$service->name,
-        $service->cost,
+        return [
+            $service->name,
+            $service->cost,
         ];
-
     }
 
 
@@ -108,21 +120,24 @@ class ServiceController extends Controller
     public function edit(string $id)
     {
         $service = Service::findOrFail($id);
-        $skills = Skill::all();
+        $workers = Worker::all();
+        // $skills = Skill::all();
 
-        if (!is_null($service)){
-            return view('service/edit', ["rootURL" => $this::rootURL,
-            "service"=> $service, 
-            'title'=>$this::editTitle, "formHeader"=>$this::editFormHeader, 
-            'skills'=> $skills
-        ]);
+        if (!is_null($service)) {
+            return view('service/editW', [
+                "rootURL" => $this::rootURL,
+                "service" => $service,
+                'title' => $this::editTitle,
+                "formHeader" => $this::editFormHeader,
+                'workers' => $workers
+            ]);
         }
-        return view('service/create', ["rootURL"=> $this::rootURL,
-         "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader,
-        'skills'=> $skills
-    ]);
-
+        return view('service/createW', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            'workers' => $workers
+        ]);
     }
 
     /**
@@ -131,25 +146,23 @@ class ServiceController extends Controller
     public function update(Request $request, string $id)
     {
         $service = Service::findOrFail($id);
-        if (!is_null($service)){
+        if (!is_null($service)) {
             $service->name = $request['name'];
             $service->cost = $request['cost'];
-    
+
             $service->save();
-    
         }
 
-        $old = Utils::skillsToArray($service->skills);
+        $old = Utils::skillsToArray($service->workers);
         $new =  $request['skill'];
 
-        if(is_null($request['skill'])){
+        if (is_null($request['skill'])) {
             $new =  [];
         }
 
         $this::UpdateSkills($service, $old, $new);
 
-        return redirect( $this::rootURL);
-
+        return redirect($this::rootURL);
     }
 
     /**
@@ -159,7 +172,6 @@ class ServiceController extends Controller
     {
         $service = Service::findOrFail($id);
         $service->delete();
-        return redirect( $this::rootURL);
-
+        return redirect($this::rootURL);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Equip;
 use App\Models\EquipCheck;
-use App\Models\EquipType;
 use App\Models\State;
 use Illuminate\Http\Request;
 

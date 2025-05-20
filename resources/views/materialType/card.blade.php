@@ -11,7 +11,7 @@
 
 @section('addButton')
 <a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
-    <button class="addButton">
+    <button class="addButton beautyButton">
         Добавить тип материала
     </button>
 </a>
@@ -22,21 +22,16 @@
 
     @foreach ($items as $item)
         <div class="card">
-            <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
-                    <div class="itemInfo orderInfo">
+                    <div class="itemInfo info3">
                         <span class="cardLabel">Наименование:</span>
                         <span class="cardData">{{ $item->name }}
                         </span>
                         <span class="cardLabel">Категория:</span>
                         <span class="cardData">{{ $item->category->name }}</span>
                     </div>
-                </a>
-
-            </div>
 
             <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
-                <button>Редактировать</button>
+                <img src="{{asset('assets/css/angle-right-svgrepo-com.svg')}}" alt="">
             </a>
 
         </div>

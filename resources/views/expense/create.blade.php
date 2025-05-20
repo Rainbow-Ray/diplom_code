@@ -20,11 +20,11 @@
 
 @endsection
 @section('main')
-    <form action="/{{$rootURL}}" method="POST" class="receiptForm">
+    <form action="/{{$rootURL}}" method="POST" class="">
         @csrf
         <h2>Добавить расход</h2>
 
-          <div class="divSource">
+          <div class="labelTop start1 end4">
             <label for="source">Источник расхода:</label>
             <select id="source" name="source">
               <option value=""></option>
@@ -36,7 +36,7 @@
           </select>
           </div>
 
-          <div class="divSource">
+          <div class="labelTop">
             <label for="worker">Целевой сотрудник:</label>
             <select id="worker" name="worker">
               <option value=""> 
@@ -51,18 +51,18 @@
           </div>
 
 
-          <div class="divdate">
+          <div class="labelTop">
             <label for="date">Дата расхода:</label>
             <input type="date" name="date" id="date" value="{{ (new DateTime('now', new DateTimeZone('Asia/Yekaterinburg')))->format('Y-m-d') }}" required>
             </div>
 
-          <div class="divAmount">
+          <div class="start1 end3">
             <label for="amount">Сумма:</label>
             <input type="money" name="amount" id="amount"> 
             <span>руб.</span>
           </div>
 
-        <input type="submit" value="Отправить">
+        <input type="submit" class="beautyButton submitButton rstart3 end7" value="Отправить">
     </form>
 @endsection
 

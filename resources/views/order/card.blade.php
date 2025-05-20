@@ -18,14 +18,13 @@
     <button class="filter notDoneItems">Выполняются</button>
     <button class="filter receiptClosed">Квитанция закрыта</button>
 
-
-
     @foreach ($items as $item)
-        <div class="card 
-@if ($item->isUrgent) urgent @else @if ($item->isHanded) handed @endif @endif ">
+
+        <div
+            class="card 
+@if ($item->isUrgent) urgent @endif @if ($item->isHanded) handed @else  working @endif  @if ($item->isDone) orDone @else noDone @endif ">
             <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
-                    <div class="itemInfo orderInfo">
+                    <div class="itemInfo info7">
                         <span class="cardLabel">Услуга:</span>
                         <span class="cardData">{{ $item->service->name }}
                         </span>
@@ -46,17 +45,18 @@
                         <span class="cardLabel">Пред. дата выдачи:</span>
                         <span class="cardData">{{ $item->receipt->datePlan }}</span>
                     </div>
-                </a>
 
             </div>
+                    <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
 
 
 
-            <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
-                <button>Добавить изделия</button>
-            </a>
+                <img src="{{asset('assets/css/angle-right-svgrepo-com.svg')}}" alt="">
+                        </a>
+
 
         </div>
+
     @endforeach
 
 
@@ -67,36 +67,53 @@
             })
 
         }
+
+        function hideCards() {
+            $('.card').each(function() {
+                $(this).hide();
+            })
+        }
+            function showInProgress(){
+                hideCards();
+                $(".working.noDone").each(function() {
+                    $(this).show();
+                })
+                $('h1').text("Выполняются");
+            }
+
+
         $(document).ready(function() {
             $('.allItems').on("click", function() {
                 $(".card").each(function() {
                     $(this).show();
-                    $('h1').text("Заказы");
-
                 })
+                $('h1').text("Заказы");
+
             })
             $('.doneItems').on("click", function() {
-                showCards();
-                $(".notDone").parents('.card').each(function() {
-                    $(this).hide();
-                    $('h1').text("Готовы");
+                hideCards();
+                $(".working.orDone").each(function() {
+                    $(this).show();
+                
                 })
+                
+                $('h1').text("Готовы");
             })
             $('.notDoneItems').on("click", function() {
-                showCards();
-                $(".done").parents('.card').each(function() {
-                    $(this).hide();
-                    $('h1').text("Выполняются");
-                })
+                showInProgress();
             })
 
+
             $('.receiptClosed').on("click", function() {
-                showCards();
+                hideCards();
                 $(".handed").each(function() {
-                    $(this).hide();
-                    $('h1').text("Квитанция закрыта");
+                    $(this).show();
                 })
+                $('h1').text("Квитанция закрыта");
+
             })
+
+            showInProgress();
         });
     </script>
 @endsection

@@ -26,10 +26,11 @@
     inherits: false;
     initial-value: #ffffff;
 }
-
-
-
-
+@property --transparent-gray {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #27374d15;
+}
 
 html{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -55,13 +56,17 @@ body{
 
     margin: 0;
     padding: 0;
+}
 
+a{
+    text-decoration: none;
+    color: inherit;
 }
 
 header{
     display: grid;
     grid-template-columns: 0.5fr 2fr 0.5fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr;
     grid-auto-flow: row;
     grid-template-areas:
     "logo . login"
@@ -74,13 +79,16 @@ header{
     padding: 20px 40px;
     /* border-bottom: 1px black solid; */
 }
-
+.main_nav ul li a {
+    display: block;
+    width: 100%;
+}
 h3{
     margin-bottom: 0.5em;
 }
 .logo{
     grid-area: logo;
-
+    font-weight: bold;
 }
 
 .logData{
@@ -101,9 +109,7 @@ h3{
     color: var(--white-font);
     border-top: 1px var(--highlight-color) solid;
 
-    box-shadow: 0 5px 15px -5px #00000075    ;
-
-
+    box-shadow: 0 5px 15px -5px #00000075;
 }
 .main_nav ul{
     display: grid;
@@ -123,38 +129,23 @@ h3{
 
 }
 
-
-/* .side_nav .selected_dict{
-    font-weight: bold;
-    color: var(--highlight-color);
-}
-
-.side_nav .selected_dict::before{
-    content: "•";
-    margin: 0;
-    padding-right: 5px;
-} */
-
 .side_nav{
     grid-area: side_nav;
 }
 .side_nav_main_ul{
     margin-top: 1.6em;
     padding-top: 0;
-
 }
 .side_nav ul{
     list-style-type: none;
     font-weight: bold;
     font-size: 14pt;
-
 }
 .side_nav li{
     border-bottom: 1px black solid;
     padding: 5px;
     font-weight: normal;
     font-size: 12pt;
-
 }
 
 .sec_ul{
@@ -178,7 +169,7 @@ main{
     align-items: baseline;
     padding: 1em 0;
 }
-.mainHeader h1 {
+ h1 {
     margin: 0;
     padding: 0;
     align-self: center;
@@ -200,27 +191,42 @@ input[type=submit]{
     border: 0;
     font-size: 1em;
     padding: 0.5em 1em;  
+    max-width: 20em;
+    min-width: 8em;
+    max-height: 2.5em;
 }
-
 .addButton{
   background: var(--backpage-color);
 }
+
+.danger{
+    background-color: maroon;
+    color: white;
+    font-weight: bold;
+}
+
 
 .submitButton{
     background: var(--bright-color);
     color: white;
 }
 
+
+
 .filter{
     background: var(--backpage-color);
     border: 0;
     padding: 0.5em 1em;
-   
+}
+.colspan2{
+    column-span: 2;
 }
 
 .receiptForm{
+    display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: repeat(9, max-content);
+    row-gap: 0.5em;
 }
 form{
     display: grid;
@@ -241,16 +247,8 @@ form h2{
     grid-column: 1/4;
 }
 
-.noMargin{
-    margin: 0;
-}
-
-
-
 
 .addMaterial{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
     /* padding: 0 1em; */
 }
 
@@ -259,17 +257,8 @@ form h2{
 }
 .receiptData .orderData,
 .receiptData .dates
-
 {
     display: none;
-}
-.filterBox{
-    display: grid;
-    grid-template-columns: repeat(7, auto);
-}
-.columns3{
-    display: grid;
-    grid-template-columns: repeat(3, auto);
 }
 .start1{
     grid-column-start: 1;
@@ -285,6 +274,10 @@ form h2{
 }
 .start5{
     grid-column-start: 5;
+}
+.start6{
+        grid-column-start: 6;
+
 }
 .end2{
     grid-column-end: 2;
@@ -309,6 +302,15 @@ form h2{
     grid-row-start: 9;
 
 }
+.rstart2{
+    grid-row-start: 2;
+}
+.rstart3{
+    grid-row-start: 3;
+}
+.rstart5{
+    grid-row-start: 5;
+}
 .rstart10{
     grid-row-start: 10;
 }
@@ -320,82 +322,39 @@ form h2{
 .rstart11{
     grid-row-start: 11;
 }
-
-.col1-5{
-    grid-column: 1/5;
-  
-}
-.col1-6{
-    grid-column: 1/6;
-  
-}
-.col1-7{
-    grid-column: 1/7;
-  
-}
-.receiptForm .divcustomer,
-.receiptForm .divservice,
-.receiptForm .divcost,
-.col1-4{
-    grid-column: 1/4;
+.rstart7{
+    grid-row-start: 7;
 }
 
-.receiptForm .divdatePlan,
-.receiptForm .divworker,
-.receiptForm .divisUrgent,
-.receiptForm .divisPaid,
-.col1-2
-{
-    grid-column: 1/2;
-
-}
-
-.receiptForm .divitem,
-.col1-3
-{
-    grid-column: 1/3;
-
-}
-
-.receiptForm .divdateOut,
-.col2-3
-{
-    grid-column: 2/3;
-}
-.col2-4
-{
-    grid-column: 2/4;
-}
-.receiptForm .divCount,
-.col3-4
-{
-    grid-column: 3/4;
-}
-.col4-7
-{
-    grid-column: 4/7;
-}
-
-.col1-5{
-    grid-column: 1/5;
- 
+.rGap{
+    row-gap: 1em;
 }
 
 .hide{
     display: none;
-}
-.receiptForm .divCount input[type=number]{
-    width: 5em;
-
 }
 .centerButton{
     justify-self: right;
     align-self: center;
 }
 
-.leftButton{
+.left{
     align-self: end;
     justify-self: left;
+}
+.right{
+    float: right;
+    justify-self: right;
+    justify-content: right;
+    justify-items: right;
+}
+.buttom{
+    align-self: end;
+    justify-self: right;
+}
+.center{
+        align-self: center;
+
 }
 
 .deleteButton{
@@ -405,7 +364,7 @@ form h2{
 
 .formButton{
     height: 30px;
-    width: 150px;
+    min-width: 150px;
 } 
 
 form button{
@@ -414,12 +373,6 @@ form button{
 form input[type=number]{
     width: max-content;
 } 
-
-form .divDiscount{
-    grid-template-columns: max-content max-content min-content;
-
-}
-
 .bdInfo{
     display: none;
 }
@@ -448,8 +401,6 @@ table.itemTable{
     border-top: 1px var(--bright-color) solid;
     border-bottom: 1px var(--bright-color) solid;
 }
-
-
 
 .checkDate{
     width: 12em;
@@ -487,14 +438,27 @@ td.checkNumber {
 .card{
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: auto 8em;
+    grid-template-columns: auto 5em;
     grid-auto-flow: column;
     grid-column: 1/3;
     box-shadow: #00000075 0 1px 0 0;
 }
-.card a {
-    text-decoration: none;
-    color: inherit;
+.card img{
+    width: 2em;
+    height: 2em;
+    filter: hue-rotate(190deg) brightness(0.8);
+       align-items: center;
+    align-self: center;
+ 
+}
+.card a{
+    display: grid;
+    align-items: center;
+    align-self: center;
+    justify-items: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
 }
 .orderDetailLabel{
     grid-column: 1/3;
@@ -504,18 +468,19 @@ td.checkNumber {
     display: none;
 }
 
-.orderDetailLabel .buttonDetail::after{
+.orderDetailLabel.closed .buttonDetail::after
+{
     content: "▽";
 }
 
-.orderDetailLabel:hover .buttonDetail::after{
+.orderDetailLabel.open .buttonDetail::after{
     content: "△";
 }
 
-
-.orderDetailLabel:hover .orderDetail{
+/* .orderDetailLabel:hover .orderDetail{
     display: block;
-}
+} */
+
 .itemInfo{
     display: grid;
     grid-template-rows: repeat(2, max-content);
@@ -526,15 +491,88 @@ td.checkNumber {
 }
 .itemInfo.customerInfo{
     display: grid;
-    grid-template-columns: auto 10em 5em;
+    grid-template-columns: 9em 10em 5em;
 }
 .itemInfo.receiptInfo{
     display: grid;
-    grid-template-columns: auto 9em 12em 6em 6em 3em;
+    grid-template-columns: 9em 9em 14em 7em 7em 4em;
 }
 .card .orderInfo{
-    grid-template-columns: auto 7em 4em 4em 5em 7em 7em;
+    grid-template-columns: 9em 7em 4em 4em 5em 7em 7em;
 }
+
+.workerInfo{
+        grid-template-columns: 9em 10em 10em 12em;
+}
+
+.info3{
+    grid-template-columns: 9em 15em 10em;
+}
+.info5{
+    grid-template-columns: 9em 14em 7em 6em 10em ;
+}
+.material{
+    grid-template-columns: 12em 12em 14em 7em 9em ;
+}
+.info7{
+    grid-template-columns: 9em 7em 4em 4em 5em 7em 7em;
+}
+
+
+.col3{
+        display: grid;
+            grid-template-columns: repeat(3, 1fr) ;
+
+}
+
+.col5{
+        grid-template-columns: repeat(5, 1fr) ;
+}
+.col2{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) ;
+}
+.info6{
+    grid-template-columns: repeat(6, 1fr) ;
+}
+
+.mainBlock{
+    display: grid;
+    padding: 0 1em;
+    grid-template-columns: auto 10em;
+    align-items: center;
+    border: var(--transparent-gray)  1px solid;
+    border-radius: 5px;
+}
+.logOut{
+    background: inherit;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    padding: 0;
+}
+
+.filterTable{
+    overflow-y: scroll;
+    max-height: 13em;
+}
+.filterTable table{
+    width: 100%;
+}
+
+.item{
+    box-shadow: 0px 5px 5px -4px var(--transparent-gray);
+}
+.block{
+    display: grid;
+    grid-template-columns: auto 7em 7em 7em 7em 7em;
+    margin: 0.3em 0;
+    padding: 0.2em;
+
+}
+
+
 .orderInfo{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -551,11 +589,17 @@ td.checkNumber {
     grid-template-rows: repeat(3, max-content);
     grid-auto-flow: column;
 }
-.col3{
+.tdRight{
+    text-align: end;
+}
+.price{
     display: grid;
-    grid-template-columns: repeat(3, max-content);
-    column-gap: 1em;
-
+    grid-template-rows: repeat(2, max-content);
+    grid-template-columns: repeat(2, max-content);
+}
+.price label{
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 .orderCount {
     display: grid;
@@ -563,6 +607,11 @@ td.checkNumber {
     column-gap: 1em;
     /* grid-column: 1/3; */
     box-shadow: var(--bright-color) 0 -1px 0 0;
+    margin-bottom: 0.5em;
+}
+
+.selfButtom{
+    align-self: end;
 }
 
 
@@ -582,9 +631,20 @@ td.checkNumber {
 
 }
 
+.currentNav::before{
+    content: "• ";
+    font-weight: bold;
+
+}
+li.currentNav{
+     font-weight: bold;   
+}
+
 .isDone{
     justify-self: center;
     text-align: center;
+    max-width: 5em;
+    margin: 0;
 }
 .done{
     color:green;
@@ -597,18 +657,13 @@ td.checkNumber {
 .cardLabel{
     color: var(--light-font);
     font-size: 12pt;
+    
 }
 
 .cardData{
     font-size: 16pt;
 }
 
-.card a{
-    align-self: center;
-    justify-self: right;
-    width: fit-content;
-    height: fit-content;
-}
 .card button{
     width: 10em;
 }
@@ -623,3 +678,12 @@ footer{
 
 }
 
+
+
+.noMargin{
+    margin: 0;
+}
+
+.noPad{
+    padding: 0;
+}

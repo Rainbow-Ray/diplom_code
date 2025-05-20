@@ -28,7 +28,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $columns = Customer::all();
+        $columns = Customer::all()->sortBy('surname');
         return view("customer/customerCard", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 
@@ -66,10 +66,7 @@ class CustomerController extends Controller
     public function show(string $id)
     {
         $customer = Customer::findOrFail($id);
-        return [$customer->name,
-        $customer->surname,
-        $customer->phone,
-        ];
+        return view("customer/data", ['item' => $customer, 'rootURL' => $this::rootURL]);
     }
 
     /**

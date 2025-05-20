@@ -62,7 +62,13 @@ class Order extends Model
 
     public function beauty_date() {
         return Normalization::beautify_date_from_str($this->receipt->dateIn);
-        
+    }
+
+    public function isUrgent(){
+        if($this->isUrgent){
+            return "Срочный";
+        }
+        return '';
     }
 
 

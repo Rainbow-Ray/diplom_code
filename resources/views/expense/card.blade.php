@@ -13,7 +13,7 @@
 
 @section('addButton')
 <a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
-    <button class="addButton">
+    <button class="addButton beautyButton">
         Добавить расход
     </button>
 </a>
@@ -25,7 +25,7 @@
 @foreach ($items as $item)
 
     <div class="card">
-    <div class="itemInfo receiptInfo">
+    <div class="itemInfo info5">
         <span class="cardLabel">Источник:</span>
         <span class="cardData">{{$item->source->name}}</span>
 
@@ -43,14 +43,14 @@
         @endif
 
         
-        <span class="cardLabel">Целевой сотрудник:</span>
-        <span class="cardData">{{$item->worker->surname}} {{$item->worker->name}} {{$item->worker->patronym}}</span>
+        <span class="cardLabel start4 end6">Целевой сотрудник:</span>
+        <span class="cardData start4 end6">{{$item->worker->surname}} {{$item->worker->name}} {{$item->worker->patronym}}</span>
 
     
     </div>
     <div>
         <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}">
-            <button>Редактировать</button>
+                <img src="{{asset('assets/css/angle-right-svgrepo-com.svg')}}" alt="">
             </a>
         
     </div>

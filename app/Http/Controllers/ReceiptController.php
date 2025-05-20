@@ -27,7 +27,8 @@ class ReceiptController extends Controller
      */
     public function index()
     {
-        $columns = Receipt::all();
+
+        $columns = Receipt::all()->sortByDesc('dateIn');;
         foreach($columns as $i){
             $i = ReceiptNormalization::beautify_dates($i);
         }
@@ -41,11 +42,13 @@ class ReceiptController extends Controller
     public function create()
     {
         $customers = Customer::all();
-        $workers = Worker::all();
+        $workers = Worker::where('job_id', 1)->get();
         $services = Service::all();
+        $number = Receipt::defNumber();
         
         return view('receipt/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
         "formHeader"=> $this::storeFormHeader, 'customers'=> $customers, 'workers'=> $workers,
+        'number' => $number,
         'services'=> $services ]);
 
     }
@@ -59,6 +62,7 @@ class ReceiptController extends Controller
         $request = ReceiptNormalization::normalize($request);
 
         $receipt->item = $request['item'];
+        $receipt->number = $request['number'];
         $receipt->dateIn = $request['dateIn'];
         $receipt->cost = $request['cost'];
         $receipt->dateOut = $request['dateOut'];
@@ -85,7 +89,7 @@ class ReceiptController extends Controller
 
         if($receipt->isPaid){
             if($request['payment']==1){
-                IncomeController::CreateExternal($request['dateIn'], $request['amount'], $receipt->id);
+                IncomeController::CreateExternal($request['payNumber'], $request['dateIn'], $request['amount'], $receipt->id);
             }
             else if($request['payment']==2){
                 IncomeController::UpdateExternal($request, $receipt->id);

@@ -10,20 +10,12 @@ use App\Models\Expense;
 use App\Models\Income;
 use App\Models\Receipt;
 use App\Models\Order;
-use App\Models\OrderOut;
-use App\Models\Purchase;
 use App\Models\PurchaseRow;
-use App\Models\User;
 use DateInterval;
 use DateTime;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\View\View;
-use PhpParser\Node\Expr\Cast\Array_;
 
 
 class ReportController extends Controller
@@ -130,10 +122,19 @@ class ReportController extends Controller
             ->union(
                 Expense::where('date', '>', $dateStart)->where('date', '<', $dateEnd)
                     ->join('ExpenseSource', 'Expense.source_id', 'ExpenseSource.id')
+                    ->whereNot('Expense.source_id', 2)
                     ->selectRaw('ExpenseSource.name ,source_id , sum(amount) as sum ')
                     ->groupBy('source_id')
-            )->get();
+            );
 
+        $fail = Expense::where('date', '>', $dateStart)->where('date', '<', $dateEnd)
+                    ->join('ExpenseSource', 'Expense.source_id', 'ExpenseSource.id')
+                    ->where('Expense.source_id', 2)
+                    ->selectRaw('ExpenseSource.name ,source_id , sum(amount) * 1.1 as sum ')
+                    ->groupBy('source_id');
+
+        $expense = $expense->union($fail)->get();
+        
         $incSum = $income->sum('sum');
         $expSum = $expense->sum('sum');
         $profit = $incSum - $expSum;
@@ -160,19 +161,31 @@ class ReportController extends Controller
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
-        $order = Order::join('Receipt', '_Order.receipt_id', 'Receipt.id')->where('dateIn', '>', $dateStart)
-            ->where('dateIn', '<', $dateEnd)->where('isPaid', 1)->where('cost', '>', 0)
-            ->get();
+        // $order = Order::join('Receipt', '_Order.receipt_id', 'Receipt.id')->where('dateIn', '>', $dateStart)
+        //     ->where('dateIn', '<', $dateEnd)->where('isPaid', 1)->where('cost', '>', 0)
+        //     ->get();
+
+        $order = Order::join('Receipt', '_Order.receipt_id', 'Receipt.id')->where('dateIn', '>=', $dateStart)
+            ->where('dateIn', '<=', $dateEnd)->where('isPaid', 1)->where('cost', '>', 0)->get();
+
+        // $order = Receipt::where('dateIn', '>=', $dateStart)
+        //     ->where('dateIn', '<=', $dateEnd)->where('isPaid', 1)->get();
+
+        // $order = Order::join('Receipt', '_Order.receipt_id', 'Receipt.id')->where('dateIn', '>', $dateStart)
+        //     ->where('dateIn', '<', $dateEnd)->where('isPaid', 1)->where('cost', '>', 0)
+        //     ->get();
 
         $orderSumm = $order->sum('cost');
         $avgSumm = $order->avg('cost');
+        $countItog = $order->sum('count');
 
         return (view('report/orderIncomeReport', [
             'dateS' => Normalization::beautify_date_from_str($dateStart),
             'dateE' => Normalization::beautify_date_from_str($dateEnd),
             'rows' => $order,
             'summ' => $orderSumm,
-            'avg' => $avgSumm
+            'avg' => $avgSumm,
+            'countItog' => $countItog,
         ]));
     }
 
@@ -186,8 +199,8 @@ class ReportController extends Controller
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
-        $order = Order::join('Receipt', '_Order.receipt_id', 'Receipt.id')->where('dateIn', '>', $dateStart)
-            ->where('dateIn', '<', $dateEnd)->where('isPaid', 1)->where('cost', '>', 0)
+        $order = Order::join('Receipt', '_Order.receipt_id', 'Receipt.id')->where('dateIn', '>=', $dateStart)
+            ->where('dateIn', '<=', $dateEnd)->where('isPaid', 1)->where('cost', '>', 0)
             ->get();
 
 
@@ -197,6 +210,50 @@ class ReportController extends Controller
         $orderSumm = $order->sum('cost');
         $expenseSumm = $expense->sum('sum');
         $expenseAmountSumm = $expense->sum('count');
+        $countItog = $order->sum('count');
+
+
+
+    $query =    "select Material.name, T.start_amount, V.income, V.expense, T.start_amount+V.income-V.expense as 'itog',
+    Ei.name as ei 
+    from 
+(Select s.mat_id as 'Mat', sum(s.count) as 'income', sum(s.amount) as 'expense' from 
+ (SELECT PurchaseRow.mat_id, `PurchaseRow`.`count`, MatExp.amount FROM `PurchaseRow` left JOIN `MatExp` ON `PurchaseRow`.`mat_id` = `MatExp`.`mat_id` inner join `Purchase` on PurchaseRow.`purch_id` = `Purchase`.`id` where
+  Purchase.date >= '".$dateStart."'  and Purchase.date <= '".$dateEnd."' 
+
+Union all
+
+SELECT MatExp.mat_id, `PurchaseRow`.`count`, MatExp.amount FROM `PurchaseRow` Right JOIN `MatExp` ON `PurchaseRow`.`mat_id` = `MatExp`.`mat_id` WHERE PurchaseRow.mat_id is null and 
+MatExp.date >= '".$dateStart."'  and MatExp.date <= '".$dateEnd."') as s GROUP BY s.mat_id) 
+
+as V
+
+left join 
+(select mat_id,  sum(count) as 'start_amount' from `PurchaseRow` inner join `Purchase` on `purch_id` = `Purchase`.`id` 
+where `date` < '".$dateStart."' group by `mat_id`)
+as T 
+on V.Mat = T.mat_id 
+
+INNER join Material on Material.id = V.Mat 
+INNER join Ei on Material.ei_id = Ei.id 
+
+;";
+
+
+
+
+        $ass = DB::select($query);
+
+        $itogs = ReportController::countItog($ass);
+
+
+        // $amountStart = PurchaseRow::selectRaw('mat_id, date, sum(count)')->join('Purchase', 'purch_id', 'Purchase.id')
+        // ->where('dateIn', '<', $dateStart)->groupBy('mat_id')->get();
+
+        // $inc = PurchaseRow::selectRaw('mat_id, date, sum(co unt)')->join('Purchase', 'purch_id', 'Purchase.id')
+        // ->where('dateIn', '>=', $dateStart)->where('dateIn', '<=', $dateEnd)->groupBy('mat_id')->get();
+
+        
 
         return (view('report/orderMaterialReport', [
             'dateS' => Normalization::beautify_date_from_str($dateStart),
@@ -205,10 +262,30 @@ class ReportController extends Controller
             'expenseRows' => $expense,
             'expenseAmountSumm' => $expenseAmountSumm,
             'orderSumm' => $orderSumm,
-            'expenseSumm' => $expenseSumm
+            'expenseSumm' => $expenseSumm,
+            'materials' => $ass,
+            'matItog' => $itogs,
+            'countItog' => $countItog,
         ]));
     }
 
+
+    public static function countItog($ass) {
+
+        $arr = array();
+
+        foreach ($ass as $i) {
+            $start = is_null($i->start_amount)  ? 0 : $i->start_amount;
+            $income = is_null($i->income)  ? 0 : $i->income;
+            $expense = is_null($i->expense)  ? 0 : $i->expense;
+
+            $arr[] = $start + $income - $expense;
+             
+
+            # code...
+        }
+        return $arr;
+    }
 
 
     public function workerForm(Request $request)
@@ -296,7 +373,6 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
-
         $labels = ReportController::getInterval($dateStart, $dateEnd);
 
         $data = ReportController::computeProfit($labels);
@@ -304,6 +380,10 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         for ($i = 0; $i < count($labels); $i++) {
             $labels[$i] = Normalization::beautify_date_from_str($labels[$i]);
         }
+
+
+        
+
 
         $labels = array_slice($labels, 1);
         $labelsJ = ReportController::encodeToJson($labels);
@@ -315,7 +395,7 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $en =  $data[count($data) - 1];
 
         $seDiff = ReportController::diffPercent($st, $en);
-        $avgeDiff = ReportController::diffPercent($avgProfit, $en);
+        $avgeDiff = ReportController::diffPercent($en, $avgProfit);
 
         // return(count($data));
         // return(count($labels));

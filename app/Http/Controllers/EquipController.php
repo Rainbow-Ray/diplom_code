@@ -32,7 +32,7 @@ class EquipController extends Controller
      */
     public function index()
     {
-        $columns = Equip::all();
+        $columns = Equip::all()->sortBy('name');
         return view("equip/equipCard", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 

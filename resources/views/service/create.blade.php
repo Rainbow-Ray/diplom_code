@@ -14,20 +14,20 @@
 
     <form action="/{{$rootURL}}" method="POST">
         @csrf
-        <h2>Добавить услугу</h2>
+        <h2 class="start1 end7">Добавить услугу</h2>
 
-        <div>
+        <div class="labelTop start1 end3">
             <label for="name">Наименование:</label>
             <input type="text" name="name" id="name" required>
         </div>
 
-        <div>
+        <div class="labelTop start3 end4">
             <label for="cost">Стоимость:</label>
             <input type="money" name="cost" id="cost" required>
         </div>
 
 
-        <div class="col1-4 receiptData">
+        <div class="start1 end4 receiptData">
             <h3 class="col1-5">Навыки, необходимые для выполнения услуги</h3>
             <select id="skill" name="skillSelect" class="col1-3">
                 @foreach ($skills as $skill)
@@ -36,17 +36,17 @@
             </select>
             <button type="button" class="addSkill col2-3">Добавить</button>
 
-            <table class="col1-2">
+            <table class="start1 end2">
                 <tbody class="skills">
                     <tr>
                         <th>Название</th>
                     </tr>
                     </tbody>
             </table>
-            <button type="button" class="deleteSkill col2-3">Удалить</button>
+            <button type="button" class="deleteSkill start2 end3">Удалить</button>
 
         </div>
     
-        <input type="submit" value="Отправить">
+        <input type="submit" class="beautyButton submitButton rstart3 end7"  value="Отправить">
     </form>
     @endsection

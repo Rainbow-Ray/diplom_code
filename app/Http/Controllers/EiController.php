@@ -25,7 +25,7 @@ class EiController extends DictController
      */
     public function index()
     {
-        $columns = Ei::all();
+        $columns = Ei::all()->sortBy('name');
         return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
 
     }

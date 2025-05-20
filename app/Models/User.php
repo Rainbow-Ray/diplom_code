@@ -23,6 +23,7 @@ class User extends Authenticatable
         'role_id',
         'email',
         'password',
+        'worker_id'
     ];
 
     /**
@@ -45,17 +46,33 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function role(){
+    public function getRoles(){
         return $this->belongsToMany(Role::class, 'UserRole', 'user_id', 'role_id');
          
     }
     public function roles(){
         $arr = array();
-        $roles = $this->role;
+        $roles = $this->getRoles;
         foreach ($roles as $role) {
 
             $arr[] = $role->name;
         }
         return $arr;
+    }
+
+    public function hasRole($roleNeed){
+        $arr = array();
+        $roles = $this->getRoles;
+        foreach ($roles as $role) {
+
+            $arr[] = $role->name;
+        }
+
+        return in_array($roleNeed,$arr);
+    }
+
+    public function worker()  {
+        return $this->belongsTo(Worker::class, 'worker_id')->withDefault();
+        
     }
 }

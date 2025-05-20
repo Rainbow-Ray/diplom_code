@@ -1,14 +1,27 @@
+@section('title')
+    <title>Заказ {{$item->service->name }}</title>
+
+@endsection
+
 @section('header')
     Заказ №{{$item->id}} {{$item->service->name}}
 @endsection
+
 @section('cardData')
     <x-order-card :order="$item"/>
+                <a href="{{ url('order/' . strval($item->id) . '/edit', []) }}">
+                <button class="addButton beautyButton">Добавить изделия</button>
+            </a>
+
+                <a class="right" target='_blank' href="{{ url('material/exp', []) }}">
+                <button class="addButton beautyButton">Расход материала</button>
+            </a>
+
 @endsection
 
 @section('cardDetails')
 <h3>Выдачи по заказу</h3>
 <x-order-out :order="$item"/>
-
 
 {{-- <table>
     <tr>

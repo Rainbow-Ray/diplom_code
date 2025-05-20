@@ -19,9 +19,13 @@ class Service extends Model
     ];
 
 
-    public function skills()
+    public function workers()
     {
-        return $this->belongsToMany(Skill::class, 'ServiceSkill', 'service_id', 'skill_id');
+        return $this->belongsToMany(Worker::class, 'WorkerService', 'service_id', 'worker_id');
     }
+    // public function skills()
+    // {
+    //     return $this->belongsToMany(Skill::class, 'ServiceSkill', 'service_id', 'skill_id');
+    // }
 
 }

@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use App\Models\LockType;
 use App\Models\Color;
 use App\Models\Country;
 use App\Models\Ei;
@@ -36,52 +33,5 @@ class LockTypeController extends DictController
         'types'=> $types,
         'category'=> $cats,
     ]);
-    }
-
-
-
-    public function index()
-    {
-        $columns = LockType::all();
-        return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
-
-    }
-
-    public function create() : View
-    {
-        return parent::p_create($this::rootURL,  $this::storeTitle,$this::storeFormHeader);
-    }
-
-    public function store(Request $request)
-    {
-        $lType = new LockType();
-        return parent::p_store($lType, $request, $this::rootURL);
-    }
-
-    public function show(string $id)
-    {
-        $lType = LockType::find($id);
-        return parent::p_show($lType);
-
-    }
-
-    public function edit(string $id) : View
-    {
-        $lType = LockType::find($id);
-
-        return parent::p_edit($lType,  $this::rootURL, $this::editTitle, $this::editFormHeader,
-        $this::storeTitle, $this::storeFormHeader);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $lType = LockType::find($id);
-        return parent::p_update($request, $lType, $this::rootURL);
-    }
-
-    public function destroy($id)
-    {
-        $lType = LockType::find($id);
-        return parent::p_destroy($lType, $this::rootURL);
     }
 }

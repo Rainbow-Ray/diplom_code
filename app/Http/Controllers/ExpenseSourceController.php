@@ -21,7 +21,7 @@ class ExpenseSourceController extends DictController
 
     public function index()
     {
-        $columns = ExpenseSource::all();
+        $columns = ExpenseSource::all()->sortBy('name');
         return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
     }
 

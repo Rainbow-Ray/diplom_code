@@ -47,7 +47,8 @@ class RolesPolicy
         || in_array('economist', $roles)  
         || in_array('admin', $roles)  
         || in_array('manager', $roles)  
-        || in_array('master', $roles)  
+        || in_array('master', $roles)
+        || !is_null($user->email)
         ){
             return true;
         }

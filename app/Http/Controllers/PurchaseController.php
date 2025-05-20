@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\Item;
 use App\Http\Helpers\PurchasedItem;
 use App\Http\Utils\Utils;
+use App\Models\Equip;
+use App\Models\Material;
 use App\Models\PurchaseRow;
 
 class PurchaseController extends Controller
@@ -28,7 +30,7 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $columns = Purchase::all();
+        $columns = Purchase::all()->sortByDesc('date');;
         foreach ($columns as $i) {
             $i['date'] = Normalization::beautify_date_from_str($i['dateCreated']);
         }
@@ -36,7 +38,6 @@ class PurchaseController extends Controller
             'items' => $columns,
             'rootURL' => $this::rootURL
         ]);
-
     }
 
     /**
@@ -48,13 +49,15 @@ class PurchaseController extends Controller
         $types = MaterialType::all();
         $eis = Ei::all();
         $equipCat = EquipType::all();
+        $num = Purchase::defNumber();
 
         return view("purchase/create", [
             'cats' => $cats,
             'types' => $types,
             'eis' => $eis,
+            'number' => $num,
             'equipCat' => $equipCat,
-            'req'=> null,
+            'req' => null,
             'rootURL' => $this::rootURL
         ]);
     }
@@ -64,13 +67,17 @@ class PurchaseController extends Controller
         $types = MaterialType::all();
         $eis = Ei::all();
         $equipCat = EquipType::all();
+        $num = Purchase::defNumber();
+
         $req = ModelRequest::findOrFail($reqId);
         return view("purchase/create", [
             'cats' => $cats,
             'types' => $types,
             'eis' => $eis,
+            'number' => $num,
+
             'equipCat' => $equipCat,
-            'req'=> $req,
+            'req' => $req,
             'rootURL' => $this::rootURL
         ]);
     }
@@ -83,6 +90,8 @@ class PurchaseController extends Controller
         $purch = new Purchase();
 
         $purch->date = $request['date'];
+        $purch->number = $request['number'];
+
         $purch->save();
 
 
@@ -95,16 +104,23 @@ class PurchaseController extends Controller
                 $row->name = $item->name;
                 $row->mat_id = $item->mat_id;
                 $row->equip_id = $item->equip_id;
-                $row->ei_id =  $item->ei;
+                // $row->ei_id =  $item->ei;
                 $row->price = $item->price;
 
                 $row->purch_id = $purch->id;
 
                 $row->save();
+
+                if(!is_null($row->mat_id )){
+                    Material::add($row->mat_id, $row->count, $request['date']);
+                }
+                if(!is_null($row->equip_id )){
+                    Equip::addEquip();
+
+                }
             }
         }
         return redirect($this::rootURL);
-
     }
 
     /**
@@ -118,7 +134,6 @@ class PurchaseController extends Controller
             'item' => $request,
             'rootURL' => $this::rootURL
         ]);
-
     }
 
     /**
@@ -139,7 +154,7 @@ class PurchaseController extends Controller
                 'types' => $types,
                 'eis' => $eis,
                 'equipCat' => $equipCat,
-                'req'=> null,
+                'req' => null,
                 'rootURL' => $this::rootURL
             ]);
         }
@@ -148,10 +163,9 @@ class PurchaseController extends Controller
             'types' => $types,
             'eis' => $eis,
             'equipCat' => $equipCat,
-            'req'=> null,
+            'req' => null,
             'rootURL' => $this::rootURL
         ]);
-
     }
 
     /**
@@ -163,6 +177,8 @@ class PurchaseController extends Controller
 
         if (!is_null($pur)) {
             $pur->date = $request['date'];
+            $pur->number = $request['number'];
+
 
             $old = [];
             foreach ($pur->rows as $i) {
@@ -182,7 +198,7 @@ class PurchaseController extends Controller
                     $row->name = $item->name;
                     $row->mat_id = $item->mat_id;
                     $row->equip_id = $item->equip_id;
-                    $row->ei_id =  $item->ei;
+                    // $row->ei_id =  $item->ei;
                     $row->price = $item->price;
 
                     $row->purch_id = $pur->id;
@@ -192,7 +208,6 @@ class PurchaseController extends Controller
             Utils::UpdateItems($old, $new);
         }
         return redirect($this::rootURL);
-
     }
 
     /**

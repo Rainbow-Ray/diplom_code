@@ -17,4 +17,13 @@ class UserRole extends Model
         'role_id',
     
     ];
+
+
+        static function create($user_id, $role_id){
+        $model = new UserRole();
+        $model->user_id = $user_id;
+        $model->role_id = $role_id;
+        $model->save();
+    }
+
 }

@@ -14,6 +14,6 @@
     <td class="tItemCount"> {{ $item->count }}</td>
     @endif
     
-    <td> {{ $item->ei->name }}</td>
+    <td> {{ $item->material()->ei->name }}</td>
 
 </tr>

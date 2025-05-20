@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Normalizators\Normalization;
 use App\Http\Normalizators\ReceiptNormalization;
 use App\Models\Order;
-use App\Models\OrderOut;
 use App\Models\Receipt;
-use App\Models\Service;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller

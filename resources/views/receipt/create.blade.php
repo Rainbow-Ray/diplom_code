@@ -13,11 +13,18 @@
     <script src=" {{ asset('assets/js/receipt/countSum.js') }}"></script>
 @endsection
 @section('main')
-    <form action="/{{ $rootURL }}" method="POST" class="receiptForm">
+    <form action="/{{ $rootURL }}" method="POST" class="col5">
         @csrf
         <h2>Добавить квитанцию</h2>
 
-        <div class="divcustomer">
+        <div class="labelTop start1">
+            <label for="number">Номер квитанции:</label>
+            <input type="text" name="number" id="number" value="{{ $number }}" required>
+        </div>
+
+
+
+        <div class="labelTop start1 end4">
             <label for="customer">ФИО/Тел.</label>
             <select id="selectCustomer" name="customer">
                 <option value=""></option>
@@ -29,19 +36,34 @@
             </select>
         </div>
 
-        <div class="divitem">
+        <div class="labelTop start4">
+            <label for="dateIn">Дата приема:</label>
+            <input type="date" name="dateIn" id="dateIn" value="{{ date('Y-m-d', time()) }}" required>
+
+        </div>
+        <div class="labelTop">
+            <label for="datePlan">Пред. дата получения:</label>
+            <input type="date" name="datePlan" id="datePlan">
+
+        </div>
+
+
+        <div class="labelTop start1 end3">
             <label for="item">Наименование изделия:</label>
             <input type="text" name="item" id="item" required>
-
         </div>
-        <div class="divCount">
+        <div class="labelTop">
             <label for="count">Количество:</label>
             <input type="number" name="count" id="count" min="1" value="1" required>
-
         </div>
 
-        <div class="divservice">
-            <label for="service">Вид ремонта:</label>
+        <div class="labelTop start5 ">
+            <label for="dateOut">Факт. дата выдачи:</label>
+            <input type="date" name="dateOut" id="dateOut">
+        </div>
+
+        <div class="labelTop start1 end4">
+            <label for="service">Вид ремонта(услуги):</label>
 
             <select id="service" name="service">
                 <option value=""></option>
@@ -51,68 +73,56 @@
                     </option>
                 @endforeach
             </select>
-
         </div>
-        <div class="divcostPred">
+
+        <div class="labelTop price start4">
             <label for="costPred">Пред. стоимость:</label>
             <input type="money" name="costPred" id="costPred">
             <span>руб.</span>
-
-
         </div>
-        <div class="divcostAdd">
+
+        <div class="labelTop price">
             <label for="costAdd">Доплата:</label>
             <input type="money" name="costAdd" id="costAdd">
             <span>руб.</span>
-
         </div>
-        <div class="divdateIn">
-            <label for="dateIn">Дата приема:</label>
-            <input type="date" name="dateIn" id="dateIn" value="{{ date('Y-m-d', time()) }}" required>
-
-        </div>
-        <div class="divcost">
-            <label for="cost">Стоимость ремонта:</label>
-            <input type="money" name="cost" id="cost">
-            <span>руб.</span>
-
-
-        </div>
-        <div class="divdatePlan">
-            <label for="datePlan">Пред. дата получения:</label>
-            <input type="date" name="datePlan" id="datePlan">
-
-        </div>
-        <div class="divdateOut">
-            <label for="dateOut">Дата получения:</label>
-            <input type="date" name="dateOut" id="dateOut">
-
-        </div>
-        <div class="divworker">
-            <label for="selectWorker">Приемщик:</label>
+        <div class="labelTop start1 end3">
+            <label for="selectWorker">Мастер:</label>
             <select id="selectWorker" name="worker">
                 <option value=""></option>
 
                 @foreach ($workers as $worker)
-                    <option value="{{ $worker->id }}">{{ $worker->surname . ' ' . $worker->name . ' // ' . $worker->job->name }}
+                    <option value="{{ $worker->id }}">{{ $worker->surname . ' ' . $worker->name }}
                     </option>
                 @endforeach
             </select>
-
         </div>
-        <div class="divnote">
-            <label for="note">Примечание</label>
-            <input type="text" name="note" id="note">
 
-        </div>
-        <div class="divisUrgent">
+        <div class="divisUrgent center right">
             <label for="isUrgent">Срочный заказ</label>
             <input type="checkbox" name="isUrgent" id="isUrgent">
 
         </div>
-        <div class="divisPaid">
+        <div class="divisPaid center right">
             <label for="isPaid">Оплачено</label>
             <input type="checkbox" name="isPaid" id="isPaid">
+
+        </div>
+
+
+
+        <div class="labelTop price start5">
+            <label for="cost">Конечная стоимость:</label>
+            <input type="money" name="cost" id="cost">
+            <span>руб.</span>
+        </div>
+
+
+
+
+        <div class="labelTop start1">
+            <label for="note">Примечание</label>
+            <input type="text" name="note" id="note">
 
         </div>
 
@@ -130,6 +140,10 @@
                 <input type="money" name="amount" id="payNal">
                 <span> руб.</span>
             </div>
+            <div class="divPaymentMethod divNal">
+                <label for="payNalNum">Номер чека</label>
+                <input type="text" name="payNumber" id="payNalNum">
+            </div>
             <div class="divPaymentMethod divKassa">
                 <table>
                     <thead>
@@ -146,6 +160,6 @@
         </div>
 
 
-        <input type="submit" value="Отправить">
+        <input type="submit" class="submitButton start5 right beautyButton rstart9" value="Отправить">
     </form>
 @endsection

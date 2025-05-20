@@ -26,7 +26,7 @@ class CountryController extends DictController
     {
         //
         // return parent::displayDict($this::storeFormHeader, Country::all(), $this::rootURL);
-        $columns = Country::all();
+        $columns = Country::all()->sortBy('name');
         return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
 
     }

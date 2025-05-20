@@ -25,7 +25,7 @@ class ExpenseController extends Controller
 
     public function index()
     {
-        $columns = Expense::all();
+        $columns = Expense::all()->sortByDesc('date');
         foreach($columns as $i){
             $i->date = Normalization::beautify_date_from_str($i->date);
         }

@@ -19,24 +19,34 @@
 
 @endsection
 @section('main')
-    <form action="/{{$rootURL}}" method="POST" class="receiptForm">
+    <form action="/{{$rootURL}}" method="POST" >
         @csrf
-        <p>Добавить оборудование</p>
-        <label for="name">Название</label>
-        <input type="text" name="name" id="name" required>
-        <label for="count">Количество</label>
-        <input type="number" name="count" id="count"" required>
-        <label for="number">Инвентарный номер</label>
-        <input type="text" name="number" id="number"" required>
-        <label for="equip_type">Тип</label>
-        <select name="equip_type" id="equip_type">
-            @foreach ($equipTypes as $type)
-            <option value="{{$type->id}}"> {{$type->name}}</option>
+        <h2>Добавить оборудование</h2>
+        <div class="labelTop start1 end3">
+            <label for="name">Название</label>
+            <input type="text" name="name" id="name" required>
+        </div>
+                <div class="labelTop start3">
+            <label for="number">Инвентарный номер</label>
+            <input type="text" name="number" id="number"" required>
+        </div>
 
-            @endforeach
-        </select>
+                <div class="labelTop start4 end7">
+            <label for="equip_type">Тип</label>
+            <select name="equip_type" id="equip_type">
+                @foreach ($equipTypes as $type)
+                <option value="{{$type->id}}"> {{$type->name}}</option>
+                @endforeach
+            </select>
+        </div>
 
 
-        <input type="submit" value="Отправить">
+        <div class="labelTop start1 hide">
+            <label class="hide" for="count">Количество</label>
+            <input class="hide" type="number" name="count" id="count" value="1" required>
+        </div>
+
+
+        <input type="submit" value="Отправить" class="addButton beautyButton right rstart5 end7">
     </form>
 @endsection

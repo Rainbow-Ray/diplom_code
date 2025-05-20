@@ -25,7 +25,7 @@ class IncomeController extends Controller
      */
     public function index()
     {
-        $columns = Income::all();
+        $columns = Income::all()->sortByDesc('date');
         foreach($columns as $i){
             $i = IncomeNormalization::beautify_datetime($i);
         }
@@ -54,6 +54,7 @@ class IncomeController extends Controller
         $income->date = $request['date'];
         $income->amount = $request['amount'];
         $income->source_id = $request['source'];
+        $income->number = $request['number'];
 
         $income->save();
 
@@ -61,8 +62,9 @@ class IncomeController extends Controller
 
     }
 
-    public static function CreateExternal($date, $amount, $receiptId){
+    public static function CreateExternal($number, $date, $amount, $receiptId){
         $income = new Income();
+        $income->number = $number;
         $income->date = $date;
         $income->amount = $amount;
         $income->source_id = 1;

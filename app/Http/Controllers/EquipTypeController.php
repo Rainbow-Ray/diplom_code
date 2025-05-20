@@ -24,7 +24,7 @@ class EquipTypeController extends DictController
      */
     public function index()
     {
-        $columns = EquipType::all();
+        $columns = EquipType::all()->sortBy('name');
         return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
 
     }

@@ -23,6 +23,7 @@ class PurchaseRow extends Model
         'ei_id',
     ];
 
+
     public function item(){
         if($this->mat_id != null){
             return Material::findOrFail($this->mat_id)->name;
@@ -33,6 +34,8 @@ class PurchaseRow extends Model
         }
             return $this->name;
     }
+
+
     public function category(){
         if($this->mat_id != null){
             return Material::findOrFail($this->mat_id)->type->name;
@@ -44,6 +47,14 @@ class PurchaseRow extends Model
             return '';
     }
 
+    public function material() {
+        if($this->mat_id != null){
+            return Material::findOrFail($this->mat_id);
+        }
+
+        return null;
+
+    }
 
 
     public function purchase(){

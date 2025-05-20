@@ -1,21 +1,23 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{$title}}</title>
-</head>
-<body>
+@extends('index')
+@section('title')
+<title>{{$title}}</title>
+@endsection
+
+@section('scripts')
+@endsection
+@section('main')
 
     <form action="/{{$rootURL}}" method="POST">
         @csrf
-        <p>{{$formHeader}}</p>
-        <label for="name">Название</label>
-        <input type="text" name="name" id="name" required>
-        <label for="name">Оклад</label>
-        <input type="number" name="salary" id="salary"" required>
-        <input type="submit" value="Отправить">
+        <h2 class="start1 end7">{{$formHeader}}</h2>
+        <div class="labelTop start1">
+            <label for="name">Название</label>
+            <input type="text" name="name" id="name" required>
+        </div>
+        <div class="labelTop">
+            <label for="name">Оклад</label>
+            <input type="number" name="salary" id="salary"" required>
+        </div>
+        <input type="submit" class="beautyButton submitButton rstart3 end7" value="Отправить">
     </form>
-</body>
-</html>
+@endsection

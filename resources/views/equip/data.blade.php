@@ -11,7 +11,10 @@
 
 
 @section('main')
-        <div class="card">
+<div class="mainHeader"><h1>
+    {{ $item->name }}
+    </h1></div>
+        <div class="">
 
 <div class="itemInfo">
 
@@ -21,15 +24,17 @@
     <span class="cardData">{{$item->number}}</span>
     <span class="cardLabel">Тип:</span>
     <span class="cardData">{{$item->equipType -> name}}</span>
-    <span class="cardLabel">Количество:</span>
-    <span class="cardData">{{$item->count}}</span>
+    {{-- <span class="cardLabel">Количество:</span>
+    <span class="cardData">{{$item->count}}</span> --}}
     <span class="cardLabel">Состояние:</span>
     <span class="cardData">{{$item->state()}}</span>
-    <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}">
-        <button>Редактировать</button>
+
+
+</div>
+        <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}" class="right">
+        <button class="addButton beautyButton right">Редактировать</button>
         </a>
 </div>
-</div>
 
-<a href="{{ url('equip_check/'.strval($item->id).'/create', []) }}"><button>Оценка состояния оборудования</button></a>
+<a href="{{ url('equip_check/'.strval($item->id).'/create', []) }}"><button class="addButton beautyButton">Оценка оборудования</button></a>
 @endsection

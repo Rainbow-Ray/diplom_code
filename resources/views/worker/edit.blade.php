@@ -79,6 +79,35 @@
         <div class="col1-4">
             <h3 class="col1-5">Навыки сотрудника</h3>
             <select id="skill" name="skillSelect" class="col1-3">
+                @foreach ($services as $service)
+                <option value="{{$service->id}}" >{{$service->name}}</option>
+                @endforeach
+            </select>
+            <button type="button" class="addSkill col2-3">Добавить</button>
+            <table class="col1-2">
+                <tbody class="skills">
+                    <tr><th>Название</th></tr>
+
+                    @foreach ($worker->services as $service)
+                        <tr>
+                            <td id='skill{{$service->id}}'> {{$service->name}}
+                                </td> 
+                            <td class='hide'>
+                                 <input type='text' name='skill[]' value='{{$service->id}}' readonly/>
+                            </td>
+                        </tr>
+                    @endforeach
+
+
+                </tbody>
+            </table>
+            <button type="button" class="deleteSkill col2-3">Удалить</button>
+
+        </div>
+
+        {{-- <div class="col1-4">
+            <h3 class="col1-5">Навыки сотрудника</h3>
+            <select id="skill" name="skillSelect" class="col1-3">
                 @foreach ($skills as $skill)
                 <option value="{{$skill->id}}" >{{$skill->name}}</option>
                 @endforeach
@@ -103,7 +132,7 @@
             </table>
             <button type="button" class="deleteSkill col2-3">Удалить</button>
 
-        </div>
+        </div> --}}
 
 
         <input type="submit" value="Отправить">

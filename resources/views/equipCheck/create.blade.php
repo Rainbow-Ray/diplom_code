@@ -23,21 +23,32 @@
 
     <form action="/{{$rootURL}}" method="POST">
         @csrf
-        <p>Состояние оборудования {{$equip->name}}</p>
-        <span>Название</span>
-        <span> {{$equip->name}} </span>
-        <label for="date">Дата проверки</label>
-        <input type="date" name="date" id="date" value="{{ date('Y-m-d', time()) }}" required>
-        <label for="equip_state">Тип</label>
-        <select name="equip_state" id="equip_state">
-            @foreach ($equipStates as $state)
-            <option value="{{$state->id}}"> {{$state->name}}</option>
+        <h2 class="start1 end7">Состояние оборудования {{$equip->name}}</h2>
+        <div class="labelTop start1 end3">
+            <span class="cardLabel">Название</span>
+            <span class="cardData"> {{$equip->name}} </span>
+        </div>
+        <div class="labelTop start3 end6">
+            <span class="cardLabel">Инвентарный номер:</span>
+            <span class="cardData"> {{$equip->number}} </span>
+        </div>
+        <div class="labelTop start1">
+            <label for="date">Дата проверки</label>
+            <input type="date" name="date" id="date" value="{{ date('Y-m-d', time()) }}" required>
+        </div>
+        <div class="labelTop start2 end4">
+                    <label for="equip_state">Оценка</label>
+
+            <select name="equip_state" id="equip_state">
+                @foreach ($equipStates as $state)
+                <option value="{{$state->id}}"> {{$state->name}}</option>
             
-            @endforeach
-        </select>
+                @endforeach
+            </select>
+        </div>
 
         <input type="text" name="equip" id="equip" value="{{$equip->id}}" readonly class="hide">
 
-        <input type="submit" value="Отправить">
+        <input type="submit" value="Отправить" class="addButton beautyButton right rstart5 end7">
     </form>
 @endsection

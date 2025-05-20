@@ -8,7 +8,7 @@
 
 @section('addButton')
 <a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
-    <button class="addButton">
+    <button class="addButton beautyButton">
         Добавить оборудование
     </button>
 </a>
@@ -19,10 +19,8 @@
 @foreach ($items as $item)
         <div class="card">
 
-            <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
 
-<div class="itemInfo">
+<div class="itemInfo info5">
 
     <span class="cardLabel">Название:</span>
     <span class="cardData">{{$item->name}}</span>
@@ -30,18 +28,22 @@
     <span class="cardData">{{$item->number}}</span>
     <span class="cardLabel">Тип:</span>
     <span class="cardData">{{$item->equipType -> name}}</span>
-    <span class="cardLabel">Количество:</span>
-    <span class="cardData">{{$item->count}}</span>
+    {{-- <span class="cardLabel">Количество:</span>
+    <span class="cardData">{{$item->count}}</span> --}}
     <span class="cardLabel">Состояние:</span>
     <span class="cardData">{{$item->state()}}</span>
 
 </div>
-</div>
-                </a>
+                    <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
 
-    <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}">
+
+
+                <img src="{{asset('assets/css/angle-right-svgrepo-com.svg')}}" alt="">
+                        </a>
+
+    {{-- <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}">
         <button>Редактировать</button>
-        </a>
+        </a> --}}
 
 </div>
 @endforeach

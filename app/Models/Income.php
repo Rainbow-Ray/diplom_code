@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Normalizators\Normalization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,6 +28,11 @@ class Income extends Model
     public function receipt()
     {
         return $this->BelongsTo(Receipt::class, 'receipt_id')->withDefault();
+    }
+
+    public function date() {
+        return Normalization::beautify_dateTime($this->date);
+        
     }
 
 }

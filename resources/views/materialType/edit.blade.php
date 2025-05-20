@@ -1,7 +1,7 @@
 @extends('index')
 
 @section('title')
-<title>Добавить тип материала</title>
+<title>Редактировать тип материала</title>
 @endsection
 
 @section('scripts')
@@ -18,12 +18,12 @@
 
 @endsection
 @section('main')
-    <form action="/{{$rootURL}}" method="POST" class="receiptForm">
+    <form action="/{{$rootURL}}" method="POST">
         @csrf
         @method('PUT')
-        <h2>Добавить тип материала</h2>
+        <h2>Редактировать тип материала</h2>
 
-          <div class="divCat">
+          <div class="labelTop start1 end3">
             <label for="category">Категория материала:</label>
             <select id="category" name="category">
               @foreach ($category as $cat)
@@ -41,12 +41,12 @@
           </select>
           </div>
 
-          <div class="divName">
+          <div class="labelTop start3 end5">
             <label for="name">Наименование:</label>
             <input type="text" name="name" id="name" value="{{$type->name}}" required>
             </div>
 
-        <input type="submit" value="Отправить">
+        <input type="submit" class="beautyButton submitButton start6 rstart3" value="Отправить">
     </form>
 @endsection
 

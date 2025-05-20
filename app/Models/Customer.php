@@ -13,6 +13,10 @@ class Customer extends Model
     public $timestamps = false;
     protected $primaryKey = 'id';
 
+    protected $attributes = [
+        'discount' => '0',
+    ];
+
     protected $fillable = [
         'surname',
         'name',
@@ -20,5 +24,4 @@ class Customer extends Model
         'phone',
         'discount',
     ];
-
 }

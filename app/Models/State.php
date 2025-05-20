@@ -13,6 +13,12 @@ class State extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'name'];
+        'name',
+        'state'
+    ];
+
+
+
+
 
 }

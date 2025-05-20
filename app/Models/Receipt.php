@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Normalizators\Normalization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,7 @@ class Receipt extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'number',
         'item',
         'dateIn',
         'cost',
@@ -39,11 +41,34 @@ class Receipt extends Model
         return $this->BelongsTo(Customer::class, 'customer_id')->withDefault();
     }
 
-    public function order() {
+    public function order()
+    {
         return $this->hasOne(Order::class);
     }
-    public function income() {
+    public function income()
+    {
         return $this->hasMany(Income::class);
     }
 
+    public function dateIn()
+    {
+        return Normalization::beautify_date_from_str($this->dateIn);
+    }
+    public function dateOut()
+    {
+        return Normalization::beautify_date_from_str($this->dateOut);
+    }
+    public function datePlan()
+    {
+        return Normalization::beautify_date_from_str($this->datePlan);
+    }
+
+    public static function defNumber()
+    {
+        $num = Purchase::all()->last();
+        if (is_null($num)) {
+            return 0;
+        }
+        return $num->id + 1;
+    }
 }

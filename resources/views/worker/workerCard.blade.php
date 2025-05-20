@@ -8,7 +8,7 @@
 
 @section('addButton')
     <a class="addButtonLink" href="{{ url($rootURL . '/create', []) }}">
-        <button class="addButton">
+        <button class="addButton beautyButton">
             Добавить сотрудника
         </button>
     </a>
@@ -18,41 +18,26 @@
 @section('dictCard')
     @foreach ($items as $item)
         <div class="card">
-            <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
-                    <div class="itemInfo receiptInfo">
-                        <span class="cardLabel">ФИО:</span>
-                        <p class="cardData">{{ $item->surname }} {{ $item->name }}
-                            {{ $item->patronym }}</p>
+                <div class="itemInfo workerInfo">
+                    <span class="cardLabel">ФИО:</span>
+                    <p class="cardData">{{ $item->surname }} {{ $item->name }}
+                        {{ $item->patronym }}</p>
 
-                        <span class="cardLabel">Должность:</span>
-                        <p class="cardData">{{ $item->job->name }}</p>
+                    <span class="cardLabel">Должность:</span>
+                    <p class="cardData">{{ $item->job->name }}</p>
 
-                        <span class="cardLabel">Телефон:</span>
-                        <p class="cardData">{{ $item->phone }}</p>
-                        <span class="cardLabel">email:</span>
-                        <p class="cardData">{{ $item->email }}</p>
-                    </div>
+                    <span class="cardLabel">Телефон:</span>
+                    <p class="cardData">{{ $item->phone }}</p>
+                    <span class="cardLabel">email:</span>
+                    <p class="cardData">{{ $item->email }}</p>
+                </div>
 
-                    <div class="orderDetailLabel">
-                        <span class="buttonDetail"></span>
+                                            <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
 
-                        <div class="orderDetail">
-                            <div class="itemInfo orderInfo">
-                                <span class="cardLabel">Паспорт:</span>
-                                <span class="cardData">{{ $item->passSerie }}</span>
-                                <span class="cardData">{{ $item->passNum }}</span>
-                            </div>
 
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
-                    <button>Редактировать</button>
-                </a>
-            </div>
+
+                <img src="{{asset('assets/css/angle-right-svgrepo-com.svg')}}" alt="">
+                        </a>
 
         </div>
     @endforeach

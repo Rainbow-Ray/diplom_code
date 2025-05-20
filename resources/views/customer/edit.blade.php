@@ -10,11 +10,15 @@
 @endsection
 @section('main')
 
+{{-- <div class="mainHeader"><h1>
+   Редактировать данные клиента
+    </h1></div> --}}
+
     <form action="/{{$rootURL}}/{{$customer->id}}" method="POST">
         @csrf
         @method('PUT')
 
-        <h2>Редактировать данные клиента</h2>
+        <h2 class="start1 end7">Редактировать данные клиента</h2>
 
         <div>
             <label for="name">Имя</label>
@@ -33,19 +37,19 @@
             <label for="phone">Телефон </label>
             <input type="text"  placeholder="8(000)000-00-00" name="phone" id="phone" value="{{$customer->phone}}" required>
         </div>
-        <div class="divDiscount">
+        <div class="start1">
             <label for="discount">Скидка</label>
             <input type="number" name="discount" id="discount" min="0" max="99" value="{{$customer->discount}}">
             <span>%</span>
         </div>
 
-        <input type="submit" value="Отправить">
+        <input type="submit" class="beautyButton submitButton rstart5 end5" value="Отправить">
     </form>
 
     <form action="/{{$rootURL}}/{{$customer->id}}" method="POST">
         @method('DELETE')
         @csrf
-        <input type="submit" value="Удалить">
+        <input type="submit" class="beautyButton danger" value="Удалить">
     </form>
     @if($errors->any())
 <h4>{{$errors->first()}}</h4>

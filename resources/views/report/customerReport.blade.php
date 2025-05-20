@@ -24,9 +24,9 @@
 <table>
     <thead>
         <th>Клиент </th>
-        <th>Кол-во заказов</th>
-        <th>Средняя сумма чека</th>
-        <th>Персональная скидка</th>
+        <th>Кол-во заказов, шт.</th>
+        <th>Средняя сумма чека, руб.</th>
+        <th>Персональная скидка, %</th>
     </thead>
     <tbody>
         @foreach($rows as $row)
@@ -37,7 +37,7 @@
                 {{$row->patronym}} 
             </td>
             <td>{{$row->countOrder}} </td>
-            <td>{{$row->avg}}</td>
+            <td>{{number_format($row->avg,  2, ',', '')}}</td>
             <td>{{$row->discount}}%</td>
             </tr>
 
@@ -54,8 +54,8 @@
 </table>
 
 
-<p>Средняя сумма чека: {{$avgSum}} руб.</p>
-<p>Средний коэффициент повторных покупок: {{$rpr}}</p>
+<p>Средняя сумма чека: {{number_format($avgSum, 2, ',', '')}} руб.</p>
+<p>Средний коэффициент повторных покупок: {{number_format($rpr, 2, ',', '')}}</p>
 
 @endsection
 

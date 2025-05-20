@@ -18,7 +18,7 @@
 
 <div class="card receiptData">
     <div>
-            <div class="itemInfo orderInfo">
+            <div class="itemInfo info5">
                 <span class="cardLabel">Дата создания:</span>
                 <span class="cardData">{{ $item->dateCreated }}</span>
                 <span class="cardLabel">Дата закрытия:</span>
@@ -28,13 +28,10 @@
                 <span class="cardLabel">Закрыт:</span>
                 <x-bool-span :cond="$item->isDone" class="" />
                 <span class="cardLabel">Создал:</span>
-                <span class="cardData">{{ $item->worker->surname}}{{ $item->worker->name}}{{ $item->worker->patronym}}</span>
+                <span class="cardData">{{ $item->worker->surname}} {{ $item->worker->name}} {{ $item->worker->patronym}}</span>
             </div>
     </div>
 
-    <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
-        <button>Редактировать</button>
-    </a>
 
 </div>
 <div class="receiptData">
@@ -49,15 +46,18 @@
     </div>
     @endforeach
 </div>
+    <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
+        <button class="beautyButton addButton rstart3 end7 right">Редактировать</button>
+    </a>
 
 @if(!$item->isDone)
+<a href="{{url('/request/'.$item->id.'/purchased')}}"><button class="beautyButton addButton">Добавить купленный товар</button></a>
 
 <form action="{{url('/request/'.$item->id.'/done')}}" method="POST">
     @csrf
-    <input type="submit" name='done' value="Закрыть запрос">
+    <input type="submit" name='done' class="beautyButton addButton danger rstart3" value="Закрыть запрос">
 </form>
 
-<a href="{{url('/request/'.$item->id.'/purchased')}}"><button>Добавить купленный товар</button></a>
 
 @endif
 

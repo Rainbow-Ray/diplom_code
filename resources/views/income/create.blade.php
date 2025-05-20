@@ -18,11 +18,11 @@
 
 @endsection
 @section('main')
-    <form action="/{{$rootURL}}" method="POST" class="receiptForm">
+    <form action="/{{$rootURL}}" method="POST" class="">
         @csrf
         <h2>Добавить доход</h2>
 
-          <div class="divSource">
+          <div class="labelTop start1 end4">
             <label for="source">Источник дохода:</label>
             <select id="source" name="source">
               <option value=""></option>
@@ -35,21 +35,28 @@
           </div>
 
 
-          <div class="divdate">
+          <div class="labelTop">
 
             <label for="date">Дата дохода:</label>
             <input type="datetime-local" name="date" id="date" value="{{ (new DateTime('now', new DateTimeZone('Asia/Yekaterinburg')))->format('Y-m-d H:m') }}" required>
             
             
             </div>
+          <div class="labelTop">
 
-          <div class="divAmount">
+            <label for="number">Номер чека:</label>
+            <input type="text" name="number" id="number" value="">
+            </div>
+
+          <div class="start1 end3">
             <label for="amount">Сумма:</label>
             <input type="money" name="amount" id="amount"> 
-            <span>руб.</span>
+                                  <span>руб.</span>
+
           </div>
 
-        <input type="submit" value="Отправить">
+
+        <input type="submit" class="beautyButton submitButton rstart3 end7" value="Отправить">
     </form>
 @endsection
 

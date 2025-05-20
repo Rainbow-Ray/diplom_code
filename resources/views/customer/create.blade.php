@@ -12,7 +12,7 @@
 
     <form action="/{{$rootURL}}" method="POST">
         @csrf
-        <h2>Добавить данные клиента</h2>
+        <h2 class="start1 end7">Добавить данные клиента</h2>
 
         <div>
             <label for="name">Имя</label>
@@ -31,12 +31,12 @@
             <label for="phone">Телефон </label>
             <input type="text"  placeholder="8(000)000-00-00" name="phone" id="phone" required>
         </div>
-        <div class="divDiscount">
+        <div class="start1">
             <label for="discount">Скидка</label>
             <input type="number" name="discount" id="discount" min="0" max="99" value="0">
             <span>%</span>
         </div>
 
-        <input type="submit" value="Отправить">
+        <input type="submit" class="beautyButton submitButton rstart5 end5" value="Отправить">
     </form>
     @endsection

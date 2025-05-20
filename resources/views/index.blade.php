@@ -6,39 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @yield('title')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+
 
     @yield('scripts')
+
+    <script>
+        $(document).ready(function() {
+
+            var url = window.location.href;
+            var href = url.split("/")[3];
+            
+            $('.side_nav_main_ul a').each(function() {
+                var now = $(this).attr('href').split("/")[3];
+                if (now == href) {
+                    $(this).children().addClass('currentNav');
+                    $(this).children().id = 'currentNav';
+                }
+            });
+        });
+    </script>
 
 </head>
 
 <body>
     <header>
         <div class="logo">ИС "КлючСервис+"</div>
-
-        @guest
-        <a href="http://127.0.0.1:8000/login">Вход</a>
-        <a href="http://127.0.0.1:8000/register">Регистрация</a>
-        @endguest
-        
-        @auth
             <div class="logData">
-                <span class="username">А.А.Иванов</span>
+        @guest
+            <a href="http://127.0.0.1:8000/login">Вход</a>
+            <a href="http://127.0.0.1:8000/register">Регистрация</a>
+        @endguest
+
+        @auth
+                <span class="username">{{ Auth::user()->email }}</span>
+                <a href="http://127.0.0.1:8000/user/{{ Auth::user()->id }}/edit">Редактировать</a>
+
                 <form action="http://127.0.0.1:8000/logout" method="POST">
                     @csrf
-                    <input type="submit" value="Выход">
+                    <input type="submit" class="logOut " value="Выход">
                 </form>
-            </div>
         @endauth
+            </div>
 
 
-        <div class="new_order">Новый заказ</div>
     </header>
     <nav class="main_nav">
         <ul>
             <li><a href="http://127.0.0.1:8000/">Главная</a></li>
-            <li>Справочники</li>
             <li><a href="http://127.0.0.1:8000/report">Отчеты</a></li>
-            <li>...</li>
         </ul>
     </nav>
     <nav class="side_nav">
@@ -67,9 +83,9 @@
             <a href="http://127.0.0.1:8000/service">
                 <li>Услуги</li>
             </a>
-            <a href="http://127.0.0.1:8000/skill">
+            {{-- <a href="http://127.0.0.1:8000/skill">
                 <li>Навыки</li>
-            </a>
+            </a> --}}
             <a href="http://127.0.0.1:8000/income">
                 <li>Доходы</li>
             </a>
@@ -103,7 +119,17 @@
                 <a href="http://127.0.0.1:8000/furniture">
                     <li>Фурнитура</li>
                 </a>
+                <a href="http://127.0.0.1:8000/leather">
+                    <li>Кожа</li>
+                </a>
+                <a href="http://127.0.0.1:8000/matOther">
+                    <li>Прочее</li>
+                </a>
             </ul>
+            <a href="http://127.0.0.1:8000/materialExp">
+                <li>Расход материала</li>
+            </a>
+
             <ul class="sec_ul">Справочники характеристик материала
                 <a href="http://127.0.0.1:8000/country">
                     <li>Страна производства</li>
@@ -117,8 +143,8 @@
                 </a>
             </ul>
 
-            <a href="http://127.0.0.1:8000/state">
-                <li>Состояние оборудования</li>
+            <a href="http://127.0.0.1:8000/equip_type">
+                <li>Тип оборудования</li>
             </a>
 
 
@@ -128,7 +154,9 @@
             <a href="http://127.0.0.1:8000/expense_source">
                 <li>Источник расхода</li>
             </a>
-
+            <a href="http://127.0.0.1:8000/user">
+                <li>Пользователи</li>
+            </a>
         </ul>
     </nav>
 

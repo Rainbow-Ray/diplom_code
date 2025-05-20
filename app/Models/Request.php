@@ -13,6 +13,7 @@ class Request extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'number',
         'dateCreated',
         'dateClosed',
         'isUrgent',
@@ -20,11 +21,22 @@ class Request extends Model
         'worker_id',
     ];
 
-    public function rows(){
-        return $this->hasMany(RequestRow::class,'req_id');
+    public function rows()
+    {
+        return $this->hasMany(RequestRow::class, 'req_id');
     }
-    public function worker(){
+    public function worker()
+    {
         return $this->belongsTo(Worker::class)->withDefault();
     }
 
+    public static function defNumber()
+    {
+        $num = Purchase::all()->last();
+        if (is_null($num)) {
+            return 'п' . 1;
+        }
+        
+        return 'п' . $num->id + 1;
+    }
 }

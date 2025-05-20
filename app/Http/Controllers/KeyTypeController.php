@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use App\Models\KeyType;
 use App\Models\Color;
 use App\Models\Country;
 use App\Models\Ei;
@@ -68,68 +65,5 @@ class KeyTypeController extends DictController
         'types'=> $types,
         'category'=> $cats,
     ]);
-    }
-
-
-
-
-    public function index()
-    {
-        $columns = KeyType::all();
-        return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
-
-    }
-
-    public function create() : View
-    {
-        return parent::p_create($this::rootURL,  $this::storeTitle,$this::storeFormHeader);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $kType = new KeyType();
-        return parent::p_store($kType, $request, $this::rootURL);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $kType = KeyType::find($id);
-        return parent::p_show($kType);
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id) : View
-    {
-        $kType = KeyType::find($id);
-
-        return parent::p_edit($kType,  $this::rootURL, $this::editTitle, $this::editFormHeader,
-        $this::storeTitle, $this::storeFormHeader);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $kType = KeyType::find($id);
-        return parent::p_update($request, $kType, $this::rootURL);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $kType = KeyType::find($id);
-        return parent::p_destroy($kType, $this::rootURL);
     }
 }

@@ -21,7 +21,7 @@ class JobTitleController extends Controller
 
     public function index()
     {
-        $columns = JobTitle::all();
+        $columns = JobTitle::all()->sortBy('name');
         return view("jobTitle/jobTitleCard", ['title' => "Должности", 'items' => $columns, 'rootURL' => $this::rootURL]);
     }
 

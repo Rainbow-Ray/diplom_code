@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Normalizators\Normalization;
 use App\Http\Utils\Utils;
-use App\Models\CategoryFurn;
 use App\Models\Ei;
 use App\Models\EquipType;
-use App\Models\Material;
 use App\Models\MaterialCat;
 use App\Models\MaterialType;
 use App\Models\Worker;
 use App\Models\Request as ModelRequest;
 use App\Models\RequestRow;
 use Illuminate\Http\Request;
-use Symfony\Component\Routing\RequestContext;
 use App\Http\Helpers\Item;
 
 
@@ -32,7 +29,7 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $columns = ModelRequest::all();
+        $columns = ModelRequest::all()->sortByDesc('dateCreated');;
         foreach ($columns as $i) {
             $i['dateCreated'] = Normalization::beautify_date_from_str($i['dateCreated']);
             $i['dateClosed'] = Normalization::beautify_date_from_str($i['dateClosed']);
@@ -66,6 +63,7 @@ class RequestController extends Controller
         $types = MaterialType::all();
         $eis = Ei::all();
         $equipCat = EquipType::all();
+        $number = ModelRequest::defNumber();
 
         return view("request/create", [
             'workers' => $workers,
@@ -73,6 +71,7 @@ class RequestController extends Controller
             'types' => $types,
             'eis' => $eis,
             'equipCat' => $equipCat,
+            'number' => $number,
 
             'rootURL' => $this::rootURL
         ]);
@@ -90,6 +89,7 @@ class RequestController extends Controller
         $req = new ModelRequest();
         $request['isUrgent'] = Normalization::normalize_checkbox($request['isUrgent']);
 
+        $req->number = $request['number'];
         $req->dateCreated = $request['dateCreated'];
         $req->isUrgent = $request['isUrgent'];
         $req->worker_id = $request['worker'];
@@ -105,7 +105,7 @@ class RequestController extends Controller
                 $row->name = $item->name;
                 $row->mat_id = $item->mat_id;
                 $row->equip_id = $item->equip_id;
-                $row->ei_id =  $item->ei;
+                // $row->ei_id =  $item->ei;
                 $row->req_id = $req->id;
                 $row->save();
             }
@@ -191,6 +191,7 @@ class RequestController extends Controller
         if (!is_null($req)) {
 
             $request['isUrgent'] = Normalization::normalize_checkbox($request['isUrgent']);
+             $req->number = $request['number'];
 
             $req->dateCreated = $request['dateCreated'];
             $req->isUrgent = $request['isUrgent'];
@@ -215,7 +216,7 @@ class RequestController extends Controller
                     $row->name = $item->name;
                     $row->mat_id = $item->mat_id;
                     $row->equip_id = $item->equip_id;
-                    $row->ei_id =  $item->ei;
+                    // $row->ei_id =  $item->ei;
                     $row->req_id = $req->id;
                     $new[] = $row;
                 }

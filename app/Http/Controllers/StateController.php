@@ -15,9 +15,8 @@ class StateController extends DictController
     const editFormHeader = "Состояние оборудования";
     public function index()
     {
-        $columns = State::all();
+        $columns = State::all()->sortBy('name');
         return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
-
     }
 
     public function create() : View
@@ -57,4 +56,6 @@ class StateController extends DictController
         $state = State::find($id);
         return parent::p_destroy($state, $this::rootURL);
     }
+
+
 }

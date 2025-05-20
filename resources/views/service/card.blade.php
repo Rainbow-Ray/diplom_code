@@ -8,7 +8,7 @@
 
 @section('addButton')
 <a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
-    <button class="addButton">
+    <button class="addButton beautyButton">
         Добавить услугу
     </button>
 </a>
@@ -18,14 +18,14 @@
 @section('dictCard')
 @foreach ($items as $item)
 <div class="card">
-    <div class="itemInfo customerInfo">
-        <span class="cardLabel">Наименование:</span>
-        <span class="cardData">{{$item->name}}</span>
+    <div class="itemInfo info3">
+        <span class="cardLabel start1 end3">Наименование:</span>
+        <span class="cardData start1 end3">{{$item->name}}</span>
         <span class="cardLabel">Стоимость:</span>
         <span class="cardData">{{$item->cost}} руб.</span>
     </div>
     <a href="{{ url($rootURL.'/'.strval($item->id).'/edit', []) }}">
-        <button>Редактировать</button>
+                <img src="{{asset('assets/css/angle-right-svgrepo-com.svg')}}" alt="">
         </a>
 </div>
 @endforeach

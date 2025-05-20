@@ -50,7 +50,7 @@
     </script>
 @endsection
 @section('main')
-    <form action="/{{ $rootURL }}" method="POST">
+    <form action="/{{ $rootURL }}/{{$item->id}}" method="POST">
         @csrf
         @method('PUT')
         <h2 class="end7">Редактировать материал</h2>
@@ -91,16 +91,16 @@
         </div>
 
 
-        <div class="labelTop">
+        {{-- <div class="labelTop">
             <label for="amount">Количество:</label>
             <input type="number" name="amount" id="amount" min='0' value="{{ $item->amount }}" required>
-        </div>
+        </div> --}}
 
-        <div class="labelTop">
+        {{-- <div class="labelTop">
             <label for="amount">Минимальное кол-во:</label>
             <input type="number" name="min_amount" id="min_amount" min='0' value="{{ $item->min_amount }}"
                 required>
-        </div>
+        </div> --}}
 
         <div class="labelTop start3 end5">
             <label for="ei">Единица измерения:</label>
@@ -148,6 +148,6 @@
             </select>
         </div>
 
-        <input class="start1 end7" type="submit" value="Отправить">
+        <input class="beautyButton submitButton end7 rstart7" type="submit" value="Отправить">
     </form>
 @endsection

@@ -7,7 +7,9 @@ use App\Models\Worker;
 use Illuminate\Http\Request;
 use App\Http\Normalizators\Normalization;
 use App\Http\Utils\Utils;
+use App\Models\Service;
 use App\Models\Skill;
+use App\Models\WorkerService;
 use App\Models\WorkerSkill;
 
 class WorkerController extends Controller
@@ -25,7 +27,6 @@ class WorkerController extends Controller
     {
         $columns = Worker::all();
         return view("worker/workerCard", ['items' => $columns, 'rootURL' => $this::rootURL]);
-
     }
 
     /**
@@ -34,9 +35,18 @@ class WorkerController extends Controller
     public function create()
     {
         $jobs = JobTitle::all();
-        $skills = Skill::all();
-        return view('worker/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader, "jobs" => $jobs, "skills"=>$skills]);
+        $services = Service::all();
+        return view('worker/create', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            "jobs" => $jobs,
+            "services" => $services
+        ]);
+
+        // $skills = Skill::all();
+        // return view('worker/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
+        // "formHeader"=> $this::storeFormHeader, "jobs" => $jobs, "skills"=>$skills]);
 
     }
 
@@ -61,39 +71,72 @@ class WorkerController extends Controller
         $worker->phone = $phone;
         $worker->job_id = $request['job'];
 
-        $worker -> save();
+        $worker->save();
 
-        if(!is_null($request['skill'])){
-            if(count($request['skill']) > 0){
-                foreach($request['skill'] as $skill){
-                    WorkerSkill::create($worker->id, $skill);
+        if (!is_null($request['skill'])) {
+            if (count($request['skill']) > 0) {
+                foreach ($request['skill'] as $skill) {
+                    WorkerService::create($worker->id, $skill);
                 }
-            }    
+            }
         }
+        // if (!is_null($request['skill'])) {
+        //     if (count($request['skill']) > 0) {
+        //         foreach ($request['skill'] as $skill) {
+        //             WorkerSkill::create($worker->id, $skill);
+        //         }
+        //     }
+        // }
 
 
         return redirect($this::rootURL);
     }
 
 
-    static function UpdateSkills($worker,$oldSkills, $newSkills){
+    static function UpdateSkills($worker, $oldSkills, $newSkills)
+    {
         $inter = array_intersect($oldSkills, $newSkills);
         $delete = array_diff($oldSkills, $inter);
         $add = array_diff($newSkills, $inter);
 
-        foreach($delete as $i){
-            WorkerSkill::where('worker_id', $worker->id)->where('skill_id', $i)->delete();
+
+        // return (print_r(
+        //     [
+        
+        //     $oldSkills,
+        //     $newSkills,
+        //     $inter,
+        //     $delete,
+        //     $add,        $inter]));
+
+        foreach ($delete as $i) {
+            WorkerService::where('worker_id', $worker->id)->where('service_id', $i)->delete();
         }
 
-        foreach($add as $i){
-            WorkerSkill::create($worker->id, $i);
+        foreach ($add as $i) {
+            WorkerService::create($worker->id, $i);
         }
     }
+    // static function UpdateSkills($worker, $oldSkills, $newSkills)
+    // {
+    //     $inter = array_intersect($oldSkills, $newSkills);
+    //     $delete = array_diff($oldSkills, $inter);
+    //     $add = array_diff($newSkills, $inter);
 
-    static function showArr($arr){
+    //     foreach ($delete as $i) {
+    //         WorkerSkill::where('worker_id', $worker->id)->where('skill_id', $i)->delete();
+    //     }
+
+    //     foreach ($add as $i) {
+    //         WorkerSkill::create($worker->id, $i);
+    //     }
+    // }
+
+    static function showArr($arr)
+    {
         foreach ($arr as $i) {
             echo $i;
-            }
+        }
     }
 
     /**
@@ -103,11 +146,11 @@ class WorkerController extends Controller
     {
         $worker = Worker::findOrFail($id);
 
-        return view('worker.workerData', ['worker'=>$worker]);
+        return view('worker.workerData', ['worker' => $worker]);
 
 
-        foreach($worker->skills as $i){
-           echo $i->name;
+        foreach ($worker->services as $i) {
+            echo $i->name;
         }
     }
 
@@ -118,22 +161,27 @@ class WorkerController extends Controller
     {
         $worker = Worker::findOrFail($id);
         $jobs = JobTitle::all();
-        $skills = Skill::all();
+        $services = Service::all();
+        // $skills = Skill::all();
 
-        if (!is_null($worker)){
-            return view('worker/edit', ["rootURL" => $this::rootURL,
-            "worker"=> $worker, 
-            'title'=>$this::editTitle, "formHeader"=>$this::editFormHeader, 
-            "skills"=>$skills, "jobs"=>$jobs]);
+        if (!is_null($worker)) {
+            return view('worker/edit', [
+                "rootURL" => $this::rootURL,
+                "worker" => $worker,
+                'title' => $this::editTitle,
+                "formHeader" => $this::editFormHeader,
+                "services" => $services,
+                "jobs" => $jobs
+            ]);
         }
-        return view('worker/create', ["rootURL"=> $this::rootURL,
-         "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader,
-        "skills"=>$skills, "jobs"=>$jobs
-    
-    ]);
+        return view('worker/create', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            "services" => $services,
+            "jobs" => $jobs
 
-
+        ]);
     }
 
     /**
@@ -143,7 +191,7 @@ class WorkerController extends Controller
     {
         $worker = Worker::findOrFail($id);
 
-        if (!is_null($worker)){
+        if (!is_null($worker)) {
             $phone = Normalization::class::normalize_phone($request['phone']);
             $worker->name = $request['name'];
             $worker->surname = $request['surname'];
@@ -159,21 +207,17 @@ class WorkerController extends Controller
             $worker->job_id = $request['job'];
             $worker->save();
 
-            $old = Utils::skillsToArray($worker->skills);
+            $old = Utils::skillsToArray($worker->services);
 
-            if(is_null($request['skill'])){
+            if (is_null($request['skill'])) {
                 $new =  [];
-            }
-            else{
+            } else {
                 $new =  $request['skill'];
             }
 
             $this::UpdateSkills($worker, $old, $new);
-        
         }
-        return redirect( $this::rootURL);
-
-
+        return redirect($this::rootURL);
     }
 
     /**
@@ -183,7 +227,6 @@ class WorkerController extends Controller
     {
         $worker = Worker::findOrFail($id);
         $worker->delete();
-        return redirect( $this::rootURL);
-
+        return redirect($this::rootURL);
     }
 }

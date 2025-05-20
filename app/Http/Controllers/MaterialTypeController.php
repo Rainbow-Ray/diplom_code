@@ -16,7 +16,6 @@ class MaterialTypeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
     }
 
     /**
@@ -24,19 +23,19 @@ class MaterialTypeController extends Controller
      */
     public function index()
     {
-        $columns = MaterialType::all();
+        $columns = MaterialType::all()->sortBy('name');
         
         return view("materialType/card", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 
     public function apiIndex($cat){
         $types = MaterialType::where('cat_id', $cat)->get();
-        echo json_encode($types, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        return json_encode($types, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 
     public function apiAll(){
         $types = MaterialType::all();
-        echo json_encode($types, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        return json_encode($types, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 
     /**

@@ -11,9 +11,15 @@
 
     <div class="dates">
         <span class="cardLabel">От</span>
-        <span class="cardData">{{$order->receipt->dateIn}}</span>
+        <span class="cardData">{{$order->receipt->dateIn()}}</span>
         <span class="cardLabel">к</span>
-        <span class="cardData">{{$order->receipt->datePlan}}</span>
+        <span class="cardData">{{$order->receipt->datePlan()}}</span>
+    </div>
+    <div class="dates">
+        @if ($order->isUrgent)
+                    <span class="cardData notDone">Срочный</span>
+
+        @endif
     </div>
     <div class="orderCount col1-3">
         <span class="cardData">По квитанции:</span>

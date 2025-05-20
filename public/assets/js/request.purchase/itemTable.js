@@ -15,6 +15,7 @@ export class ApiClient {
     static async fetchItems(item_type, filters = {}) {
         const url = `/api/items?${new URLSearchParams({ item_type, ...filters })}`;
         const response = await fetch(url);
+        
         return await response.json();
     }
 
@@ -61,28 +62,30 @@ export class ItemStore{
     isAdded(id) {
         return this.items.some(e => e.id === id)
     }
+
+
+
+    delete($id){
+        const index = this.items.indexOf($id);
+
+        this.items.splice(index, 1); 
+    }
     
 }
 
 
 function appendSearchItem(element) {
     $(".searchItemsTbody").append(
-        '<tr><td><input type="radio" name="material" class="hide check" id="' + element['id'] + '">' +
+        '<tr><td><input type="radio" name="material"  ei="' + element['ei'] + '" class="hide check" id="' + element['id'] + '">' +
         element['name'] + '</td> </tr>'
     );
+    
 }
 
 function appendItem(json) {
     var selector = '.itemTbody';
     if (!$('.itemPurchasedTbody').length) {
         selector = '.itemTbody';
-    }
-    else {
-        selector = '.itemPurchasedTbody';
-    }
-    console.log(selector);
-    console.log(json);
-
     $(selector).append(
         `<tr>
             <td>
@@ -98,6 +101,36 @@ function appendItem(json) {
             <td> `+ json['eiName'] + `</td>
             </tr>`
     );
+
+    }
+    else {
+        selector = '.itemPurchasedTbody';
+
+            $(selector).append(
+        `<tr>
+            <td>
+            <input type='text' name='itemCheck[].Key'
+            class='hide check `+ json['frontPrefId'] + `' 
+            id='item`+ json['frontPrefId'] + `' 
+            value='` + json['frontValue'] + `' readonly>
+            <input type='text' name='itemCheck[].Value' 
+            class='hide `+ json['frontPrefId'] + `' 
+            value='`+ json['itemQuantity'] + `'>
+            `+ json['name'] + `</td>
+            <td> `+ json['count'] + `</td>
+            <td> `+ json['price'] + `</td>
+            <td> `+ json['eiName'] + `</td>
+            </tr>`
+    );
+
+    }
+    console.log(selector);
+    console.log(json);
+
+
+
+
+    
 }
 
 function addError(field, error){
@@ -108,7 +141,6 @@ function removeErrors(){
 }
 
 export function addItem(itemStore) {
-
     removeErrors();
 
     var count = $('#count').val();
@@ -134,15 +166,15 @@ export function addItem(itemStore) {
             are_adding = true;
         }
     }
-    else {
-        var id = itemStore.itemID;
-        var name = $('#name').val();
-        $('#name').val('');
-        itemStore.itemID += 1;
-        it = new item(prefix, id);
-        itemStore.items.push(it);
-        are_adding = true;
-    }
+    // else {
+    //     var id = itemStore.itemID;
+    //     var name = $('#name').val();
+    //     $('#name').val('');
+    //     itemStore.itemID += 1;
+    //     it = new item(prefix, id);
+    //     itemStore.items.push(it);
+    //     are_adding = true;
+    // }
 
     if (are_adding) {
         if(isPurchased){
@@ -179,17 +211,14 @@ export function addItem(itemStore) {
                         addError(k, json['errors'][k])
                     })    
                 }
-                else{
+                else{                    
                     updateTable(json);
                     itemStore.items.push(it);
                     $('#itemName').val('');
-                    $('#price').val('');
+                    $('#price').val('1');
                 }        
             });
     }
-    HighlightConcreteElement('.itemTbody :last-child');
-    HighlightConcreteElement('.itemPurchasedTbody :last-child');
-    bindEditingFunc('.itemPurchasedTbody :last-child')
 }
 
 
@@ -205,12 +234,16 @@ function updateSearchedItems(json) {
     selectSearchItem();
     putInTextBox();
     HighlightElement("searchItemsTbody");
+
 }
+
+
 
 function get_materials(cat_id, type_id) {
     var resp = ApiClient.fetchItems('material', { cat: cat_id, type: type_id });
-
+    
     resp.then(function (json) {
+        
         updateSearchedItems(json)
     });
 }
@@ -224,12 +257,26 @@ function get_equips(type_id) {
 
 function putInTextBox() {
     $('.searchItemsTbody tr').on('click', function (e) {
+
         textInTextBox(e.currentTarget.innerText);
+        eiNameSet($(this).find('input').attr('ei'));
     })
+}
+function eiNameSet(ei) {
+    $('#ei').text(ei);
+
+}
+function selectedItemSet(id) {
+    $('#selectedItem').val(id);
+    console.log('asss');
+    
+
 }
 
 function textInTextBox(text) {
     $('#itemName').val(text);
+
+
 }
 
 function appendOption(select_id, element) {
@@ -257,13 +304,15 @@ export function selectSearchItem() {
         var selected_tr_item = $('.searchItemsTbody').find('#' + item_id).parent().parent();
         SelectRow(selected_tr_item);
         textInTextBox($('.searchItemsTbody').find('#' + item_id).parent()[0].innerText);
+        eiNameSet($('.searchItemsTbody').find('#' + item_id).attr('ei'));
+
     }
 }
 
 function get_types(cat_id) {
     fetch("http://127.0.0.1:8000/api/types/" + cat_id).then(function (response) {
         response.json().then(function (json) {
-            populateSelectWithDefault("#type", json);
+            populateSelectWithDefault("#type", json);            
         }
         );
     });
@@ -276,12 +325,21 @@ function populateSelectWithDefault(selectId, json) {
     json.forEach(element => {
         appendOption(selectId, element);
     });
+        $(selectId).trigger('change');
+
 }
 
 export function populateSearchItemTable() {
     if ($('.itemType:checked').val() == 'material') {
         var cat_id = $("#cat").find(':selected').val();
         var type_id = $("#type").find(':selected').val();
+        if(type_id==null){
+            type_id = '';
+        }
+        if( cat_id==null){
+            cat_id = '';
+
+        }
         get_materials(cat_id, type_id);
     }
     else {
@@ -292,25 +350,53 @@ export function populateSearchItemTable() {
 
 
 function updateTable(data) {
+    console.log(data);
+    
     appendItem(data);
+        bindEditingFunc('.itemPurchasedTbody :last-child');
+
+    HighlightConcreteElement('.itemTbody :last-child');
+    HighlightConcreteElement('.itemPurchasedTbody :last-child');
+    
+
 }
 
-export function deleteItem() {
+export function deleteItem(itemStore) {
+    if($('.itemTbody > .selected input[type="text"]').length>1){
+         var id =   $('.itemTbody > .selected input[type="text"]').last().val();
+    }
+    else if($('.itemPurchasedTbody > .selected input[type="text"]').length>1){
+         var id =   $('.itemPurchasedTbody > .selected input[type="text"]').last().val();
+
+    }
+             itemStore.delete();
+
+     console.log(id);
+
+
     $('.itemTbody > .selected').remove();
     $('.itemPurchasedTbody > .selected').remove();
     $('#itemName').val('');
+
+
+     
+
 }
 
 function showFilterBox() {
     $('.filterBox').show();
     $('.filterResult').show();
     $('#itemName').show();
+        $('.filters').show();
+
 }
 
 function hideFilterBox() {
     $('.filterBox').hide();
     $('.filterResult').hide();
     $('#itemName').hide();
+    $('.filters').hide();
+    
 
 }
 
@@ -352,15 +438,19 @@ export function editPurchasedItem() {
     var countNode = $('.itemPurchasedTbody .selected .tItemCount')[0];
     var countEi = $('.itemPurchasedTbody .selected .tItemName input.countEi').val();
     var priceNode = $('.itemPurchasedTbody .selected .tItemPrice')[0];
-
+    var ei = $('.itemPurchasedTbody .selected td').last()[0].innerText;
+    
     var name = nameNode == undefined ? '' : nameNode.innerText;
-    var countN = countNode == undefined ? '0' : countNode.innerText;
-    var count = countN.split(" ")[0];
-    var ei = countEi.length > 2 ? countEi.split(" ")[1] : '';
+    var countN = countNode == undefined ? '0' : countNode.innerText.split('/')[1];
+    var count = countN.trim(" ");
+    console.log(count);
+    
+    // var ei = countEi.length > 2 ? countEi.split(" ")[1] : '';
 
     var price = priceNode == undefined ? '0' : priceNode.innerText;
-
-    prepareTextBoxsToEdit(name, count[0], ei, price, id);
+    selectedItemSet(id);
+    
+    prepareTextBoxsToEdit(name, count, ei, price, id);
 }
 
 function prepareTextBoxsToEdit(name, count, ei, price) {
@@ -371,8 +461,10 @@ function prepareTextBoxsToEdit(name, count, ei, price) {
 
     $('#itemName').val(name);
     $('#count').val(count);
-    $('#ei').val(ei);
-    $('#ei').trigger('change')
+    eiNameSet(ei);
+    
+    // $('#ei').val(ei);
+    // $('#ei').trigger('change')
 
     $('#price').val(price);
     $('#itemName').addClass('edit');
@@ -381,24 +473,31 @@ function prepareTextBoxsToEdit(name, count, ei, price) {
 }
 
 export function editItem() {
-    var prevCount = $('.itemPurchasedTbody .selected .tItemCount')[0].innerText.split('/')[1];
+    var id = $('#selectedItem').val();
+
+    var tr = $('.itemPurchasedTbody').find('.'+id).parent().parent();
+
+    // var prevCount = $('.itemPurchasedTbody .selected .tItemCount')[0].innerText.split('/')[1];
+    var prevCount = $(tr).find('.tItemCount')[0].innerText.split('/')[1];
     var count = $('#count').val();
     var price = $('#price').val();
-    var ei = $('#ei').find(':selected').val();
-    if (ei == null || ei == undefined || ei == '') {
-        ei = 'null';
-    }
+    // var ei = $('#ei').find(':selected').val();
+    // if (ei == null || ei == undefined || ei == '') {
+    //     ei = 'null';
+    // }
 
-    $('.itemPurchasedTbody .selected .tItemName .countEi').val(count + '|' + ei + '|' + price);
-    $('.itemPurchasedTbody .selected .tItemCount')[0].innerText = count + ' / ' + prevCount;
-    $('.itemPurchasedTbody .selected .tItemPrice')[0].innerText = price;
+    $(tr).find('.countEi').last().attr('value', count + '|' + price);
+    $(tr).find('.tItemCount')[0].innerText = count + ' / ' + prevCount;
+    $(tr).find('.tItemPrice')[0].innerText = price;
+
+    // $('.itemPurchasedTbody .selected .tItemName').find('.countEi').val(count + '|' + price);
+    // $('.itemPurchasedTbody .selected .tItemCount')[0].innerText = count + ' / ' + prevCount;
+    // $('.itemPurchasedTbody .selected .tItemPrice')[0].innerText = price;
 
 
     console.log($('.itemPurchasedTbody .selected .tItemName .countEi').val());
     console.log($('.itemPurchasedTbody .selected .tItemCount')[0].innerText);
     console.log($('.itemPurchasedTbody .selected .tItemPrice')[0].innerText);
-    console.log("ADSSDDASSDAAD");
-
     resetEditFields();
 
 }
@@ -410,16 +509,18 @@ export function resetEditFields() {
     $('#itemAdd').removeClass('hide');
 
     $('#itemName').val('');
-    $('#count').val(0);
-    $('#ei option[value=""]').prop('selected', true);
+    $('#count').val(1);
+    // $('#ei option[value=""]').prop('selected', true);
     $('#price').val('1');
     $('#itemName').removeClass('edit');
     showFilterBox();
+    $('.itemPurchasedTbody').find(".selected").removeClass('selected');
 }
 
 function bindEditingFunc(selector) {
     $(selector).on('click', function () {
         editPurchasedItem();
+
     })
 }
 

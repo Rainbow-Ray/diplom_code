@@ -12,35 +12,29 @@
 @endsection
 
 @section('dictCard')
-<div>
+<div class="mainBlock">
     <h2>Доходы и расходы предприятия за период</h2>
-    <p></p>
-    <a href="http://127.0.0.1:8000/report/incomes"><button>Сфоромировать</button></a>
+    <a href="http://127.0.0.1:8000/report/incomes"><button class="addButton beautyButton">Сфоромировать</button></a>
 </div>
-<div>
+<div class="mainBlock">
     <h2>Доход за заказы</h2>
-    <p></p>
-    <a href="http://127.0.0.1:8000/report/orderIncome"><button>Сфоромировать</button></a>
+    <a href="http://127.0.0.1:8000/report/orderIncome"><button class="addButton beautyButton">Сфоромировать</button></a>
 </div>
-<div>
+<div class="mainBlock">
     <h2>Затраченные материалы за период </h2>
-    <p></p>
-    <a href="http://127.0.0.1:8000/report/orderMaterial"><button>Сфоромировать</button></a>
+    <a href="http://127.0.0.1:8000/report/orderMaterial"><button class="addButton beautyButton">Сфоромировать</button></a>
 </div>
-<div>
+<div class="mainBlock ">
     <h2>Количество выполненных заказов на мастера   </h2>
-    <p></p>
-    <a href="http://127.0.0.1:8000/report/worker"><button>Сфоромировать</button></a>
+    <a href="http://127.0.0.1:8000/report/worker"><button class="addButton beautyButton">Сфоромировать</button></a>
 </div>
-<div>
+<div class="mainBlock">
     <h2>Постоянные клиенты    </h2>
-    <p></p>
-    <a href="http://127.0.0.1:8000/report/customer"><button>Сфоромировать</button></a>
+    <a href="http://127.0.0.1:8000/report/customer"><button class="addButton beautyButton">Сфоромировать</button></a>
 </div>
-<div>
+<div class="mainBlock">
     <h2>Изменение прибыли предприятия за период </h2>
-    <p></p>
-    <a href="http://127.0.0.1:8000/report/incomeMedian"><button>Сфоромировать</button></a>
+    <a href="http://127.0.0.1:8000/report/incomeMedian"><button class="addButton beautyButton">Сфоромировать</button></a>
 </div>
 
 

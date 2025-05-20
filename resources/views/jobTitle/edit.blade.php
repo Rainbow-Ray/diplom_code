@@ -1,30 +1,30 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{$title}}</title>
-</head>
-<body>
+@extends('index')
+@section('title')
+<title>{{$title}}</title>
+@endsection
+
+@section('scripts')
+@endsection
+@section('main')
     <form action="/{{$rootURL}}/{{$id}}" method="POST">
         @csrf
         @method('PUT')
-        <p>{{$formHeader}}</p>
-        <label for="name">Название</label>
-        <input type="text" name="name" id="name" value="{{$name}}" required>
-        <label for="name">Оклад</label>
-        <input type="number" name="salary" id="salary" value="{{$salary}}" required>
-        <input type="submit" value="Отправить">
+        <h2 class="start1 end7">{{$formHeader}}</h2>
+        <div class="labelTop start1">
+            <label for="name">Название</label>
+            <input type="text" name="name" id="name" value="{{$name}}" required>
+        </div>
+        <div class="labelTop ">
+            <label for="name">Оклад</label>
+            <input type="number" name="salary" id="salary" value="{{$salary}}" required>
+        </div>
+        <input type="submit" class="beautyButton submitButton rstart3 end7" value="Отправить">
         
     </form>
     <form action="/{{$rootURL}}/{{$id}}" method="POST">
         @method('DELETE')
         @csrf
-        <input type="submit" value="Удалить">
+        <input type="submit" class="beautyButton danger" value="Удалить">
     </form>
 
-    <br>
-    <br>
-</body>
-</html>
+@endsection

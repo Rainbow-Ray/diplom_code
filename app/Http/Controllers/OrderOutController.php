@@ -69,8 +69,8 @@ class OrderOutController extends Controller
 
         if($request['isFail'] == 0){
             if($request['payment']==1){
-                IncomeController::CreateExternal($request['date'], $request['amount'], $receipt->id);
-            }
+                IncomeController::CreateExternal($request['payNumber'],$request['date'], $request['amount'], $receipt->id);
+            } 
             else if($request['payment']==2){
                 IncomeController::UpdateExternal($request, $receipt->id);
             }

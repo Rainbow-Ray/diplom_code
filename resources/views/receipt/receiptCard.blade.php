@@ -12,7 +12,7 @@
 
 @section('addButton')
     <a class="addButtonLink" href="{{ url($rootURL . '/create', []) }}">
-        <button class="addButton">
+        <button class="addButton beautyButton">
             Добавить квитанцию
         </button>
     </a>
@@ -54,23 +54,22 @@
                 @endif
 
             </div>
-            <div>
-                <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
-                    <button>Редактировать</button>
-                </a>
+
+            <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">
 
 
-                <a href="{{ url($rootURL . '/' . strval($item->id) . '/hand_over', []) }}">
-                    <button>Выдать</button>
-                </a>
 
-            </div>
+                <img src="{{ asset('assets/css/angle-right-svgrepo-com.svg') }}" alt="">
+            </a>
 
-            <div class="orderDetailLabel">
+
+
+
+            <div class="orderDetailLabel closed">
                 <span class="buttonDetail"></span>
 
                 <div class="orderDetail">
-                    <div class="itemInfo orderInfo">
+                    <div class="itemInfo info5">
                         <span class="cardLabel">Услуга:</span>
                         <span class="cardData">{{ $item->order->service->name }}</span>
                         <span class="cardLabel">Кол-во всего:</span>

@@ -35,7 +35,7 @@
 <table>
     <thead>
         <th>Услуга</th>
-        <th>Кол-во изделий</th>
+        <th>Кол-во изделий, шт.</th>
         <th>Заказчик</th>
         <th>Дата оформления</th>
         <th>Сумма, руб.</th>
@@ -55,7 +55,7 @@
         @endforeach
         <tr class="itog">
             <td>ИТОГО:</td>
-            <td>{{count($rows)}}</td>
+            <td>{{$countItog}}</td>
             <td></td>
             <td></td>
             <td>{{$summ}}</td>
