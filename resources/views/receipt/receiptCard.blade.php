@@ -3,6 +3,8 @@
     <title>Квитанции</title>
 
     <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+        <script src=" {{ asset('assets/js/filter/filter.js') }}"></script>
+
 @endsection
 
 @section('header')
@@ -20,9 +22,11 @@
 
 
 @section('dictCard')
-    <button class="filter allItems">Все</button>
-    <button class="filter doneItems">Готовы к выдаче</button>
-    <button class="filter handedItems">Выданы</button>
+    <button class="filter doneItems" id="open">Открыты на данный момент</button>
+    <button class="filter doneItems" id="ready">Готовы к выдаче</button>
+    <button class="filter handedItems" id="done">Выданы</button>
+    <button class="filter allItems" id="all">Все квитанции</button>
+
 
 
     @foreach ($items as $item)
@@ -94,7 +98,36 @@
         </div>
     @endforeach
 
+
     <script>
+        $(document).ready(function() {
+            $('#all').on('click', function(e) {
+                receipts(e.target.id, 'Все');
+            });
+            $('#open').on('click', function(e) {
+                receipts(e.target.id, 'Открыты на данный момент');
+
+            });
+            $('#ready').on('click', function(e) {
+                receipts(e.target.id, 'Готовы к выдаче');
+
+            });
+            $('#done').on('click', function(e) {
+                receipts(e.target.id, 'Закрытые квитанции');
+            });
+
+            $('#open').trigger('click');
+        });
+    </script>
+
+
+
+
+
+
+
+
+    {{-- <script>
         function showCards() {
             $('.card').each(function() {
                 $(this).show();
@@ -140,5 +173,5 @@
                 })
             })
         });
-    </script>
+    </script> --}}
 @endsection

@@ -1,9 +1,9 @@
 
 <table  {{ $attributes }}>
     <tr>
-        <th>
+        {{-- <th>
             ID
-        </th>
+        </th> --}}
         <th>
             Дата
         </th>
@@ -16,11 +16,14 @@
         <th>
             Брак
         </th>
+        <th>
+            Сумма брака, руб.
+        </th>
     </tr>
 
     @foreach ($order->orderOut as $out)
     <tr>
-        <td>{{$out->id}}</td>
+        {{-- <td>{{$out->id}}</td> --}}
         <td>{{$out->date}}</td>
         <td>{{$out->count}}</td>
         <td>{{$out->note}}</td>
@@ -29,6 +32,9 @@
             <span class="cardData notDone isDone">Брак</span>
             @endif
         
+        </td>
+        <td class="right">
+        {{$out->failSum->amount}}
         </td>
         {{-- <td>
             <a href="{{ url('/'.strval($out->id).'/edit', []) }}">

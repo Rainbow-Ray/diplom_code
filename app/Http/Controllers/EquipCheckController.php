@@ -58,6 +58,16 @@ class EquipCheckController extends Controller
         return(redirect('equip'));
     }
 
+    public static function storeNewEquip($id,$date) {
+            $c = new EquipCheck();
+            $c->equip_id = $id;
+            $c->state_id = 4;
+            $c->date = $date;
+
+            $c->save();
+
+    }
+
     /**
      * Display the specified resource.
      */

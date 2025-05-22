@@ -7,7 +7,7 @@
 @endsection
 
 @section('header')
-    Квитанция
+    Квитанция {{ $item->number }}
 @endsection
 @section('addButton')
 @endsection
@@ -116,34 +116,36 @@
 
         <div class="start1 end4">
             @if ($item->isPaid)
-                <span class="cardData isDone">Оплачено</span>
+                <span class="cardData isDone done">Оплачено</span>
             @else
                 <span class="cardData notDone isDone">Нет оплаты</span>
             @endif
         </div>
-            <a href="{{ url('receipt/' . strval($item->id) . '/edit', []) }}" class="start3 end4 ">
-        <button class="addButton beautyButton right">Редактировать</button>
-    </a>
+        <a href="{{ url('receipt/' . strval($item->id) . '/edit', []) }}" class="start3 end4 ">
+            <button class="addButton beautyButton right">Редактировать</button>
+        </a>
 
     </div>
 
     <div class="receiptData">
         <h3 class="col1-4">Изделий готово:</h3>
         <x-order-card :order="$item->order" />
-        <a href="{{ url('receipt/' . strval($item->id) . '/hand_over', []) }}">
-            <button class="addButton beautyButton">Выдать</button>
-        </a>
         <h3 class="col1-4">Выдачи заказа:</h3>
 
         <x-order-out :order="$item->order" class="col1-2" />
+
+            <a href="{{ url('receipt/' . strval($item->id) . '/hand_over', []) }}">
+            <button class="addButton beautyButton">Выдать</button>
+        </a>
 
         <h3 class="col1-4">Оплата:</h3>
 
         <x-income-row :income="$item->income" class="col1-2" />
 
     </div>
+
     <form action="{{ url('/receipt/' . $item->id . '/done') }}" method="POST">
         @csrf
-        <input type="submit" class="addButton beautyButton" name='done' value="Закрыть квитанцию">
+        <input type="submit" class="addButton beautyButton rstart11 danger" name='done' value="Закрыть квитанцию">
     </form>
 @endsection

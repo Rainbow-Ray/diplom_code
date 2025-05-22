@@ -25,7 +25,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $columns = Worker::all();
+        $columns = Worker::all()->sortBy('surname');
         return view("worker/workerCard", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 

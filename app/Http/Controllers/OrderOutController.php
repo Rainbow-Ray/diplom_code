@@ -74,9 +74,10 @@ class OrderOutController extends Controller
             else if($request['payment']==2){
                 IncomeController::UpdateExternal($request, $receipt->id);
             }
+            $receipt->paymentClose();
         }
         else{
-            ExpenseController::CreateExternal($request['date'], $request['amount'], $receipt->worker->id);
+            ExpenseController::CreateExternal($request['date'], $request['amount'], $receipt->worker->id, $order->id);
         }
 
         if($request['isHanded'] == 1){

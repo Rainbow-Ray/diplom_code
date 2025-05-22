@@ -32,6 +32,9 @@
     <span class="cardData">{{$item->count}}</span> --}}
     <span class="cardLabel">Состояние:</span>
     <span class="cardData">{{$item->state()}}</span>
+                <span class="cardLabel">Дата проверки:</span>
+            <span class="cardData">{{ $item->dateCheck() }}</span>
+
 
 </div>
                     <a href="{{ url($rootURL . '/' . strval($item->id), []) }}">

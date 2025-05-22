@@ -22,18 +22,29 @@
             <input type="text" name="number" id="number" value="{{ $number }}" required>
         </div>
 
-
-
-        <div class="labelTop start1 end4">
+        <div class="labelTop start1 end3">
             <label for="customer">ФИО/Тел.</label>
             <select id="selectCustomer" name="customer">
                 <option value=""></option>
                 @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}">
+                    <option value="{{ $customer->id }}" discount="{{ $customer->discount }}">
                         {{ $customer->surname . ' ' . $customer->name . ' ' . $customer->patronym . ' // ' . $customer->phone }}
                     </option>
                 @endforeach
             </select>
+            <input type="text" id="discount" class="hide" value="0" readonly>
+        </div>
+
+        <div class="labelTop">
+            <div>
+                <span>Скидка: </span>
+                <span id='disc'></span>
+                <span>%</span>
+            </div>
+            <div>
+                <label for="">Применить скидку</label>
+                <input type="checkbox" id="applyDiscount" checked>
+            </div>
         </div>
 
         <div class="labelTop start4">

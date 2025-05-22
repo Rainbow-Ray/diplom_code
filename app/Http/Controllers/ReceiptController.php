@@ -28,7 +28,7 @@ class ReceiptController extends Controller
     public function index()
     {
 
-        $columns = Receipt::all()->sortByDesc('dateIn');;
+        $columns = Receipt::all()->sortByDesc('dateIn');
         foreach($columns as $i){
             $i = ReceiptNormalization::beautify_dates($i);
         }
@@ -94,7 +94,8 @@ class ReceiptController extends Controller
             else if($request['payment']==2){
                 IncomeController::UpdateExternal($request, $receipt->id);
             }
-            $receipt->cost = $request['amount'];
+            // $receipt->cost = $request['amount'];
+            $receipt->paymentClose();
         }
 
         return redirect($this::rootURL);

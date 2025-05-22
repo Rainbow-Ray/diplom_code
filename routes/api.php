@@ -6,6 +6,7 @@ use App\Http\Controllers\ChecksApiController;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\Item;
 use App\Http\Controllers\EquipController;
+use App\Http\Controllers\FilterController;
 use App\Http\Controllers\MainMenuController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialTypeController;
@@ -28,6 +29,15 @@ use Illuminate\Support\Facades\Validator;
 // Route::middleware('can:create, App\Models\Material')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+// Фильтры
+Route::get('/order/filter', [FilterController::class, 'order']);
+Route::get('/receipt/filter', [FilterController::class, 'receipt']);
+Route::get('/income/filter', [FilterController::class, 'income']);
+Route::get('/expense/filter', [FilterController::class, 'expense']);
+Route::get('/materialExp/filter', [FilterController::class, 'materialExp']);
+
+
 
 Route::get('/checks', [ChecksApiController::class, 'index']);
 Route::get('/checks', [ChecksApiController::class, 'index']);

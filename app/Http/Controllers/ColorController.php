@@ -26,7 +26,7 @@ class ColorController extends DictController
     public function index()
     {
         //
-        return parent::displayDict($this::storeFormHeader, Color::all(), $this::rootURL);
+        return parent::displayDict($this::storeFormHeader, Color::all()->sortBy('name'), $this::rootURL);
 
     }
 

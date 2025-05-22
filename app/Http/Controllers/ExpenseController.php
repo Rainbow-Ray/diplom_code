@@ -61,13 +61,14 @@ class ExpenseController extends Controller
 
     }
 
-    public static function CreateExternal($date, $amount, $workerId){
+    public static function CreateExternal($date, $amount, $workerId, $receiptId){
         $expense = new Expense();
 
         $expense->date = $date;
         $expense->amount = $amount;
         $expense->source_id = 2;
         $expense->worker_id = $workerId;
+        $expense->receipt_id = $receiptId;
 
         $expense->save();
     }
@@ -75,9 +76,10 @@ class ExpenseController extends Controller
     public function show(string $id)
     {
         $receipt = Expense::findOrFail($id);
-        return [$receipt->date,
-        $receipt->amount,
-        ];
+        return view('expense/data', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
+        "formHeader"=> $this::storeFormHeader, 'item'=> $receipt
+    
+    ]);
 
     }
 

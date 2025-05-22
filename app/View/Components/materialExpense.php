@@ -23,6 +23,15 @@ class materialExpense extends Component
      */
     public function render(): View|Closure|string
     {
+        // return print_r($this->items);
+
         return view('components.material-expense', ['items'=>$this->items]);
     }
+
+        public function viewRender(): View|Closure|string
+    {
+        // return print_r($this->items);
+        return view('components.material-expense', ['items'=>$this->items, 'rootURL'=>'materialExp'])->render();
+    }
+
 }

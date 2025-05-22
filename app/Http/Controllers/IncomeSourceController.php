@@ -20,7 +20,7 @@ class IncomeSourceController extends DictController
 
     public function index()
     {
-        $columns = IncomeSource::all();
+        $columns = IncomeSource::all()->sortBy('name');
         return parent::p_index($columns, $this::rootURL, $this::storeFormHeader);
     }
 

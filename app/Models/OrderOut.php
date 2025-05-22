@@ -25,4 +25,9 @@ class OrderOut extends Model
     {
         return $this->BelongsTo(Order::class, 'order_id');
     }
+
+    public function failSum()
+    {
+        return $this->hasOne(Expense::class, 'orderOut_id')->withDefault();
+    }
 }

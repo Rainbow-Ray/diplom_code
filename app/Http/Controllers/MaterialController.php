@@ -27,7 +27,7 @@ class MaterialController extends Controller
 
     static function getMaterialByCat($cat)
     {
-        return Material::join('MaterialType', 'Material.type_id', '=', 'MaterialType.id')->where('cat_id', $cat)->select('Material.*')->get();
+        return Material::join('MaterialType', 'Material.type_id', '=', 'MaterialType.id')->where('cat_id', $cat)->select('Material.*')->get()->sortBy('name');
         //  return Material::join('MaterialType', 'Material.type_id', '=', 'MaterialType.id')->where('cat_id', $cat)->get();
     }
 
@@ -106,7 +106,7 @@ class MaterialController extends Controller
 
     public function index()
     {
-        $columns = Material::all();
+        $columns = Material::all()->sortBy('name');
 
         return view("material/card", ['title' => 'Материалы', 'createURL' => $this::rootURL, 'editURL' => $this::rootURL, 'items' => $columns, 'rootURL' => $this::rootURL]);
     }
@@ -189,10 +189,6 @@ class MaterialController extends Controller
 
     public function expenseIndex()
     {
-
-        $mats = MatExp::all()->groupBy('date');
-        $mats = MatExp::all();
-
         $mats = MatExp::selectRaw('
         MatExp.date, 
         MatExp.date as dateNow, 
@@ -201,13 +197,11 @@ class MaterialController extends Controller
         MatExp.mat_id, 
         (Select COUNT(MatExp.id) from MatExp where MatExp.date = dateNow) as rowCount,
         (Select sum(MatExp.amount) from MatExp where MatExp.date = dateNow) as dateAmount
-        
-        
-        
         ')
-        ->orderBy('date')
+        ->orderByDesc('date')
         ->get();
 
+        // return $mats;
         // return $mats;
 
         return view('material/expenseCard', ['items' => $mats]);

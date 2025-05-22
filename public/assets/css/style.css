@@ -194,6 +194,7 @@ input[type=submit]{
     max-width: 20em;
     min-width: 8em;
     max-height: 2.5em;
+    width: max-content;
 }
 .addButton{
   background: var(--backpage-color);
@@ -495,7 +496,7 @@ td.checkNumber {
 }
 .itemInfo.receiptInfo{
     display: grid;
-    grid-template-columns: 9em 9em 14em 7em 7em 4em;
+    grid-template-columns: 2em 9em 9em 14em 7em 7em 4em;
 }
 .card .orderInfo{
     grid-template-columns: 9em 7em 4em 4em 5em 7em 7em;
@@ -515,7 +516,11 @@ td.checkNumber {
     grid-template-columns: 12em 12em 14em 7em 9em ;
 }
 .info7{
-    grid-template-columns: 9em 7em 4em 4em 5em 7em 7em;
+    grid-template-columns: 12em 7em 4em 4em 5em 7em 7em;
+}
+
+.marginTop{
+    margin-top: 1em;
 }
 
 
@@ -526,6 +531,8 @@ td.checkNumber {
 }
 
 .col5{
+            display: grid;
+
         grid-template-columns: repeat(5, 1fr) ;
 }
 .col2{
@@ -533,6 +540,8 @@ td.checkNumber {
         grid-template-columns: repeat(2, 1fr) ;
 }
 .info6{
+            display: grid;
+
     grid-template-columns: repeat(6, 1fr) ;
 }
 

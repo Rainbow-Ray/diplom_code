@@ -43,7 +43,7 @@ class Receipt extends Model
 
     public function order()
     {
-        return $this->hasOne(Order::class);
+        return $this->hasOne(Order::class)->withDefault();
     }
     public function income()
     {
@@ -71,4 +71,22 @@ class Receipt extends Model
         }
         return $num->id + 1;
     }
+
+    public function fails() {
+        $order = $this->order->id;
+        if(!is_null($order)){
+            return OrderOut::where('order_id', $order)->where('isFail', 1)->get();
+        }
+        return null;
+    }
+
+    function paymentClose() {
+        $summ = is_null($this->cost) ? $this->costPred + $this->costAdd : $this->cost;
+          $now = $this->income->sum('amount');
+        if($now >= $summ){
+            $this->isPaid = 1;
+            $this->save();
+        }
+    }
+
 }

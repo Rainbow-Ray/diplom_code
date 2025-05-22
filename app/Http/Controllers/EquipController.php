@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\Utils;
 use App\Models\Equip;
+use App\Models\EquipCheck;
 use App\Models\EquipType;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -57,7 +59,11 @@ class EquipController extends Controller
         $equip->count = $request->count;
         $equip->number = $request->number;
         $equip->type_id = $request->equip_type;
+        $equip->type_id = $request->equip_type;
         $equip -> save();
+
+        EquipCheck::storeNewEquip($equip->id, Utils::dateNow());
+
         return redirect($this::rootURL);
 
     }

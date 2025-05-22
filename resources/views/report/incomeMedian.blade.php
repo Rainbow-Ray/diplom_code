@@ -21,6 +21,7 @@
     <thead>
         <th>Дата</th>
         <th>Прибыль, руб.</th>
+        <th>Разница с пред. периодом, %.</th>
     </thead>
     <tbody>
 
@@ -29,6 +30,7 @@
 
             <td>{{$labels[$i]}}</td>
             <td>{{$data[$i]}}</td>
+            <td>{{$dataPerDiff[$i]}}</td>
         </tr>
 
             @endfor

@@ -128,13 +128,13 @@ class ReportController extends Controller
             );
 
         $fail = Expense::where('date', '>', $dateStart)->where('date', '<', $dateEnd)
-                    ->join('ExpenseSource', 'Expense.source_id', 'ExpenseSource.id')
-                    ->where('Expense.source_id', 2)
-                    ->selectRaw('ExpenseSource.name ,source_id , sum(amount) * 1.1 as sum ')
-                    ->groupBy('source_id');
+            ->join('ExpenseSource', 'Expense.source_id', 'ExpenseSource.id')
+            ->where('Expense.source_id', 2)
+            ->selectRaw('ExpenseSource.name ,source_id , sum(amount) * 1.1 as sum ')
+            ->groupBy('source_id');
 
         $expense = $expense->union($fail)->get();
-        
+
         $incSum = $income->sum('sum');
         $expSum = $expense->sum('sum');
         $profit = $incSum - $expSum;
@@ -214,23 +214,23 @@ class ReportController extends Controller
 
 
 
-    $query =    "select Material.name, T.start_amount, V.income, V.expense, T.start_amount+V.income-V.expense as 'itog',
+        $query =    "select Material.name, T.start_amount, V.income, V.expense, T.start_amount+V.income-V.expense as 'itog',
     Ei.name as ei 
     from 
 (Select s.mat_id as 'Mat', sum(s.count) as 'income', sum(s.amount) as 'expense' from 
  (SELECT PurchaseRow.mat_id, `PurchaseRow`.`count`, MatExp.amount FROM `PurchaseRow` left JOIN `MatExp` ON `PurchaseRow`.`mat_id` = `MatExp`.`mat_id` inner join `Purchase` on PurchaseRow.`purch_id` = `Purchase`.`id` where
-  Purchase.date >= '".$dateStart."'  and Purchase.date <= '".$dateEnd."' 
+  Purchase.date >= '" . $dateStart . "'  and Purchase.date <= '" . $dateEnd . "' 
 
 Union all
 
 SELECT MatExp.mat_id, `PurchaseRow`.`count`, MatExp.amount FROM `PurchaseRow` Right JOIN `MatExp` ON `PurchaseRow`.`mat_id` = `MatExp`.`mat_id` WHERE PurchaseRow.mat_id is null and 
-MatExp.date >= '".$dateStart."'  and MatExp.date <= '".$dateEnd."') as s GROUP BY s.mat_id) 
+MatExp.date >= '" . $dateStart . "'  and MatExp.date <= '" . $dateEnd . "') as s GROUP BY s.mat_id) 
 
 as V
 
 left join 
 (select mat_id,  sum(count) as 'start_amount' from `PurchaseRow` inner join `Purchase` on `purch_id` = `Purchase`.`id` 
-where `date` < '".$dateStart."' group by `mat_id`)
+where `date` < '" . $dateStart . "' group by `mat_id`)
 as T 
 on V.Mat = T.mat_id 
 
@@ -253,7 +253,7 @@ INNER join Ei on Material.ei_id = Ei.id
         // $inc = PurchaseRow::selectRaw('mat_id, date, sum(co unt)')->join('Purchase', 'purch_id', 'Purchase.id')
         // ->where('dateIn', '>=', $dateStart)->where('dateIn', '<=', $dateEnd)->groupBy('mat_id')->get();
 
-        
+
 
         return (view('report/orderMaterialReport', [
             'dateS' => Normalization::beautify_date_from_str($dateStart),
@@ -270,7 +270,8 @@ INNER join Ei on Material.ei_id = Ei.id
     }
 
 
-    public static function countItog($ass) {
+    public static function countItog($ass)
+    {
 
         $arr = array();
 
@@ -280,7 +281,7 @@ INNER join Ei on Material.ei_id = Ei.id
             $expense = is_null($i->expense)  ? 0 : $i->expense;
 
             $arr[] = $start + $income - $expense;
-             
+
 
             # code...
         }
@@ -381,8 +382,12 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
             $labels[$i] = Normalization::beautify_date_from_str($labels[$i]);
         }
 
+        $dataPerDiff = array();
+        $dataPerDiff[] = 0;
 
-        
+        for ($i = 1; $i < count($data); $i++) {
+            $dataPerDiff[] = ReportController::diffPercent($data[$i - 1], $data[$i]);
+        }
 
 
         $labels = array_slice($labels, 1);
@@ -395,7 +400,7 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $en =  $data[count($data) - 1];
 
         $seDiff = ReportController::diffPercent($st, $en);
-        $avgeDiff = ReportController::diffPercent($en, $avgProfit);
+        $avgeDiff = ReportController::diffPercent( $avgProfit, $en);
 
         // return(count($data));
         // return(count($labels));
@@ -414,6 +419,7 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
             'end' => $en,
             'seDiff' => $seDiff,
             'avgeDiff' => $avgeDiff,
+            'dataPerDiff' => $dataPerDiff,
 
             // 'avgSum' => $avgSum,
         ]));
@@ -423,6 +429,11 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
     {
         $a = is_null($a) || $a == 0 ? $b : $a;
         $diff = ($a - $b) / ($a / 100);
+            $diff = abs($diff);
+
+        if ($a > $b) {
+            $diff = -$diff;
+        }
         return $diff;
     }
 

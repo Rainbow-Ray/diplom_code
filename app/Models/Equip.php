@@ -55,6 +55,15 @@ class Equip extends Model
         }
         return null;
     }
+    public function dateCheck() {
+
+        $lastCheck = EquipCheck::where('equip_id',  $this->id)->get()->last();
+        if(!is_null($lastCheck)){
+            return Normalization::beautify_date_from_str( $lastCheck->date);
+            
+        }
+        return null;
+    }
     public function date() {
 
         $lastCheck = EquipCheck::where('equip_id',  $this->id)->get()->last();

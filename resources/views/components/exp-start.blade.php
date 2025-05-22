@@ -2,7 +2,7 @@
     <div>
         <div class="itemInfo orderInfo">
                     <span class="cardLabel">Дата:</span>
-                    <span class="cardData">{{ $item->date }} </span>
+                    <span class="cardData">{{ $item->date() }} </span>
                     <span class="cardLabel">Количество материалов:</span>
                     <span class="cardData">{{ $item->rowCount }}</span>
                     <span class="cardLabel">Количество израсходовано:</span>
