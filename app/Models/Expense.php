@@ -19,6 +19,7 @@ class Expense extends Model
         'worker_id',
         'orderOut_id',
         'source_id',
+        'orderOut_id',
     ];
 
         public function date()
@@ -36,6 +37,10 @@ class Expense extends Model
     }
     public function receipt()
     {
-        return OrderOut::where('id', $this->orderOut_id)->get()->first()->order()->first()->receipt()->first();
+        $order = OrderOut::where('id', $this->orderOut_id)->get()->first();
+        if(!is_null($order)){
+        return $order->order()->first()->receipt()->first();
+
+        }
     }
 }

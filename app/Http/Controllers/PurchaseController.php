@@ -207,6 +207,8 @@ class PurchaseController extends Controller
             }
             Utils::UpdateItems($old, $new);
         }
+                    // return print_r($request);
+
         return redirect($this::rootURL);
     }
 

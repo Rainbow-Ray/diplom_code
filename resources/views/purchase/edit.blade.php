@@ -14,8 +14,9 @@
 
 @endsection
 @section('main')
-    <form action="/{{ $rootURL }}" method="POST">
+    <form action="/{{ $rootURL }}/{{$item->id}}" method="POST">
         @csrf
+        @method('Put')
         <h2 class="start1 end7">Редактировать закупку</h2>
 
         <div class="">

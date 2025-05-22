@@ -12,6 +12,8 @@ use App\Http\Normalizators\ReceiptNormalization;
 use App\Http\Utils\Utils;
 use App\Models\Order;
 use App\Models\Service;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ReceiptController extends Controller
 {
@@ -29,10 +31,10 @@ class ReceiptController extends Controller
     {
 
         $columns = Receipt::all()->sortByDesc('dateIn');
-        foreach($columns as $i){
+        foreach ($columns as $i) {
             $i = ReceiptNormalization::beautify_dates($i);
         }
-        
+
         return view("receipt/receiptCard", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 
@@ -45,12 +47,16 @@ class ReceiptController extends Controller
         $workers = Worker::where('job_id', 1)->get();
         $services = Service::all();
         $number = Receipt::defNumber();
-        
-        return view('receipt/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader, 'customers'=> $customers, 'workers'=> $workers,
-        'number' => $number,
-        'services'=> $services ]);
 
+        return view('receipt/create', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            'customers' => $customers,
+            'workers' => $workers,
+            'number' => $number,
+            'services' => $services
+        ]);
     }
 
     /**
@@ -58,8 +64,53 @@ class ReceiptController extends Controller
      */
     public function store(Request $request)
     {
-        $receipt = new Receipt();
+
+                $receipt = new Receipt();
         $request = ReceiptNormalization::normalize($request);
+
+
+        $rules=[
+            'item' => 'required|string',
+
+
+
+
+             'amount' => [
+        'nullable',
+        'numeric',
+        'min:1',
+        Rule::requiredIf(function () use ($request) {
+            return $request->isPaid == 1;
+        }),
+        function ($attribute, $value, $fail) use ($request) {
+            if ($request->isPaid == 1 && ($value < 1 || $value > $request->cost)) {
+                $fail('Если оплачено (isPaid=1), сумма оплаты (amount) должна быть в диапазоне от 1 до стоимости (cost)');
+            }
+        },
+    ],
+
+        ];
+
+        $messages = [
+            // 'name.required' => 'required|assssss',
+            'amount' =>'sdskkosdokkosdf',
+
+        ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            return print_r($validator) ;
+
+            if ($validator->fails()) {
+            return redirect($this::rootURL.'/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+
+    $validated = $validator->validated();
+
+
 
         $receipt->item = $request['item'];
         $receipt->number = $request['number'];
@@ -78,20 +129,19 @@ class ReceiptController extends Controller
         $receipt->save();
 
         $data = [
-            "count"=> $request['count'], 
-            "countDone"=> 0, 
-            "isDone"=> 0, 
-            "isUrgent"=> $request['isUrgent'], 
-            "receipt_id"=> $receipt->id, 
+            "count" => $request['count'],
+            "countDone" => 0,
+            "isDone" => 0,
+            "isUrgent" => $request['isUrgent'],
+            "receipt_id" => $receipt->id,
             "service_id" => $request['service']
         ];
         OrderController::store($data);
 
-        if($receipt->isPaid){
-            if($request['payment']==1){
+        if ($receipt->isPaid) {
+            if ($request['payment'] == 1) {
                 IncomeController::CreateExternal($request['payNumber'], $request['dateIn'], $request['amount'], $receipt->id);
-            }
-            else if($request['payment']==2){
+            } else if ($request['payment'] == 2) {
                 IncomeController::UpdateExternal($request, $receipt->id);
             }
             // $receipt->cost = $request['amount'];
@@ -108,9 +158,10 @@ class ReceiptController extends Controller
     {
         $receipt = Receipt::findOrFail($id);
 
-        return view('receipt.receiptData', ['item'=>$receipt]);
-        return [$receipt->item,
-        $receipt->dateIn,
+        return view('receipt.receiptData', ['item' => $receipt]);
+        return [
+            $receipt->item,
+            $receipt->dateIn,
         ];
     }
 
@@ -124,29 +175,39 @@ class ReceiptController extends Controller
         $workers = Worker::all();
         $services = Service::all();
 
-        if (!is_null($receipt)){
-            return view('receipt/edit', ["rootURL" => $this::rootURL,
-            "receipt"=> $receipt, 
-            'title'=>$this::editTitle, "formHeader"=>$this::editFormHeader, "customers"=>$customers,
-            'workers' => $workers, 'services'=> $services
-        ]);
+        if (!is_null($receipt)) {
+            return view('receipt/edit', [
+                "rootURL" => $this::rootURL,
+                "receipt" => $receipt,
+                'title' => $this::editTitle,
+                "formHeader" => $this::editFormHeader,
+                "customers" => $customers,
+                'workers' => $workers,
+                'services' => $services
+            ]);
         }
-        return view('receipt/create', ["rootURL"=> $this::rootURL,
-         "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader, "customers"=>$customers,
-            'workers' => $workers, 'services'=> $services]);
+        return view('receipt/create', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            "customers" => $customers,
+            'workers' => $workers,
+            'services' => $services
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.
      */
 
-    public static function closeReceipt($id){
+    public static function closeReceipt($id)
+    {
         $receipt = Receipt::findOrFail($id);
 
-        if(!is_null($receipt)){
+        if (!is_null($receipt)) {
             $time = Utils::timeNow();
-            if(!$receipt->order->isHandedOver()){
+            if (!$receipt->order->isHandedOver()) {
                 $count = $receipt->order->count - $receipt->order->handedOverCount();
                 OrderOutController::storeClosed($time, $count, $receipt->order->id);
             }
@@ -155,11 +216,11 @@ class ReceiptController extends Controller
             $pred = is_null($receipt->costPred) ? 0 : $receipt->costPred;
             $add = is_null($receipt->costAdd) ? 0 : $receipt->costAdd;
             $receipt->cost = $pred + $add;
-            
+
             $receipt->save();
         }
 
-        return;
+        return redirect('receipt');
     }
 
     public function update(Request $request, string $id)
@@ -167,7 +228,7 @@ class ReceiptController extends Controller
         $receipt = Receipt::findOrFail($id);
         $request = ReceiptNormalization::normalize($request);
 
-        if (!is_null($receipt)){
+        if (!is_null($receipt)) {
             $receipt->item = $request['item'];
             $receipt->dateIn = $request['dateIn'];
             $receipt->cost = $request['cost'];
@@ -182,17 +243,17 @@ class ReceiptController extends Controller
             $receipt->customer_id = $request['customer'];
             $receipt->save();
 
-            if(!is_null($receipt->order->id)){
+            if (!is_null($receipt->order->id)) {
                 $data = [
-                    "count"=> $request['count'], 
+                    "count" => $request['count'],
                     "service_id" => $request['service'],
                     "isHanded" => $request['isHanded'],
                     "isUrgent" => $request['isUrgent']
                 ];
-                OrderController::updateFromReceipt($data, $receipt->order->id);        
+                OrderController::updateFromReceipt($data, $receipt->order->id);
             }
         }
-        return redirect( $this::rootURL);
+        return redirect($this::rootURL);
     }
 
     /**
@@ -202,12 +263,6 @@ class ReceiptController extends Controller
     {
         $receipt = Receipt::findOrFail($id);
         $receipt->delete();
-        return redirect( $this::rootURL);
-
+        return redirect($this::rootURL);
     }
-
-
-
-
-
 }

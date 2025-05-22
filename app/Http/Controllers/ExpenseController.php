@@ -68,7 +68,7 @@ class ExpenseController extends Controller
         $expense->amount = $amount;
         $expense->source_id = 2;
         $expense->worker_id = $workerId;
-        $expense->receipt_id = $receiptId;
+        $expense->orderOut_id = $receiptId;
 
         $expense->save();
     }

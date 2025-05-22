@@ -16,7 +16,7 @@
 
             var url = window.location.href;
             var href = url.split("/")[3];
-            
+
             $('.side_nav_main_ul a').each(function() {
                 var now = $(this).attr('href').split("/")[3];
                 if (now == href) {
@@ -32,13 +32,13 @@
 <body>
     <header>
         <div class="logo">ИС "КлючСервис+"</div>
-            <div class="logData">
-        @guest
-            <a href="http://127.0.0.1:8000/login">Вход</a>
-            <a href="http://127.0.0.1:8000/register">Регистрация</a>
-        @endguest
+        <div class="logData">
+            @guest
+                <a href="http://127.0.0.1:8000/login">Вход</a>
+                <a href="http://127.0.0.1:8000/register">Регистрация</a>
+            @endguest
 
-        @auth
+            @auth
                 <span class="username">{{ Auth::user()->email }}</span>
                 <a href="http://127.0.0.1:8000/user/{{ Auth::user()->id }}/edit">Редактировать</a>
 
@@ -46,8 +46,8 @@
                     @csrf
                     <input type="submit" class="logOut " value="Выход">
                 </form>
-        @endauth
-            </div>
+            @endauth
+        </div>
 
 
     </header>
@@ -58,48 +58,64 @@
         </ul>
     </nav>
     <nav class="side_nav">
-        <ul class="side_nav_main_ul"> Справочники
+        <ul class="side_nav_main_ul">
             <a href="http://127.0.0.1:8000/order">
                 <li>Заказы</li>
             </a>
             <a href="http://127.0.0.1:8000/receipt">
                 <li>Квитанции</li>
             </a>
+
             <a href="http://127.0.0.1:8000/customer">
                 <li>Клиенты</li>
             </a>
-            <a href="http://127.0.0.1:8000/equip">
-                <li>Оборудование</li>
-            </a>
-            <a href="http://127.0.0.1:8000/worker">
+
+                        <a href="http://127.0.0.1:8000/worker">
                 <li>Сотрудники</li>
             </a>
-            <a href="http://127.0.0.1:8000/ei">
-                <li>Единица измерения</li>
+
+            <a href="http://127.0.0.1:8000/user">
+                <li>Пользователи</li>
             </a>
-            <a href="http://127.0.0.1:8000/job_title">
-                <li>Должность</li>
-            </a>
-            <a href="http://127.0.0.1:8000/service">
-                <li>Услуги</li>
-            </a>
+
+
+            <ul class="sec_ul"> Доходы и расходы
+                <a href="http://127.0.0.1:8000/income">
+                    <li>Доходы</li>
+                </a>
+                <a href="http://127.0.0.1:8000/expense">
+                    <li>Расходы</li>
+                </a>
+            </ul>
+
+            <ul class="sec_ul">Оборудование
+                <a href="http://127.0.0.1:8000/equip">
+                    <li>Оборудование</li>
+                </a>
+                <a href="http://127.0.0.1:8000/equip_type">
+                    <li>Тип оборудования</li>
+                </a>
+            </ul>
+
+            <ul class="sec_ul">Закупки
+                <a href="http://127.0.0.1:8000/request">
+                    <li>Запросы на закупку</li>
+                </a>
+                <a href="http://127.0.0.1:8000/purchase">
+                    <li>Закупки</li>
+                </a>
+
+            </ul>
+
             {{-- <a href="http://127.0.0.1:8000/skill">
                 <li>Навыки</li>
             </a> --}}
-            <a href="http://127.0.0.1:8000/income">
-                <li>Доходы</li>
-            </a>
-            <a href="http://127.0.0.1:8000/expense">
-                <li>Расходы</li>
-            </a>
-            <a href="http://127.0.0.1:8000/request">
-                <li>Запросы на закупку</li>
-            </a>
-            <a href="http://127.0.0.1:8000/purchase">
-                <li>Закупки</li>
-            </a>
 
             <ul class="sec_ul">Материалы
+                <a href="http://127.0.0.1:8000/materialExp">
+                    <li>Расход материала</li>
+                </a>
+
                 <a href="http://127.0.0.1:8000/materials">
                     <li class="selected_dict">Все</li>
                 </a>
@@ -126,11 +142,10 @@
                     <li>Прочее</li>
                 </a>
             </ul>
-            <a href="http://127.0.0.1:8000/materialExp">
-                <li>Расход материала</li>
-            </a>
 
-            <ul class="sec_ul">Справочники характеристик материала
+
+
+            <ul>Справочники характеристик материала
                 <a href="http://127.0.0.1:8000/country">
                     <li>Страна производства</li>
                 </a>
@@ -143,21 +158,30 @@
                 </a>
             </ul>
 
-            <a href="http://127.0.0.1:8000/equip_type">
-                <li>Тип оборудования</li>
-            </a>
 
+            <ul class="sec_ul">
+                Справочники
+                <a href="http://127.0.0.1:8000/ei">
+                    <li>Единица измерения</li>
+                </a>
+                <a href="http://127.0.0.1:8000/job_title">
+                    <li>Должность</li>
+                </a>
+                <a href="http://127.0.0.1:8000/service">
+                    <li>Услуги</li>
+                </a>
 
-            <a href="http://127.0.0.1:8000/income_source">
-                <li>Источник дохода</li>
-            </a>
-            <a href="http://127.0.0.1:8000/expense_source">
-                <li>Источник расхода</li>
-            </a>
-            <a href="http://127.0.0.1:8000/user">
-                <li>Пользователи</li>
-            </a>
+                <a href="http://127.0.0.1:8000/income_source">
+                    <li>Источник дохода</li>
+                </a>
+                <a href="http://127.0.0.1:8000/expense_source">
+                    <li>Источник расхода</li>
+                </a>
+
+            </ul>
+
         </ul>
+
     </nav>
 
     <main>
