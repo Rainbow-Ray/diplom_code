@@ -31,9 +31,6 @@ class PurchaseController extends Controller
     public function index()
     {
         $columns = Purchase::all()->sortByDesc('date');;
-        foreach ($columns as $i) {
-            $i['date'] = Normalization::beautify_date_from_str($i['dateCreated']);
-        }
         return view("purchase/card", [
             'items' => $columns,
             'rootURL' => $this::rootURL
@@ -101,7 +98,7 @@ class PurchaseController extends Controller
                 $row = new PurchaseRow();
 
                 $row->count = $item->count;
-                $row->name = $item->name;
+                // $row->name = $item->name;
                 $row->mat_id = $item->mat_id;
                 $row->equip_id = $item->equip_id;
                 // $row->ei_id =  $item->ei;
@@ -195,7 +192,7 @@ class PurchaseController extends Controller
                     $row = new PurchaseRow();
 
                     $row->count = $item->count;
-                    $row->name = $item->name;
+                    // $row->name = $item->name;
                     $row->mat_id = $item->mat_id;
                     $row->equip_id = $item->equip_id;
                     // $row->ei_id =  $item->ei;

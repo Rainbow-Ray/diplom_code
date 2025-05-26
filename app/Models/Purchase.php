@@ -44,6 +44,5 @@ class Purchase extends Model
 
     public function date() {
         return Normalization::beautify_date_from_str($this->date);
-        
     }
 }

@@ -8,7 +8,7 @@
 @endsection
 
 @section('header')
-Запрос на закупку
+Запрос на закупку {{$item->number}}
 @endsection
 @section('addButton')
 @endsection
@@ -25,9 +25,9 @@
                 <span class="cardData">{{ $item->dateClosed }}</span>
                 <span class="cardLabel">Срочный:</span>
                 <x-bool-span :cond="$item->isUrgent" class="" />
-                <span class="cardLabel">Закрыт:</span>
+                <span class="cardLabel">Выполнен:</span>
                 <x-bool-span :cond="$item->isDone" class="" />
-                <span class="cardLabel">Создал:</span>
+                <span class="cardLabel">Разместил:</span>
                 <span class="cardData">{{ $item->worker->surname}} {{ $item->worker->name}} {{ $item->worker->patronym}}</span>
             </div>
     </div>
@@ -42,7 +42,7 @@
         <span class="cardLabel">Кол-во:</span>
         <span class="cardData">{{ $row->count }}</span>
         <span class="cardLabel">Ед. изм.:</span>
-        <span class="cardData">{{ $row->ei->name }}</span>
+        <span class="cardData">{{ $row->material()->ei->name }}</span>
     </div>
     @endforeach
 </div>

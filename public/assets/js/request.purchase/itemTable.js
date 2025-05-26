@@ -20,11 +20,14 @@ export class ApiClient {
     }
 
     static async addItem(itemData) {
-        const response = await fetch("/api/items", {
+
+        var req = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: itemData,
-        });
+        };
+
+        const response = await fetch("/api/post_items", req);
 
         return await response.json();
     }
@@ -75,9 +78,13 @@ export class ItemStore{
 
 
 function appendSearchItem(element) {
+
+
+    var number = element['number'] == undefined ? '' : element['number'] ;
+
     $(".searchItemsTbody").append(
         '<tr><td><input type="radio" name="material"  ei="' + element['ei'] + '" class="hide check" id="' + element['id'] + '">' +
-        element['name'] + '</td> </tr>'
+        element['name'] + ' ' + number + '</td> </tr>'
     );
     
 }

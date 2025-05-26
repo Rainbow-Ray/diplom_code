@@ -16,7 +16,7 @@ class RequestRow extends Model
     protected $fillable = [
         'count',
         'countPurchased',
-        'name',
+        // 'name',
         'req_id',
         'mat_id',
         'equip_id',

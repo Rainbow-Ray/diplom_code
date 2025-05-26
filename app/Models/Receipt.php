@@ -65,9 +65,9 @@ class Receipt extends Model
 
     public static function defNumber()
     {
-        $num = Purchase::all()->last();
+        $num = Receipt::all()->last();
         if (is_null($num)) {
-            return 0;
+            return 1;
         }
         return $num->id + 1;
     }
@@ -88,5 +88,23 @@ class Receipt extends Model
             $this->save();
         }
     }
+
+
+        public function sumNow() {
+        $incomes = Income::where('receipt_id', $this->id)->get()->sum('amount');
+        return $incomes;
+    }
+
+    public function setIsPaid() {
+        if ($this->sumNow() > $this->cost) {
+            $this->isPaid = 1;
+        }
+        else{
+            $this->isPaid = 0;
+        }
+        return $this->isPaid;
+
+    }
+
 
 }

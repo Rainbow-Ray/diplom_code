@@ -22,9 +22,10 @@ class Equip extends Model
         'name',
         'count',
         'number',
+        'checkFreq',
         'type_id',
     ];
-        public $replace = false;
+    public $replace = false;
 
 
     public static function add($id, $add){
@@ -57,16 +58,15 @@ class Equip extends Model
     }
     public function dateCheck() {
 
-        $lastCheck = EquipCheck::where('equip_id',  $this->id)->get()->last();
+        $lastCheck = EquipCheck::where('equip_id',  $this->id)->orderBy('date')->get()->last();
         if(!is_null($lastCheck)){
             return Normalization::beautify_date_from_str( $lastCheck->date);
-            
         }
         return null;
     }
     public function date() {
 
-        $lastCheck = EquipCheck::where('equip_id',  $this->id)->get()->last();
+        $lastCheck = EquipCheck::where('equip_id',  $this->id)->orderBy('date')->get()->last();
         if(!is_null($lastCheck)){
             return Normalization::beautify_date_from_str( $lastCheck->date);
         }
@@ -74,11 +74,11 @@ class Equip extends Model
     }
     public function states() {
 
-        return EquipCheck::where('equip_id',  $this->id)->get();
+        return EquipCheck::where('equip_id',  $this->id)->orderBy('date')->get();
     }
     public function getState() {
 
-        return EquipCheck::where('equip_id',  $this->id)->get()->last();
+        return EquipCheck::where('equip_id',  $this->id)->orderBy('date')->get()->last();
     }
 
     public function needReplace(){
@@ -88,7 +88,7 @@ class Equip extends Model
             return false;
         }
 
-                $state = $this->getState()->state;
+        $state = $this->getState()->state;
 
 
         if(!is_null($state) && $state->state < 3){
@@ -99,19 +99,19 @@ class Equip extends Model
     public function old(){
         $check = $this->getState();
 
-        if(!is_null($check) && Equip::monthOld($check->date)){
+        if(!is_null($check) && $this->monthOld($check->date)){
             return true;
         }
         return false;
     }
 
-    public static function monthOld($a)  {
+    public function monthOld($a)  {
 
         $a = new DateTime($a);
         $now = Utils::timeNow();
         $time = $now->diff($a);
 
-        if($time->days > 30){
+        if($time->days > $this->checkFreq){
             return true;
         }
         return false;

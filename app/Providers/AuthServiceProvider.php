@@ -6,6 +6,8 @@ namespace App\Providers;
 
 use App\Models\Equip;
 use App\Models\EquipCheck;
+use App\Models\Income;
+use App\Models\IncomeSource;
 use App\Models\Material;
 use App\Models\MaterialCat;
 use App\Models\MaterialType;
@@ -18,6 +20,7 @@ use App\Models\User;
 use App\Models\Worker;
 use App\Policies\EquipCheckPolicy;
 use App\Policies\EquipPolicy;
+use App\Policies\IncomePolicy;
 use App\Policies\MaterialPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\PurchasePolicy;
@@ -50,6 +53,8 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolesPolicy::class,
         User::class => UserPolicy::class,
         Worker::class => WorkerPolicy::class,
+        IncomeSource::class => IncomePolicy::class,
+        Income::class => IncomePolicy::class,
     ];
 
     /**

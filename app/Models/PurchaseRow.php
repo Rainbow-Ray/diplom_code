@@ -14,7 +14,7 @@ class PurchaseRow extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'name',
+        // 'name',
         'price',
         'count',
         'purch_id',

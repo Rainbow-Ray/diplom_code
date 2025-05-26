@@ -14,6 +14,7 @@ use App\Http\Controllers\EquipController;
 use App\Http\Controllers\EquipTypeController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpenseSourceController;
+use App\Http\Controllers\FastServiceController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\IncomeSourceController;
 use App\Http\Controllers\JobTitleController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
+use App\Models\FastService;
 use App\Models\Material;
 use App\Models\User;
 
@@ -46,6 +48,10 @@ use App\Models\User;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::resource(FastServiceController::rootURL, FastServiceController::class);
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -86,7 +92,7 @@ Route::resources([
     StateController::class::rootURL => StateController::class,
 
     // Доходы и Расходы.
-    IncomeSourceController::class::rootURL => IncomeSourceController::class,
+    
     IncomeController::class::rootURL => IncomeController::class,
     ExpenseSourceController::class::rootURL => ExpenseSourceController::class,
     ExpenseController::class::rootURL => ExpenseController::class,
@@ -98,6 +104,15 @@ Route::resources([
     ServiceController::class::rootURL => ServiceController::class,
 
 ]);
+
+Route::resource(IncomeSourceController::class::rootURL, IncomeSourceController::class)
+    ->only(['create', 'store', 'edit', 'update', 'index', 'show'])
+    ->middleware('can:create, App\Models\Income');
+Route::resource(IncomeSourceController::class::rootURL, IncomeSourceController::class)
+    ->only(['destroy'])
+    ->middleware('can:delete, App\Models\Income');
+Route::resource(IncomeController::class::rootURL, IncomeController::class)
+->middleware('can:view, App\Models\Income');
 
 // Сотрудники. Роли.
 Route::resource(WorkerController::class::rootURL, WorkerController::class)
@@ -196,6 +211,7 @@ Route::get('locks', [MaterialController::class, 'show_locks']);
 Route::get('furniture', [MaterialController::class, 'show_furniture']);
 Route::get('leather', [MaterialController::class, 'show_leather']);
 Route::get('matOther', [MaterialController::class, 'show_matOther']);
+Route::get('made_item', [MaterialController::class, 'show_item']);
 
 // Материалы по категориям. Создание
 Route::get('accessories/create', [AccController::class, 'create_material'])
@@ -257,6 +273,10 @@ Route::post('report/customer', [ReportController::class, 'customerForm']);
 
 Route::get('report/incomeMedian', [ReportController::class, 'incomeMedian']);
 Route::post('report/incomeMedian', [ReportController::class, 'incomeMedianForm']);
+
+
+
+
 
 
 Route::get('/clear', [ConfigController::class, 'clearRoute']);

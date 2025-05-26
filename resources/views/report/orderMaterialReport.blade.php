@@ -20,13 +20,13 @@
     <thead>
         <th>Доход за заказы, руб.</th>
         <th>Расходы за закупки, руб.</th>
-        <th>Прибыль, руб.</th>
+        {{-- <th>Прибыль, руб.</th> --}}
     </thead>
     <tbody>
         <tr>
             <td>{{ $orderSumm }}</td>
             <td>{{ $expenseSumm }}</td>
-            <td>{{ $orderSumm - $expenseSumm }}</td>
+            {{-- <td>{{ $orderSumm - $expenseSumm }}</td> --}}
         </tr>
     </tbody>
 </table>
@@ -67,7 +67,7 @@
 <table>
     <thead>
         <th>Наименование материала</th>
-        <th>Категория материала</th>
+        <th>Тип материала</th>
         <th>Кол-во</th>
         <th>Ед. измерения.</th>
         <th>Дата закупки</th>

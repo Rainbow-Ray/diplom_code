@@ -15,10 +15,18 @@ class IncomeController extends Controller
     const editTitle = "Редактировать доход";
     const editFormHeader = "Доход";
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('can:create, App\Models\Material')->except(['index', 'show']);
     }
+
+
+    public function getIncome($id) {
+        // $id = $_GET['id'];
+        $inc = Income::find($id);
+        return 'ass';
+        return json_encode($inc);
+    }   
 
     /**
      * Display a listing of the resource.
@@ -26,10 +34,10 @@ class IncomeController extends Controller
     public function index()
     {
         $columns = Income::all()->sortByDesc('date');
-        foreach($columns as $i){
+        foreach ($columns as $i) {
             $i = IncomeNormalization::beautify_datetime($i);
         }
-        
+
         return view("income/card", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 
@@ -39,9 +47,13 @@ class IncomeController extends Controller
     public function create()
     {
         $sources = IncomeSource::all();
-        
-        return view('income/create', ["rootURL"=> $this::rootURL, "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader, 'sources'=> $sources]);
+
+        return view('income/create', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            'sources' => $sources
+        ]);
     }
 
     /**
@@ -59,18 +71,31 @@ class IncomeController extends Controller
         $income->save();
 
         return redirect($this::rootURL);
-
     }
 
-    public static function CreateExternal($number, $date, $amount, $receiptId){
+    public static function CreateExternal($number, $date, $amount, $receiptId)
+    {
         $income = new Income();
         $income->number = $number;
         $income->date = $date;
         $income->amount = $amount;
         $income->source_id = 1;
-        $income->receipt_id= $receiptId;
+        $income->receipt_id = $receiptId;
 
         $income->save();
+    }
+    public static function CreateFastExternal($number, $date, $amount, $serviceId)
+    {
+        $income = new Income();
+        $income->number = $number;
+        $income->date = $date;
+        $income->amount = $amount;
+        $income->source_id = 1;
+        $income->service_id = $serviceId;
+
+        $income->save();
+
+        return $income->id;
     }
 
     /**
@@ -79,10 +104,10 @@ class IncomeController extends Controller
     public function show(string $id)
     {
         $receipt = Income::findOrFail($id);
-        return [$receipt->date,
-        $receipt->amount,
+        return [
+            $receipt->date,
+            $receipt->amount,
         ];
-
     }
 
     /**
@@ -93,17 +118,22 @@ class IncomeController extends Controller
         $income = Income::findOrFail($id);
         $sources = IncomeSource::all();
 
-        if (!is_null($income)){
-            return view('income/edit', ["rootURL" => $this::rootURL,
-            "income"=> $income, 
-            'title'=>$this::editTitle, "formHeader"=>$this::editFormHeader, "sources"=>$sources,
-            
-        ]);
-        }
-        return view('income/create', ["rootURL"=> $this::rootURL,
-         "title"=>  $this::storeTitle, 
-        "formHeader"=> $this::storeFormHeader, "sources"=>$sources,
+        if (!is_null($income)) {
+            return view('income/edit', [
+                "rootURL" => $this::rootURL,
+                "income" => $income,
+                'title' => $this::editTitle,
+                "formHeader" => $this::editFormHeader,
+                "sources" => $sources,
+
             ]);
+        }
+        return view('income/create', [
+            "rootURL" => $this::rootURL,
+            "title" =>  $this::storeTitle,
+            "formHeader" => $this::storeFormHeader,
+            "sources" => $sources,
+        ]);
     }
 
     /**
@@ -113,24 +143,35 @@ class IncomeController extends Controller
     {
         $income = Income::findOrFail($id);
 
-        if (!is_null($income)){
+        if (!is_null($income)) {
             $income->date = $request['date'];
             $income->amount = $request['amount'];
-            $income->source_id = $request['source'];
+            $income->service_id = $request['source'];
 
             $income->save();
-
         }
-        return redirect( $this::rootURL);
+        return redirect($this::rootURL);
     }
 
-    public static function UpdateExternal(Request $request, $receiptId){
+    public static function UpdateExternal(Request $request, $receiptId)
+    {
         $income = Income::findOrFail($request["check"]);
 
-        if (!is_null($income)){
+        if (!is_null($income)) {
             $income->receipt_id = $receiptId;
             $income->save();
         }
+    }
+    public static function UpdateFastExternal(Request $request, $serviceId)
+    {
+        $income = Income::findOrFail($request["check"]);
+
+        if (!is_null($income)) {
+            $income->receipt_id = $serviceId;
+            $income->save();
+        }
+
+        return $income->id;
     }
 
 
@@ -141,7 +182,6 @@ class IncomeController extends Controller
     {
         $income = Income::findOrFail($id);
         $income->delete();
-        return redirect( $this::rootURL);
+        return redirect($this::rootURL);
     }
-
 }

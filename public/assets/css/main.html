@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @yield('title')
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
-    <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <title>
+        Главное меню
+    </title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- <script src=" http://127.0.0.1:8000/assets/js/jquery-3.7.1.min.js"></script> -->
+    <script src="C:\OSPanel\diplom\public\assets\js/jquery-3.7.1.min.js"></script>
 
 
-    @yield('scripts')
 
-    <script>
+    <!-- <script>
         $(document).ready(function() {
 
             var url = window.location.href;
@@ -24,21 +26,31 @@
                     $(this).children().id = 'currentNav';
                 }
             });
+        });
+    </script> -->
+    <script>
+        $(document).ready(function () {
 
-
-
-
-
-            $(".menuMobile").on('click', function() {
+            $(".menuMobile").on('click', function () {
                 if ($(".side_nav").is(":visible")) {
                     $(".side_nav").hide();
 
-                } else {
+                }
+                else {
                     $(".side_nav").show();
 
                 }
             })
+            var url = window.location.href;
+            var href = url.split("/")[3];
 
+            $('.side_nav_main_ul a').each(function () {
+                var now = $(this).attr('href').split("/")[3];
+                if (now == href) {
+                    $(this).children().addClass('currentNav');
+                    $(this).children().id = 'currentNav';
+                }
+            });
         });
     </script>
 
@@ -48,24 +60,19 @@
     <header>
         <div class="logo"> <a href="http://127.0.0.1:8000/">ИС "КлючСервис+"</a> </div>
         <div class="logData">
-            @guest
-                <a href="http://127.0.0.1:8000/login">Вход</a>
-                <a href="http://127.0.0.1:8000/register">Регистрация</a>
-            @endguest
 
-            @auth
-                <span class="username">{{ Auth::user()->email }}</span>
-                <a href="http://127.0.0.1:8000/user/{{ Auth::user()->id }}/edit">Редактировать</a>
+            <span class="username">a@a.ru</span>
+            <a href="http://127.0.0.1:8000/user/1/edit">Редактировать</a>
 
-                <form action="http://127.0.0.1:8000/logout" method="POST">
-                    @csrf
-                    <input type="submit" class="logOut " value="Выход">
-                </form>
-            @endauth
+            <form action="http://127.0.0.1:8000/logout" method="POST">
+                <input type="hidden" name="_token" value="aCCKW7sVGMILKiBXhFXuDXYX8GPf5QKHX75nuGs7" autocomplete="off">
+                <input type="submit" class="logOut " value="Выход">
+            </form>
         </div>
 
 
     </header>
+
     <nav class="main_nav">
         <ul>
             <li><a href="http://127.0.0.1:8000/">Главная</a></li>
@@ -129,9 +136,7 @@
 
             </ul>
 
-            {{-- <a href="http://127.0.0.1:8000/skill">
-                <li>Навыки</li>
-            </a> --}}
+
 
             <ul class="sec_ul">Материалы
                 <a href="http://127.0.0.1:8000/materialExp">
@@ -209,59 +214,114 @@
 
     <main>
 
-        @yield('main')
-
-        {{-- <h1>Тип аксуссуара</h1>
-
-        <div class="card">
-            <span class="cardLabel">Тип:</span>
-            <span class="cardData">Станок</span>
-            <span class="cardLabel">Название:</span>
-            <span class="cardData">Станок Рязань-2</span>
-            <span class="cardLabel">Инвентарный номер:</span>
-            <span class="cardData">СТ1002</span>
-            <span class="cardLabel">Количество:</span>
-            <span class="cardData">1</span>
-            <a href="">
-                <button>Редактировать</button>
-                </a>
+        <div class="mainHeader">
+            <h1>Главное меню</h1>
         </div>
-        <div class="card">
-            <span class="cardLabel">Тип:</span>
-            <span class="cardData">Станок</span>
-            <span class="cardLabel">Название:</span>
-            <span class="cardData">Станок Рязань-2</span>
-            <span class="cardLabel">Инвентарный номер:</span>
-            <span class="cardData">СТ1002</span>
-            <span class="cardLabel">Количество:</span>
-            <span class="cardData">1</span>
-            <a href="">
-                <button>Редактировать</button>
-                </a>
-        </div>
-        <div class="card">
-            <span class="cardLabel">Тип:</span>
-            <span class="cardData">Станок</span>
-            <span class="cardLabel">Название:</span>
-            <span class="cardData">Станок Рязань-2</span>
-            <span class="cardLabel">Инвентарный номер:</span>
-            <span class="cardData">СТ1002</span>
-            <span class="cardLabel">Количество:</span>
-            <span class="cardData">1</span>
-            <a href="">
-                <button>Редактировать</button>
-                </a>
-        </div> --}}
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+        <div class="mainBlock">
+            <h2 class="start1 end3">Готовы к выдаче</h2>
+            <div class="block header start1 end3">
+                <span>Изделие</span>
+                <span class="start2 end4">Клиент</span>
+                <span class="start4 end6">Номер телефона</span>
             </div>
-        @endif
+
+            <a class="start1 end3" href="http://127.0.0.1:8000/receipt/2">
+                <div class="block item">
+                    <span>Ключ дверной </span>
+                    <span class="start2 end4">Некрасова Алиса Егоровна</span>
+                    <span class="start4 end6">89225698741</span>
+
+                </div>
+
+            </a>
+            <a href="http://127.0.0.1:8000/receipt/2" class="start5">Квитанция</a>
+            <a class="start1 end3" href="http://127.0.0.1:8000/receipt/1">
+                <div class="block item">
+                    <span>Сумка </span>
+                    <span class="start2 end4">Иванов Георгий Андреевич</span>
+                    <span class="start4 end6">89225874210</span>
+
+                </div>
+
+            </a>
+            <a href="http://127.0.0.1:8000/receipt/15" class="start5">Квитанция</a>
+        </div>
+
+        <div class="mainBlock">
+            <h2 class="start1 end3">Заказы в работе</h2>
+            <div class="block header start1 end3">
+                <span>Изделие</span>
+                <span>Дата принятия</span>
+                <span>Дата выдачи</span>
+                <span>Готово</span>
+                <span></span>
+            </div>
+            <a class="start1 end3" href="http://127.0.0.1:8000/order/11">
+                <div class="block item">
+                    <span>Кошелек </span>
+                    <span>15.05.2025</span>
+                    <span>18.05.2025</span>
+                    <span>0</span>
+                    <span></span>
+                </div>
+            </a>
+            <a class="start1 end3" href="http://127.0.0.1:8000/order/12">
+                <div class="block item">
+                    <span>Ключи офис </span>
+                    <span>01.04.2025</span>
+                    <span>20.04.2025</span>
+                    <span>15</span>
+                    <span>Срочный</span>
+                </div>
+            </a>
+            <a class="start1 end3" href="http://127.0.0.1:8000/order/16">
+                <div class="block item">
+                    <span>Сумка </span>
+                    <span>23.05.2025</span>
+                    <span>24.05.2025</span>
+                    <span>0</span>
+                    <span></span>
+                </div>
+            </a>
+            <a class="start1 end3" href="http://127.0.0.1:8000/order/17">
+                <div class="block item">
+                    <span>Браслет часов </span>
+                    <span>25.05.2025</span>
+                    <span>25.05.2025</span>
+                    <span>0</span>
+                    <span></span>
+                </div>
+            </a>
+        </div>
+
+        <div class="mainBlock">
+            <h2 class="start1 end3">Оборудование в плохом состоянии или требующее проверки</h2>
+            <div class="block header start1 end3">
+                <span>Изделие</span>
+                <span>Инвентарный номер</span>
+                <span class="start3 end5">Дата последней проверки</span>
+                <span>Состояние</span>
+                <span>Частота проверки</span>
+            </div>
+            <a class="start1 end3" href="http://127.0.0.1:8000/equip/6">
+                <div class="block item">
+                    <span>Программатор Autel </span>
+                    <span>П01 </span>
+                    <span class="start3 end5">12.01.2025</span>
+                    <span>Отлично</span>
+                    <span>Раз в 90 дн.</span>
+                    <span></span>
+                </div>
+            </a>
+        </div>
+
+
+
+
+
+
+
+
 
     </main>
     <footer>

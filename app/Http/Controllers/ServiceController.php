@@ -65,13 +65,13 @@ class ServiceController extends Controller
 
         $service->save();
 
-        if (!is_null($request['skill'])) {
-            if (count($request['skill']) > 0) {
-                foreach ($request['skill'] as $skill) {
-                    WorkerService::create($service->id, $skill);
-                }
-            }
-        }
+        // if (!is_null($request['skill'])) {
+        //     if (count($request['skill']) > 0) {
+        //         foreach ($request['skill'] as $skill) {
+        //             // WorkerService::create($service->id, $skill);
+        //         }
+        //     }
+        // }
         // if(!is_null($request['skill'])){
         //     if(count($request['skill']) > 0){
         //         foreach($request['skill'] as $skill){
@@ -90,13 +90,13 @@ class ServiceController extends Controller
         $delete = array_diff($oldSkills, $inter);
         $add = array_diff($newSkills, $inter);
 
-        foreach ($delete as $i) {
-            WorkerService::where('service_id', $service->id)->where('worker_id', $i)->delete();
-        }
+        // foreach ($delete as $i) {
+        //     // WorkerService::where('service_id', $service->id)->where('worker_id', $i)->delete();
+        // }
 
-        foreach ($add as $i) {
-            ServiceSkill::create($service->id, $i);
-        }
+        // foreach ($add as $i) {
+        //     // ServiceSkill::create($service->id, $i);
+        // }
     }
 
 
@@ -129,14 +129,14 @@ class ServiceController extends Controller
                 "service" => $service,
                 'title' => $this::editTitle,
                 "formHeader" => $this::editFormHeader,
-                'workers' => $workers
+                // 'workers' => $workers
             ]);
         }
         return view('service/createW', [
             "rootURL" => $this::rootURL,
             "title" =>  $this::storeTitle,
             "formHeader" => $this::storeFormHeader,
-            'workers' => $workers
+            // 'workers' => $workers
         ]);
     }
 
@@ -153,14 +153,14 @@ class ServiceController extends Controller
             $service->save();
         }
 
-        $old = Utils::skillsToArray($service->workers);
-        $new =  $request['skill'];
+        // $old = Utils::skillsToArray($service->workers);
+        // $new =  $request['skill'];
 
-        if (is_null($request['skill'])) {
-            $new =  [];
-        }
+        // if (is_null($request['skill'])) {
+        //     $new =  [];
+        // }
 
-        $this::UpdateSkills($service, $old, $new);
+        // $this::UpdateSkills($service, $old, $new);
 
         return redirect($this::rootURL);
     }

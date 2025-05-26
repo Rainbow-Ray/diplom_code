@@ -76,7 +76,7 @@ class WorkerController extends Controller
         if (!is_null($request['skill'])) {
             if (count($request['skill']) > 0) {
                 foreach ($request['skill'] as $skill) {
-                    WorkerService::create($worker->id, $skill);
+                    // WorkerService::create($worker->id, $skill);
                 }
             }
         }
@@ -110,11 +110,11 @@ class WorkerController extends Controller
         //     $add,        $inter]));
 
         foreach ($delete as $i) {
-            WorkerService::where('worker_id', $worker->id)->where('service_id', $i)->delete();
+            // WorkerService::where('worker_id', $worker->id)->where('service_id', $i)->delete();
         }
 
         foreach ($add as $i) {
-            WorkerService::create($worker->id, $i);
+            // WorkerService::create($worker->id, $i);
         }
     }
     // static function UpdateSkills($worker, $oldSkills, $newSkills)

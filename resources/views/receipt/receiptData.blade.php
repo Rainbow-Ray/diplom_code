@@ -7,11 +7,10 @@
 @endsection
 
 @section('header')
-    Квитанция {{ $item->number }}
+    Квитанция №{{ $item->number }}
 @endsection
 @section('addButton')
 @endsection
-
 
 @section('dictCard')
     <div class="receiptForm receiptData">
@@ -57,15 +56,12 @@
             @else
                 <span class="cardData">0</span>
             @endif
-
-
-            <span class="cardData">{{ $item->costAdd }}</span>
             <span>руб.</span>
 
         </div>
         <div class="start3 underline">
             <span class="cardLabel">Дата приема:</span>
-            <span class="cardData">{{ $item->dateIn }}</span>
+            <span class="cardData">{{ $item->dateIn() }}</span>
 
 
         </div>
@@ -83,14 +79,17 @@
         </div>
         <div class="  underline">
             <span class="cardLabel">Пред. дата получения:</span>
-            <span class="cardData">{{ $item->datePlan }}</span>
+            <span class="cardData">{{ $item->datePlan() }}</span>
 
 
         </div>
         <div class="start3 end4 underline">
             <span class="cardLabel">Дата получения:</span>
-            <span class="cardData">{{ $item->dateOut }}</span>
-
+            @if(is_null( $item->dateOut))
+            <span class="cardData"></span>
+            @else
+            <span class="cardData">{{ $item->dateOut() }}</span>
+            @endif
 
         </div>
         <div class="start1 end3 underline">
@@ -114,13 +113,23 @@
 
         </div>
 
-        <div class="start1 end4">
+        <div class="start1 underline">
+            <span class="cardLabel">Оплачено на данный момент:</span>
+            @if ($item->sumNow() > 0)
+                <span class="cardData">{{$item->sumNow()}} руб.</span>
+            @else
+                <span class="cardData">0 руб.</span>
+            @endif
+        </div>
+                <div class=" underline">
             @if ($item->isPaid)
                 <span class="cardData isDone done">Оплачено</span>
             @else
                 <span class="cardData notDone isDone">Нет оплаты</span>
             @endif
         </div>
+
+        
         <a href="{{ url('receipt/' . strval($item->id) . '/edit', []) }}" class="start3 end4 ">
             <button class="addButton beautyButton right">Редактировать</button>
         </a>

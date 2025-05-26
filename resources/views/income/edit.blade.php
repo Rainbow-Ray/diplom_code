@@ -44,12 +44,12 @@
 
         <div class="labelTop">
             <label for="dateIn">Дата дохода:</label>
-            <input type="datetime-local" name="dateIn" id="dateIn" value="{{ $income->date }}" required>
+            <input type="datetime-local" name="date" id="date" value="{{ $income->date }}" required>
         </div>
 
         <div class="start1 end3 ">
               <label for="costAdd">Сумма:</label>
-              <input type="money" name="costAdd" id="costAdd" value="{{ $income->amount }}">
+              <input type="money" name="amount" id="amount" value="{{ $income->amount }}">
           <span>руб.</span>
 
         </div>

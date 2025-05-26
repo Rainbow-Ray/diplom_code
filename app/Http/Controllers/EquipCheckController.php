@@ -79,17 +79,39 @@ class EquipCheckController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(EquipCheck $equipCheck)
+    public function edit($id)
     {
-        //
+        $check = EquipCheck::findOrFail($id);
+        if (!is_null($check)) {
+            
+            $equip = $check->equip;
+            $states = State::all();
+
+            return view('equipCheck/edit', ["rootURL"=> EquipCheckController::rootURL,
+            'equip'=>$equip, 'equipStates'=>$states, 'check'=> $check]);
+
+            # code...
+        }
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EquipCheck $equipCheck)
+    public function update(Request $request, $id)
     {
-        //
+                $check = EquipCheck::findOrFail($id);
+        if (!is_null($check)) {
+            
+            $check->date = $request['date'];
+            $check->state_id = $request['equip_state'];
+            $check->save();
+
+            return redirect('/equip/'.$check->equip->id);
+
+            # code...
+        }
+
     }
 
     /**

@@ -27,12 +27,17 @@
             <select id="selectCustomer" name="customer">
                 <option value=""></option>
                 @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}" discount="{{ $customer->discount }}">
-                        {{ $customer->surname . ' ' . $customer->name . ' ' . $customer->patronym . ' // ' . $customer->phone }}
+                    @if ($customer->id == old('customer'))
+                        <option value="{{ $customer->id }}" discount="{{ $customer->discount }}" selected>
+                        @else
+                        <option value="{{ $customer->id }}" discount="{{ $customer->discount }}">
+                    @endif
+                    {{ $customer->surname . ' ' . $customer->name . ' ' . $customer->patronym . ' // ' . $customer->phone }}
                     </option>
                 @endforeach
             </select>
             <input type="text" id="discount" class="hide" value="0" readonly>
+
         </div>
 
         <div class="labelTop">
@@ -61,16 +66,16 @@
 
         <div class="labelTop start1 end3">
             <label for="item">Наименование изделия:</label>
-            <input type="text" name="item" id="item" required>
+            <input type="text" name="item" id="item" value="{{ old('item') }}" required>
         </div>
         <div class="labelTop">
             <label for="count">Количество:</label>
-            <input type="number" name="count" id="count" min="1" value="1" required>
+            <input type="number" name="count" id="count" min="1" value="{{ old('count', 1) }}" required>
         </div>
 
         <div class="labelTop start5 ">
             <label for="dateOut">Факт. дата выдачи:</label>
-            <input type="date" name="dateOut" id="dateOut">
+            <input type="date" name="dateOut" id="dateOut" value="{{ old('dateOut') }}">
         </div>
 
         <div class="labelTop start1 end4">
@@ -79,8 +84,12 @@
             <select id="service" name="service">
                 <option value=""></option>
                 @foreach ($services as $service)
-                    <option value="{{ $service->id }}">
-                        {{ $service->name . ' // ' . $service->cost }}
+                    @if ($service->id == old('service'))
+                        <option value="{{ $service->id }}" cost="{{$service->cost}}" selected>
+                        @else
+                        <option value="{{ $service->id }}" cost="{{$service->cost}}">
+                    @endif
+                    {{ $service->name . ' // ' . $service->cost }} руб.
                     </option>
                 @endforeach
             </select>
@@ -88,22 +97,26 @@
 
         <div class="labelTop price start4">
             <label for="costPred">Пред. стоимость:</label>
-            <input type="money" name="costPred" id="costPred">
+            <input type="money" name="costPred" id="costPred" value="{{ old('costPred') }}">
             <span>руб.</span>
         </div>
 
         <div class="labelTop price">
             <label for="costAdd">Доплата:</label>
-            <input type="money" name="costAdd" id="costAdd">
+            <input type="money" name="costAdd" id="costAdd" value="{{ old('costAdd') }}">
             <span>руб.</span>
         </div>
         <div class="labelTop start1 end3">
             <label for="selectWorker">Мастер:</label>
             <select id="selectWorker" name="worker">
                 <option value=""></option>
-
                 @foreach ($workers as $worker)
-                    <option value="{{ $worker->id }}">{{ $worker->surname . ' ' . $worker->name }}
+                    @if ($worker->id == old('worker'))
+                        <option value="{{ $worker->id }}" selected>
+                        @else
+                        <option value="{{ $worker->id }}">
+                    @endif
+                    {{ $worker->surname . ' ' . $worker->name }}
                     </option>
                 @endforeach
             </select>
@@ -111,12 +124,12 @@
 
         <div class="divisUrgent center right">
             <label for="isUrgent">Срочный заказ</label>
-            <input type="checkbox" name="isUrgent" id="isUrgent">
+            <input type="checkbox" name="isUrgent" id="isUrgent" @if(old('isUrgent')) checked @endif>
 
         </div>
         <div class="divisPaid center right">
             <label for="isPaid">Оплачено</label>
-            <input type="checkbox" name="isPaid" id="isPaid">
+            <input type="checkbox" name="isPaid" id="isPaid" @if(old('isPaid')) checked @endif>
 
         </div>
 
@@ -124,7 +137,7 @@
 
         <div class="labelTop price start5">
             <label for="cost">Конечная стоимость:</label>
-            <input type="money" name="cost" id="cost">
+            <input type="money" name="cost" id="cost" value="{{ old('cost') }}">
             <span>руб.</span>
         </div>
 
@@ -133,8 +146,7 @@
 
         <div class="labelTop start1">
             <label for="note">Примечание</label>
-            <input type="text" name="note" id="note">
-
+            <input type="text" name="note" id="note" value="{{ old('note') }}">
         </div>
 
         <div class="divPayment">
@@ -176,13 +188,13 @@
 
 
     @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
 @endsection

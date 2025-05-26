@@ -18,6 +18,7 @@
             Добавить квитанцию
         </button>
     </a>
+
 @endsection
 
 
@@ -29,7 +30,7 @@
 
 
 
-    @foreach ($items as $item)
+    {{-- @foreach ($items as $item)
         @if ($item->order->isHanded)
             <div class="card handed">
             @else
@@ -56,6 +57,7 @@
                 @else
                     <p class="cardData notDone isDone">❌</p>
                 @endif
+
 
             </div>
 
@@ -96,7 +98,7 @@
 
         </a>
         </div>
-    @endforeach
+    @endforeach --}}
 
 
     <script>

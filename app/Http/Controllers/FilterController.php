@@ -17,6 +17,7 @@ use App\View\Components\jsReceipt;
 use App\View\Components\materialExpense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 enum Type
 {
@@ -90,9 +91,12 @@ class FilterController extends Controller
         }
 
         if ($filter == 'mine') {
-            if (!is_null(Auth::user())) {
+            // return auth()->guard('api')->user();
+
+            // return Auth::User();
+            if (!is_null(Auth::User())) {
                 $result = Order::where('isDone', 0)->join('Receipt', 'receipt_id', 'Receipt.id')
-                    ->where('worker_id', Auth::user()->worker_id)
+                    ->where('worker_id', Auth::User()->worker_id)
                     ->orderBy('isUrgent', 'desc')
                     ->orderBy(Receipt::select("datePlan")->whereColumn('Receipt.id', '_Order.receipt_id')->orderBy('datePlan', 'desc'))
                     ->get();

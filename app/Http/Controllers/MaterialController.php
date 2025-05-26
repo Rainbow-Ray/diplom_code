@@ -66,6 +66,11 @@ class MaterialController extends Controller
         $columns = $this::getMaterialByCat(7);
         return view('material.card', ['title' => 'Прочие материалы', 'createURL' => 'materials', 'items' => $columns, 'rootURL' => $this::rootURL]);
     }
+    public function show_item()
+    {
+        $columns = $this::getMaterialByCat(8);
+        return view('material.card', ['title' => 'Изделия', 'createURL' => 'materials', 'items' => $columns, 'rootURL' => $this::rootURL]);
+    }
 
     public static function apiIndex()
     {
@@ -135,14 +140,11 @@ class MaterialController extends Controller
         $mats = Material::all();
 
         $exp = MatExp::selectRaw(
-
 '        MatExp.date, 
         MatExp.id, 
         MatExp.amount, 
         MatExp.mat_id
 '
-
-            
         )->where('date', $req['date'])->get();
 
         return view('material/expenseEdit', [
@@ -183,7 +185,6 @@ class MaterialController extends Controller
                 }
             }
         }
-
         return redirect('materialExp');
     }
 

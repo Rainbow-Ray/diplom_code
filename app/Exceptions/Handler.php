@@ -31,17 +31,17 @@ class Handler extends ExceptionHandler
         // $this->reportable(function (Throwable $e) {
         // });
 
-        // $this->renderable(function (ErrorException $e, $request) {
-        //     return response() -> view('error', ['request'=> $request, 'message'=>"ERROR"]);
-        // });
+        $this->renderable(function (ErrorException $e, $request) {
+            return response() -> view('error', ['request'=> $request, 'message'=>"ERROR"]);
+        });
 
-        // $this->renderable(function (QueryException $e,  $request) {
-        //     return back()->withErrors(['err'=>'Невозможно удалить, на данную запись ссылаются другие объекты']);
-        // });
+        $this->renderable(function (QueryException $e,  $request) {
+            return back()->withErrors(['err'=>'Невозможно удалить, на данную запись ссылаются другие объекты']);
+        });
 
-        // $this->renderable(function (Exception $e, $request) {
-        //     return response() -> view('error', ['request'=> $request, 'message'=>"Произошла ошибка. Вернитесь на предыдущую страницу"]);
-        // });
+        $this->renderable(function (Exception $e, $request) {
+            return response() -> view('error', ['request'=> $request, 'message'=>"Произошла ошибка. Вернитесь на предыдущую страницу"]);
+        });
 
     }
 }

@@ -26,7 +26,7 @@
             <label for="name">Название</label>
             <input type="text" name="name" id="name" value="{{ $equip->name }}" required>
         </div>
-                <div class="labelTop start3">
+        <div class="labelTop start3">
             <label for="number">Инвентарный номер</label>
             <input type="text" name="number" id="number" value="{{ $equip->number }}" required>
         </div>
@@ -47,6 +47,19 @@
             <label class="hide" for="count">Количество</label>
             <input class="hide" type="number" name="count" id="count" value="1" required>
         </div>
+
+        <div class="labelTop start1 end3 col3">
+            <label class="start1 end4" for="checkFreq">Периодичность проверки:</label>
+            Каждый
+            <input class="start2" type="number" name="checkFreq" value="1">
+            <select name="freq" id="freq" class="start3">
+                <option value="1">мес.</option>
+                <option value="2" selected>дн.</option>
+            </select>
+        </div>
+
+
+
         <input type="submit" value="Отправить" class="addButton beautyButton right rstart5 end7">
     </form>
 

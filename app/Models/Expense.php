@@ -19,7 +19,6 @@ class Expense extends Model
         'worker_id',
         'orderOut_id',
         'source_id',
-        'orderOut_id',
     ];
 
         public function date()

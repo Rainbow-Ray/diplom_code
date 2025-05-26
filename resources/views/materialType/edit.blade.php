@@ -18,7 +18,7 @@
 
 @endsection
 @section('main')
-    <form action="/{{$rootURL}}" method="POST">
+    <form action="/{{$rootURL}}/{{$type->id}}" method="POST">
         @csrf
         @method('PUT')
         <h2>Редактировать тип материала</h2>
@@ -27,7 +27,7 @@
             <label for="category">Категория материала:</label>
             <select id="category" name="category">
               @foreach ($category as $cat)
-              @if ($cat->id == $item->cat_id)
+              @if ($cat->id == $type->cat_id)
               <option value="{{$cat->id}}" selected>
                 {{$cat->name}}
             </option>

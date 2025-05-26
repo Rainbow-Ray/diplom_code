@@ -22,12 +22,24 @@ class EquipCheck extends Model
 
     public function equip(): BelongsTo
     {
-        return $this->BelongsTo(Equip::class, 'equip_id');
+        return $this->BelongsTo(Equip::class, 'equip_id')->withDefault();
     }
 
     public function state(): BelongsTo
     {
         return $this->BelongsTo(State::class, 'state_id');
+    }
+
+
+
+
+    public static function storeNewEquip($equip, $date){
+        $a = new EquipCheck();
+        $a->equip_id = $equip;
+        $a->date = $date;
+        $a->state_id = 5;
+        $a->save();
+        
     }
 
 }

@@ -7,11 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\Item;
 use App\Http\Controllers\EquipController;
 use App\Http\Controllers\FilterController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\MainMenuController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialTypeController;
 use App\Http\Controllers\RequestController;
 use App\Http\Helpers\PurchasedItem;
+use App\Models\Income;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Validator;
 
@@ -26,16 +28,27 @@ use Illuminate\Support\Facades\Validator;
 |
 */
 
-// Route::middleware('can:create, App\Models\Material')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('can:create, App\Models\Material')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 // Фильтры
-Route::get('/order/filter', [FilterController::class, 'order']);
+Route::get('/order/filter', [FilterController::class, 'order'])->middleware('web');
 Route::get('/receipt/filter', [FilterController::class, 'receipt']);
 Route::get('/income/filter', [FilterController::class, 'income']);
 Route::get('/expense/filter', [FilterController::class, 'expense']);
 Route::get('/materialExp/filter', [FilterController::class, 'materialExp']);
+
+Route::get('/getincome/{id}', [ChecksApiController::class, 'getIncome']
+// function($id)  {
+
+//     echo "asdaassadasd";
+
+//             $inc = Income::find($id);
+
+// }
+
+);
 
 
 
@@ -48,9 +61,7 @@ Route::get("types", [MaterialTypeController::class, 'apiAll']);
 Route::get("materials", [MaterialController::class, 'apiIndex']);
 Route::get("equips", [EquipController::class, 'apiIndex']);
 
-Route::post('items', function (Request $request) {
-
-    
+Route::post('post_items', function (Request $request) {
     $request['price']  = str_replace(',', '.', $request['price'] );
 
     $data = $request->all();

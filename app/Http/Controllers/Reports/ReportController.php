@@ -112,22 +112,24 @@ class ReportController extends Controller
         $dateStart = Utils::formatDateFromStr($request['dateStart'], "Y-m-d H:m:s");
         $dateEnd = Utils::formatDateFromStr($request['dateEnd'], "Y-m-d H:m:s");
 
-        $income = Income::where('date', '>', $dateStart)->where('date', '<', $dateEnd)
+        $income = Income::where('date', '>=', $dateStart)->where('date', '<=', $dateEnd)
             ->join('IncomeSource', 'Income.source_id', 'IncomeSource.id')
             ->selectRaw('IncomeSource.name ,source_id , sum(amount) as sum')
             ->groupBy('source_id')->get();
 
 
-        $expense = PurchaseRow::selectRaw('"Закупки" as `name`, -1 as id, sum(count * price) as sum')->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')->where('date', '>', $dateStart)->where('date', '<', $dateEnd)
+        $expense = PurchaseRow::selectRaw('"Закупки" as `name`, -1 as id, sum(count * price) as sum')
+        ->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')
+            ->where('date', '>=', $dateStart)->where('date', '<=', $dateEnd)
             ->union(
-                Expense::where('date', '>', $dateStart)->where('date', '<', $dateEnd)
+                Expense::where('date', '>=', $dateStart)->where('date', '<=', $dateEnd)
                     ->join('ExpenseSource', 'Expense.source_id', 'ExpenseSource.id')
                     ->whereNot('Expense.source_id', 2)
                     ->selectRaw('ExpenseSource.name ,source_id , sum(amount) as sum ')
                     ->groupBy('source_id')
             );
 
-        $fail = Expense::where('date', '>', $dateStart)->where('date', '<', $dateEnd)
+        $fail = Expense::where('date', '>=', $dateStart)->where('date', '<=', $dateEnd)
             ->join('ExpenseSource', 'Expense.source_id', 'ExpenseSource.id')
             ->where('Expense.source_id', 2)
             ->selectRaw('ExpenseSource.name ,source_id , sum(amount) * 1.1 as sum ')
@@ -140,6 +142,10 @@ class ReportController extends Controller
         $profit = $incSum - $expSum;
 
         $row = ReportController::concat($income, $expense, 'i', 'e');
+
+        if (is_null($row)) {
+            $row = array();
+        }
 
         return view('report/incomeExpenseReport', [
             'dateS' => Normalization::beautify_date_from_str($dateStart),
@@ -204,7 +210,8 @@ class ReportController extends Controller
             ->get();
 
 
-        $expense = PurchaseRow::selectRaw('PurchaseRow.*, count*price as sum')->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')->where('date', '>', $dateStart)->where('date', '<', $dateEnd)
+        $expense = PurchaseRow::selectRaw('PurchaseRow.*, count*price as sum')->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')
+            ->where('date', '>=', $dateStart)->where('date', '<=', $dateEnd)
             ->get();
 
         $orderSumm = $order->sum('cost');
@@ -230,7 +237,7 @@ as V
 
 left join 
 (select mat_id,  sum(count) as 'start_amount' from `PurchaseRow` inner join `Purchase` on `purch_id` = `Purchase`.`id` 
-where `date` < '" . $dateStart . "' group by `mat_id`)
+where `date` <= '" . $dateStart . "' group by `mat_id`)
 as T 
 on V.Mat = T.mat_id 
 
@@ -300,29 +307,60 @@ INNER join Ei on Material.ei_id = Ei.id
 
         $days = Utils::dateDifference($request['dateEnd'], $request['dateStart'])->days;
 
-        $orders = Order::selectRaw('Worker.id,Worker.name, Worker.surname, count(CASE WHEN OrderOut.isFail = 1 then 1 ELSE NULL END ) as fails, 
-count(_Order.id) as orderCount, count(_Order.id)/' . $days . ' as orderDay, 
-sum( case when isnull(cost) THEN costPred ELSE cost END) as sum')
+        $orders = Order::selectRaw(
+            'Worker.id, Worker.name, Worker.surname, sum(CASE WHEN OrderOut.isFail = 1 then OrderOut.count ELSE 0 END ) as fails, 
+            count(DISTINCT(_Order.id)) as orderCount, count(DISTINCT(_Order.id))/' . $days . ' as orderDay, 
+            (SELECT sum(cost) from Receipt where Receipt.worker_id = Worker.id and isPaid = 1 
+            and  `dateIn` >= "' . $dateStart . '" and `dateIn` <= "' . $dateEnd . '") as sum
+'
+        )
             ->join('Receipt', 'Receipt.id', '_Order.receipt_id')
             ->join('Worker', 'Worker.id', 'Receipt.worker_id')
-            ->join('OrderOut', 'OrderOut.order_id', '_Order.id')
-            ->where('isHanded', 1)->where('dateIn', '>=', $dateStart)->where('dateOut', '<=', $dateEnd)
-            ->whereNotNull('worker_id')->groupBy('worker_id')->get();
+            ->leftJoin('OrderOut', 'OrderOut.order_id', '_Order.id')
+            ->where('isDone', 1)
+            ->where('dateIn', '>=', $dateStart)->where('dateIn', '<=', $dateEnd)
+            ->whereNotNull('worker_id')->groupBy('worker_id')->orderBy('Worker.id')->get();
 
+
+        $izdel = Order::selectRaw('Worker.id, sum(count) as sum, sum(count)/' . $days . ' as sumDay')
+            ->where('isDone', 1)
+            ->join('Receipt', 'Receipt.id', '_Order.receipt_id')
+            ->where('dateIn', '>=', $dateStart)->where('dateIn', '<=', $dateEnd)
+            ->join('Worker', 'Worker.id', 'Receipt.worker_id')
+            ->whereNotNull('worker_id')->groupBy('worker_id')->orderBy('Worker.id')->get();
+
+
+        $failPer = array();
+
+        for ($i = 0; $i < count($orders); $i++) {
+
+            $failPer[] = $orders[$i]->fails / $izdel[$i]->sum * 100;
+            # code...
+        }
+
+        $failAvg = array_sum($failPer) / count($failPer);
+
+
+        // 'isPaid', 1
         $itog = $orders->sum('orderCount');
-        $avgFail = $orders->avg('fails');
         $avgOrder = $orders->avg('orderDay');
         $sum = $orders->sum('sum');
+        $itogIz = $izdel->sum('sum');
+        $avgIz = $izdel->avg('sumDay');
 
+        // ->where('isDone', 1) CASE WHEN isPaid=1 THEN cost ELSE 0 END
         return (view('report/workerReport', [
             'dateS' => Normalization::beautify_date_from_str($dateStart),
             'dateE' => Normalization::beautify_date_from_str($dateEnd),
             'rows' => $orders,
             'itog' => $itog,
             'days' => $days,
-            'avgFail' => $avgFail,
+            'avgFail' => $failAvg,
             'avgOrder' => $avgOrder,
             'sum' => $sum,
+            'iz' => $izdel,
+            'avgIz' => $avgIz,
+            'itogIz' => $itogIz,
         ]));
     }
 
@@ -340,15 +378,21 @@ sum( case when isnull(cost) THEN costPred ELSE cost END) as sum')
         $customer = Receipt::selectRaw('customer_id, 
         Customer.name,Customer.surname,Customer.patronym,  count(Receipt.id) as countOrder, 
         avg( case when isnull(cost) THEN costPred ELSE cost END) as avg, 
-Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
-            ->where('dateIn', '>=', $dateStart)->where('dateOut', '<=', $dateEnd)->whereNotNull('customer_id')
-            ->groupBy('customer_id')
-            ->havingRaw('count(Receipt.id) > 1')->get();
+        Customer.discount')
+        ->join('Customer', 'Customer.id', 'Receipt.customer_id')
+        ->where('dateIn', '>=', $dateStart)
+        ->where('dateOut', '<=', $dateEnd)
+        ->whereNotNull('customer_id')
+        ->groupBy('customer_id')
+        ->havingRaw('count(Receipt.id) > 1')->get();
 
         $custPost = $customer->count('customer_id');
         $custAll = Customer::count();
 
-        $rpr = $custPost / $custAll;
+        $rpr = 0;
+        if ($custAll > 0) {
+            $rpr = $custPost / $custAll;
+        }
 
         $avgSum = $customer->avg('avg');
         $itog = $customer->sum('countOrder');
@@ -386,9 +430,10 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $dataPerDiff[] = 0;
 
         for ($i = 1; $i < count($data); $i++) {
-            $dataPerDiff[] = ReportController::diffPercent($data[$i - 1], $data[$i]);
+            $dataPerDiff[] =  $data[$i] - $data[$i - 1];
         }
 
+        // return $data;
 
         $labels = array_slice($labels, 1);
         $labelsJ = ReportController::encodeToJson($labels);
@@ -400,7 +445,7 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $en =  $data[count($data) - 1];
 
         $seDiff = ReportController::diffPercent($st, $en);
-        $avgeDiff = ReportController::diffPercent( $avgProfit, $en);
+        $avgeDiff = ReportController::diffPercent($avgProfit, $en);
 
         // return(count($data));
         // return(count($labels));
@@ -427,9 +472,10 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
 
     public static function diffPercent($a, $b)
     {
+        $b = is_null($b) || $b == 0 ? 1 : $b;
         $a = is_null($a) || $a == 0 ? $b : $a;
         $diff = ($a - $b) / ($a / 100);
-            $diff = abs($diff);
+        $diff = abs($diff);
 
         if ($a > $b) {
             $diff = -$diff;
@@ -461,21 +507,22 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
         $inervalArr = array();
         $date = $dateStart;
         $inervalArr[] = $dateStart->format('Y-m-d');
-
+        
         if ($diff->days >= (365 * 2)) {
             $dayDiff = intval($diff->days / 10);
             $dayInterval = new DateInterval('P' . $dayDiff . 'D');
-            $inervalArr = ReportController::addInterval($date, $dayInterval, 9);
+            $inervalArr = array_merge($inervalArr, ReportController::addInterval($date, $dayInterval, 9));
         } elseif ($diff->days > 120 && $diff->days < (365 * 2)) {
-            $dayDiff = intval($diff->days / 30) - 1;
+            $dayDiff = intval($diff->days / 29) - 1;
             $dayInterval = new DateInterval('P1M');
-            $inervalArr = ReportController::addInterval($date, $dayInterval, $dayDiff);
+            $inervalArr = array_merge($inervalArr, ReportController::addInterval($date, $dayInterval, $dayDiff));
         } else {
             $dayDiff = intval($diff->days / 7) - 1;
             $dayInterval = new DateInterval('P' . $dayDiff . 'D');
-            $inervalArr = ReportController::addInterval($date, $dayInterval, 7);
+            $inervalArr = array_merge($inervalArr, ReportController::addInterval($date, $dayInterval, 7));
         }
         $inervalArr[] = $dateEnd->format('Y-m-d');
+
         return $inervalArr;
     }
 
@@ -489,7 +536,7 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
             $ds = $inervalArr[$i];
             $de = $inervalArr[$i + 1];
             $income = Income::select('amount')->where('date', '>=', $ds)
-                ->where('date', '<', $de)->get()->sum('amount');
+                ->where('date', '<=', $de)->get()->sum('amount');
 
             $expense = PurchaseRow::selectRaw('sum(count * price) as sum')
                 ->join('Purchase', 'Purchase.id', 'PurchaseRow.purch_id')
@@ -520,6 +567,9 @@ Customer.discount')->join('Customer', 'Customer.id', 'Receipt.customer_id')
 
     public static function concat($a, $b, $prefA, $prefB)
     {
+        if (count($a) < 1 || count($b) < 1) {
+            return;
+        }
         $c = collect([]);
         $max_len = count($a) >= count($b) ? count($a) : count($b);
 

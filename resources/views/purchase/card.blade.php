@@ -24,7 +24,7 @@
                         <span class="cardLabel">Номер:</span>
                         <span class="cardData">{{ $item->number }}</span>
                         <span class="cardLabel">Дата создания:</span>
-                        <span class="cardData">{{ $item->date }}</span>
+                        <span class="cardData">{{$item->date()}}</span>
                         <span class="cardLabel start3 end5">Сумма:</span>
                         <span class="cardData start3 end5">{{ $item->summ() }} руб.</span>
                     </div>
@@ -47,8 +47,8 @@
                         <span class="cardData">{{ $row->count }}</span>
                         <span class="cardLabel">Ед. изм.:</span>
                         <span class="cardData">{{ $row->material()->ei->name }}</span>
-                        <span class="cardLabel">Цена:</span>
-                        <span class="cardData">{{ $row->price }}</span>
+                        <span class="cardLabel start4 end6">Цена:</span>
+                        <span class="cardData start4 end6">{{ $row->price }} руб.</span>
                     </div>
                     @endforeach
                 </div>

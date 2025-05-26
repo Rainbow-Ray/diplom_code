@@ -16,3 +16,7 @@ table, th, td{
 .italic{
     font-style: italic;
 }
+
+table thead th{
+    /* max-width: 15em; */
+}

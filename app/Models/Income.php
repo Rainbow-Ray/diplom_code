@@ -19,6 +19,7 @@ class Income extends Model
         'date',
         'source_id',
         'receipt_id',
+        'service_id',
     ];
 
     public function source()
@@ -30,9 +31,15 @@ class Income extends Model
         return $this->BelongsTo(Receipt::class, 'receipt_id')->withDefault();
     }
 
+    public function service()
+    {
+        return $this->BelongsTo(FastService::class, 'service_id')->withDefault();
+    }
+
     public function date() {
         return Normalization::beautify_dateTime($this->date);
-        
     }
+
+    
 
 }

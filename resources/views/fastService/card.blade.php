@@ -1,22 +1,22 @@
 @extends('List')
 @section('title')
-    <title>Доходы</title>
+    <title>Быстрая услуга</title>
 
     <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src=" {{ asset('assets/js/filter/filter.js') }}"></script>
 @endsection
 
 @section('header')
-    Доходы
+    Быстрые услуги
 @endsection
 
 
 @section('addButton')
-    {{-- <a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
+    <a class="addButtonLink" href="{{url($rootURL.'/create', [])}}">
     <button class="addButton beautyButton">
-        Добавить доход
+        Новая быстрая услуга
     </button>
-</a> --}}
+</a>
 @endsection
 
 
@@ -33,17 +33,18 @@
     @foreach ($items as $item)
         <div class="card">
             <div class="itemInfo info5">
-                <span class="cardLabel">Источник:</span>
-                <span class="cardData">{{ $item->source->name }}</span>
+                <span class="cardLabel">Номер:</span>
+                <span class="cardData">{{ $item->number }}</span>
 
                 <span class="cardLabel">Дата:</span>
                 <span class="cardData">{{ $item->date() }}</span>
 
-                <span class="cardLabel">Сумма:</span>
-                <span class="cardData">{{ $item->amount }} руб.</span>
+                <span class="cardLabel start4 end6">Услуга:</span>
+                <span class="cardData start4 end6">{{ $item->service->name }}</span>
 
-                <span class="cardLabel">Номер:</span>
-                <span class="cardData">{{ $item->number }}</span>
+                <span class="cardLabel">Сумма:</span>
+                <span class="cardData">{{ $item->income->amount }} руб.</span>
+
 
 
             </div>

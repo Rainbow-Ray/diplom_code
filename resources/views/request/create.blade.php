@@ -18,24 +18,24 @@
         @csrf
         <h2 class="start1 end7">Добавить запрос</h2>
 
-        <div class="">
+        <div class="labelTop">
             <label for="date">Номер:</label>
             <input type="text" name="number" id="number" value="{{ $number }}" required>
         </div>
 
-        <div class="">
+        <div class="labelTop">
             <label for="dateCreated">Дата создания:</label>
             <input type="date" name="dateCreated" id="dateCreated" value="{{ date('Y-m-d', time()) }}" required>
         </div>
 
-        <div class="">
-            <label for="isUrgent">Срочно</label>
-            <input type="checkbox" name="isUrgent" id="isUrgent">
-
+        <div class="labelLeft center">
+            
+            <label for="isUrgent" >Срочно</label>
+            <input  type="checkbox" name="isUrgent" id="isUrgent">
         </div>
 
 
-        <div class="divworker">
+        <div class="labelTop start4 end6">
             <label for="selectWorker">Создал:</label>
             <select id="selectWorker" class="select2" name="worker">
                 <option value=""></option>
@@ -156,7 +156,7 @@
             <label for="nameItem">Наименование:</label>
             <input type="text" id="itemName" readonly>
         </div>
-        <div class="labelTop col2 start4">
+        <div class="labelTop col2 start4 end6">
             <label for="count">Количество</label>
             <input type="number" name="count" id="count" min="0" value="1">
             <span class="start2">Ед. изм.</span>

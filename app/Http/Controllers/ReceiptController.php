@@ -12,6 +12,7 @@ use App\Http\Normalizators\ReceiptNormalization;
 use App\Http\Utils\Utils;
 use App\Models\Order;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -35,6 +36,8 @@ class ReceiptController extends Controller
             $i = ReceiptNormalization::beautify_dates($i);
         }
 
+
+
         return view("receipt/receiptCard", ['items' => $columns, 'rootURL' => $this::rootURL]);
     }
 
@@ -48,6 +51,7 @@ class ReceiptController extends Controller
         $services = Service::all();
         $number = Receipt::defNumber();
 
+
         return view('receipt/create', [
             "rootURL" => $this::rootURL,
             "title" =>  $this::storeTitle,
@@ -55,8 +59,54 @@ class ReceiptController extends Controller
             'customers' => $customers,
             'workers' => $workers,
             'number' => $number,
-            'services' => $services
+            'services' => $services,
+           
         ]);
+    }
+
+
+    private static function validationRules(Request $request){
+        $isPaid  =  $request['isPaid'];
+        $paidNal = $request['isPaid'] && $request['payment'] == 1;
+        $paidKass = $request['isPaid'] && $request['payment'] == 2;
+        $rules = [
+            'item' => 'required|string',
+
+            'payment'=> [Rule::excludeIf(function () use ($isPaid) {
+                return !$isPaid;
+            }), 
+            Rule::in(1, 2),
+            'required'
+        ],
+
+            'amount' => [
+                Rule::excludeIf(function () use ($paidNal) {
+                    return !$paidNal;
+                }),
+                'nullable',
+                'numeric',
+                'min:1',
+            ],
+
+            'check' => [
+                'nullable',
+                'numeric',
+                Rule::excludeIf(function () use ($paidKass) {
+                    return !$paidKass;
+                }),
+            ]
+
+        ];
+
+        $messages = [
+            'name.required' => 'Введите наименование изделия',
+            'amount.required' => 'Введите стоимость оплаты',
+            'check.required' => 'Выберите чек',
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        return $validator;
     }
 
     /**
@@ -65,52 +115,19 @@ class ReceiptController extends Controller
     public function store(Request $request)
     {
 
-                $receipt = new Receipt();
         $request = ReceiptNormalization::normalize($request);
 
+        $validator = ReceiptController::validationRules($request);
 
-        $rules=[
-            'item' => 'required|string',
-
-
-
-
-             'amount' => [
-        'nullable',
-        'numeric',
-        'min:1',
-        Rule::requiredIf(function () use ($request) {
-            return $request->isPaid == 1;
-        }),
-        function ($attribute, $value, $fail) use ($request) {
-            if ($request->isPaid == 1 && ($value < 1 || $value > $request->cost)) {
-                $fail('Если оплачено (isPaid=1), сумма оплаты (amount) должна быть в диапазоне от 1 до стоимости (cost)');
-            }
-        },
-    ],
-
-        ];
-
-        $messages = [
-            // 'name.required' => 'required|assssss',
-            'amount' =>'sdskkosdokkosdf',
-
-        ];
-
-            $validator = Validator::make($request->all(), $rules, $messages);
-
-            return print_r($validator) ;
-
-            if ($validator->fails()) {
-            return redirect($this::rootURL.'/create')
-                        ->withErrors($validator)
-                        ->withInput();
+        if ($validator->fails()) {
+            return redirect($this::rootURL . '/create')
+                ->withErrors($validator)
+                ->withInput();
         }
 
+        $validated = $validator->validated();
 
-    $validated = $validator->validated();
-
-
+        $receipt = new Receipt();
 
         $receipt->item = $request['item'];
         $receipt->number = $request['number'];
@@ -121,8 +138,6 @@ class ReceiptController extends Controller
         $receipt->costAdd = $request['costAdd'];
         $receipt->costPred = $request['costPred'];
         $receipt->datePlan = $request['datePlan'];
-        $receipt->isPaid = $request['isPaid'];
-        $receipt->paidNow = $request['paidNow'];
         $receipt->worker_id = $request['worker'];
         $receipt->customer_id = $request['customer'];
 
@@ -138,7 +153,7 @@ class ReceiptController extends Controller
         ];
         OrderController::store($data);
 
-        if ($receipt->isPaid) {
+        if ($request->isPaid) {
             if ($request['payment'] == 1) {
                 IncomeController::CreateExternal($request['payNumber'], $request['dateIn'], $request['amount'], $receipt->id);
             } else if ($request['payment'] == 2) {
@@ -147,6 +162,8 @@ class ReceiptController extends Controller
             // $receipt->cost = $request['amount'];
             $receipt->paymentClose();
         }
+
+
 
         return redirect($this::rootURL);
     }
@@ -201,12 +218,12 @@ class ReceiptController extends Controller
      * Update the specified resource in storage.
      */
 
-    public static function closeReceipt($id)
+    public static function closeReceipt($id, $date)
     {
         $receipt = Receipt::findOrFail($id);
 
         if (!is_null($receipt)) {
-            $time = Utils::timeNow();
+            $time = $date;
             if (!$receipt->order->isHandedOver()) {
                 $count = $receipt->order->count - $receipt->order->handedOverCount();
                 OrderOutController::storeClosed($time, $count, $receipt->order->id);
@@ -225,8 +242,22 @@ class ReceiptController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $receipt = Receipt::findOrFail($id);
         $request = ReceiptNormalization::normalize($request);
+
+        $validator = ReceiptController::validationRules($request);
+
+        if ($validator->fails()) {
+            return redirect($this::rootURL .'/'.$id. '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+
+
+
+        $receipt = Receipt::findOrFail($id);
 
         if (!is_null($receipt)) {
             $receipt->item = $request['item'];
@@ -237,8 +268,6 @@ class ReceiptController extends Controller
             $receipt->costAdd = $request['costAdd'];
             $receipt->costPred = $request['costPred'];
             $receipt->datePlan = $request['datePlan'];
-            $receipt->isPaid = $request['isPaid'];
-            $receipt->paidNow = $request['paidNow'];
             $receipt->worker_id = $request['worker'];
             $receipt->customer_id = $request['customer'];
             $receipt->save();
@@ -252,6 +281,8 @@ class ReceiptController extends Controller
                 ];
                 OrderController::updateFromReceipt($data, $receipt->order->id);
             }
+                        $receipt->paymentClose();
+
         }
         return redirect($this::rootURL);
     }

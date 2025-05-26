@@ -32,7 +32,7 @@ class OrderOutController extends Controller
             $this::store($request, $receipt);
 
             if($request['isHanded'] == 1){
-                $var = ReceiptController::closeReceipt($id);
+                $var = ReceiptController::closeReceipt($id, $request['date']);
             }
         }
         return redirect( ReceiptController::rootURL);

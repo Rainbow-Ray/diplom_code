@@ -74,18 +74,18 @@ class Material extends Model
 
         return $inc-$exp;
 
-        $bal = MatBal::where('mat_id', $this->id)->get()->last();
-        if (!is_null($bal)) {
-            return $bal->amount;
-        } else {
-            return 0;
-        }
+        // $bal = MatBal::where('mat_id', $this->id)->get()->last();
+        // if (!is_null($bal)) {
+        //     return $bal->amount;
+        // } else {
+        //     return 0;
+        // }
     }
 
     public function hasBal()
     {
-        $bal = MatBal::where('mat_id', $this->id)->where('date', Utils::timeNow())->get();
-        return !is_null($bal);
+        // $bal = MatBal::where('mat_id', $this->id)->where('date', Utils::timeNow())->get();
+        // return !is_null($bal);
     }
 
     public static function add($id, $add, $date)
@@ -93,7 +93,7 @@ class Material extends Model
         $mat = Material::findOrFail($id);
 
         if (!is_null($mat)) {
-            MatBal::add($mat->id, $add, $date);
+            // MatBal::add($mat->id, $add, $date);
         }
     }
 
@@ -102,7 +102,7 @@ class Material extends Model
         $mat = Material::findOrFail($id);
         if (!is_null($mat)) {
             MatExp::add($mat->id, $ex, $date);
-            MatBal::sub($mat->id, $ex, $date);
+            // MatBal::sub($mat->id, $ex, $date);
         }
     }
 

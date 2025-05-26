@@ -22,7 +22,7 @@
                 <span class="cardLabel">Название:</span>
                 <span class="cardData">{{ $item->name }}</span>
                 <span class="cardLabel">Заработная плата:</span>
-                <span class="cardData">{{ $item->salary }}</span>
+                <span class="cardData">{{ $item->salary }} руб.</span>
             </div>
                                 <a href="{{ url($rootURL . '/' . strval($item->id) . '/edit', []) }}">
 

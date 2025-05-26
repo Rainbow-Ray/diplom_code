@@ -40,6 +40,16 @@
             </select>
         </div>
 
+        <div class="labelTop start1 end3 col3">
+            <label class="start1 end4" for="checkFreq">Периодичность проверки:</label>
+            Каждый
+            <input class="start2" type="number" name="checkFreq" value="1">
+            <select name="freq" id="freq" class="start3">
+                <option value="1">мес.</option>
+                <option value="2">дн.</option>
+            </select>
+        </div>
+
 
         <div class="labelTop start1 hide">
             <label class="hide" for="count">Количество</label>

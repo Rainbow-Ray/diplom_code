@@ -16,7 +16,7 @@ function countSumm(applyDisc) {
     //     }
     // });
     $("#service option:selected").each(function () {
-        serv = $(this).text().split('//')[1];
+        serv = $(this).attr('cost');
         if (serv == 'undefined' || num == NaN || isNaN(serv)) {
             serv = -1;
         }
@@ -25,7 +25,7 @@ function countSumm(applyDisc) {
         {
             str = Number(serv);
         }
-        console.log(serv);
+        console.log( $(this).attr('cost'));
         
     });
             num = Number(str) * Number($("#count").val());

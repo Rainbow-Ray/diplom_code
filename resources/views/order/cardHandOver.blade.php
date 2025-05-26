@@ -13,8 +13,8 @@
 
     <div>
         <div class="itemInfo receiptInfo noPad">
-            <span class="cardLabel">ФИО:</span>
-            <span class="cardData">{{ $receipt->customer->surname }} {{ $receipt->customer->name }}
+            <span class="cardLabel start1 end3">ФИО:</span>
+            <span class="cardData start1 end3">{{ $receipt->customer->surname }} {{ $receipt->customer->name }}
                 {{ $receipt->customer->patronym }}</span>
             <span class="cardLabel">Изделие:</span>
             <span class="cardData">{{ $receipt->item }}</span>
@@ -22,8 +22,10 @@
             <span class="cardData">{{ $receipt->order->service->name }}</span>
             <span class="cardLabel">Дата приема:</span>
             <span class="cardData">{{ $receipt->dateIn() }}</span>
+            <span class="cardLabel">Дата пред. выдачи:</span>
+            <span class="cardData">{{ $receipt->datePlan() }}</span>
             <span class="cardLabel">Пред.стоимость:</span>
-            <span class="cardData">{{ $receipt->costPred }}</span>
+            <span class="cardData">{{ $receipt->costPred }} руб.</span>
 
         </div>
         @if ($receipt->isPaid)

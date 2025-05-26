@@ -20,5 +20,4 @@ class MaterialCat extends Model
     {
         return $this->hasMany(Material::class)->withDefault();
     }
-    
 }

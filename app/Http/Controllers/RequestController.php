@@ -102,7 +102,7 @@ class RequestController extends Controller
                 $row = new RequestRow();
 
                 $row->count = $item->count;
-                $row->name = $item->name;
+                // $row->name = $item->name;
                 $row->mat_id = $item->mat_id;
                 $row->equip_id = $item->equip_id;
                 // $row->ei_id =  $item->ei;
@@ -213,7 +213,7 @@ class RequestController extends Controller
                     $row = new RequestRow();
 
                     $row->count = $item->count;
-                    $row->name = $item->name;
+                    // $row->name = $item->name;
                     $row->mat_id = $item->mat_id;
                     $row->equip_id = $item->equip_id;
                     // $row->ei_id =  $item->ei;

@@ -21,13 +21,13 @@
             <input type="text" name="name" id="name" required>
         </div>
 
-        <div class=" start3">
+        <div class="labelTop start3">
             <label for="cost">Стоимость:</label>
             <input type="money" name="cost" id="cost" required>
         </div>
 
 
-        <div class="start1 end4 hide receiptData">
+        {{-- <div class="start1 end4 hide receiptData">
             <h3 class="col1-5">Сотрудники, квалифицированные выполнять услугу</h3>
             <select id="skill" name="skillSelect" class="col1-3">
                 @foreach ($workers as $worker)
@@ -50,7 +50,7 @@
             </table>
             <button type="button" class="deleteSkill start2 end3 beautyButton addButton">Удалить</button>
 
-        </div>
+        </div> --}}
     
         <input type="submit" class="beautyButton submitButton rstart7 end7" value="Отправить">
     </form>

@@ -1,7 +1,7 @@
 @extends('index')
 
 @section('title')
-<title>Добавить оборудование</title>
+<title>Новая оценка оборудования</title>
 @endsection
 
 @section('scripts')
@@ -19,11 +19,9 @@
 
 @endsection
 @section('main')
-
-
     <form action="/{{$rootURL}}" method="POST">
         @csrf
-        <h2 class="start1 end7">Состояние оборудования {{$equip->name}}</h2>
+        <h2 class="start1 end7">Новая оценка состояния оборудования {{$equip->name}}</h2>
         <div class="labelTop start1 end3">
             <span class="cardLabel">Название</span>
             <span class="cardData"> {{$equip->name}} </span>
@@ -51,4 +49,9 @@
 
         <input type="submit" value="Отправить" class="addButton beautyButton right rstart5 end7">
     </form>
+
+    @if($errors->any())
+<h4>{{$errors->first()}}</h4>
+@endif
+
 @endsection

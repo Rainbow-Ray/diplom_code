@@ -4,7 +4,7 @@
         <span class="cardData">{{$item->source->name}}</span>
 
         <span class="cardLabel">Дата:</span>
-        <span class="cardData">{{$item->date}}</span>
+        <span class="cardData">{{$item->date()}}</span>
 
         <span class="cardLabel">Сумма:</span>
         <span class="cardData">{{$item->amount}} руб.</span>

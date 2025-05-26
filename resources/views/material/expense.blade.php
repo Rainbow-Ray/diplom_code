@@ -46,14 +46,21 @@
             <label for="mat">Израсходованный материал:</label>
             <select id="mat" name="mat">
                 @foreach ($mats as $mat)
-                    <option value="{{ $mat->id }}" ei="{{$mat->ei->name}}">
+                    <option value="{{ $mat->id }}" ei="{{$mat->ei->name}}" count="{{$mat->amount()}}">
                         {{ $mat->name }}
                     </option>
                 @endforeach
             </select>
         </div>
 
-        <div class="labelTop col2 start3 end5">
+        <div class="labelTop start3">
+            <span>Кол-во сейчас:</span>
+            <span id="countNow"></span>
+
+
+        </div>
+
+        <div class="labelTop col2 start4 end6">
             <label for="amount">Количество:</label>
             <input type="number" name="amount" id="amount" min='0' value="1" required>
                         <span class="start2">Ед. изм.</span>

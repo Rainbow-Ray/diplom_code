@@ -15,7 +15,7 @@ class item {
         this.ei = ei;
     }
 
-    getItems(){
+    getItems() {
         var trs = $('#itemTable').children();
         trs.forEach(element => {
             var id = $(element).find('input').first().val();
@@ -23,7 +23,7 @@ class item {
             var name = $(element).find('td')[1].innerText;
             var ei = $(element).find('td')[2].innerText;
 
-            var i = new item(id, name,  count, ei);
+            var i = new item(id, name, count, ei);
             this.items.push(i);
         });
     }
@@ -82,10 +82,21 @@ function addItem(itemStore) {
     var id = $('#mat :selected').first().val();
     var count = $('#amount').val();
     var ei = $('#mat :selected').attr('ei');
+    var countNow = $('#mat :selected').attr('count');
 
+    console.log(countNow);
+    console.log(count);
+    console.log(Number(countNow) < Number(count));
+    
+    if ((countNow) < (count)) {
+        errorShow('Материала нет в наличии');
+        return;
+
+    }
     var it = new item(id, name, count, ei);
 
     var isAdded = itemStore.addItem(it);
+
 
     if (isAdded) {
         var a = it.toRow();
@@ -165,6 +176,9 @@ $(document).ready(function () {
 
     $('#mat').on('change', function () {
         selectMat();
+                var count = $('#mat :selected').attr('count');
+        $('#countNow').text(count);
+
     });
     $('#mat').trigger('change');
 
