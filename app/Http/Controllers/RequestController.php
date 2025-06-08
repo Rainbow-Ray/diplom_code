@@ -196,7 +196,7 @@ class RequestController extends Controller
             $req->dateCreated = $request['dateCreated'];
             $req->isUrgent = $request['isUrgent'];
             $req->worker_id = $request['worker'];
-
+            $req->save();
 
             $old = [];
             foreach ($req->rows as $i) {

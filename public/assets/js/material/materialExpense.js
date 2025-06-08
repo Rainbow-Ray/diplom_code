@@ -84,12 +84,11 @@ function addItem(itemStore) {
     var ei = $('#mat :selected').attr('ei');
     var countNow = $('#mat :selected').attr('count');
 
-    console.log(countNow);
-    console.log(count);
     console.log(Number(countNow) < Number(count));
     
-    if ((countNow) < (count)) {
+    if (Number(countNow) < Number(count)) {
         errorShow('Материала нет в наличии');
+        
         return;
 
     }
@@ -137,7 +136,14 @@ function setEi(ei) {
 }
 
 function selectMat() {
+    
     var ei = $('#mat :selected').attr('ei');
+    var count = $('#mat :selected').attr('count');
+    $('#countNow').text(count);
+
+    console.log(ei);
+    console.log(count);
+
     setEi(ei);
 }
 
@@ -145,7 +151,7 @@ $(document).ready(function () {
     var itemStore = new ItemStore();
 
     $("#cat").select2();
-    $("#type").select2();
+    // $("#type").select2();
     $("#mat").select2();
 
     $("#cat").on('change', function () {
@@ -156,13 +162,12 @@ $(document).ready(function () {
 
     });
 
+    // $("#type").on('change', function () {
+    //     var cat_id = $("#cat").find(':selected').val();
+    //     var type_id = $("#type").find(':selected').val();
 
-    $("#type").on('change', function () {
-        var cat_id = $("#cat").find(':selected').val();
-        var type_id = $("#type").find(':selected').val();
-
-        get_materials(cat_id, type_id)
-    });
+    //     get_materials(cat_id, type_id)
+    // });
 
     $('#addItem').on('click', function () {
         addItem(itemStore);
@@ -173,11 +178,8 @@ $(document).ready(function () {
     });
 
 
-
     $('#mat').on('change', function () {
         selectMat();
-                var count = $('#mat :selected').attr('count');
-        $('#countNow').text(count);
 
     });
     $('#mat').trigger('change');
@@ -209,9 +211,9 @@ function updateMatSelect(json) {
 
     $("#mat").empty();
     json.forEach(element => {
-        console.log('ass');
-
         appendOption('#mat', element);
+        console.log(element);
+        
     });
 }
 

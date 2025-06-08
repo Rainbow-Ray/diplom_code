@@ -175,6 +175,7 @@ class PurchaseController extends Controller
         if (!is_null($pur)) {
             $pur->date = $request['date'];
             $pur->number = $request['number'];
+            $pur->save();
 
 
             $old = [];

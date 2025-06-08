@@ -85,10 +85,10 @@
         </div>
         <div class="start3 end4 underline">
             <span class="cardLabel">Дата получения:</span>
-            @if(is_null( $item->dateOut))
-            <span class="cardData"></span>
+            @if (is_null($item->dateOut))
+                <span class="cardData"></span>
             @else
-            <span class="cardData">{{ $item->dateOut() }}</span>
+                <span class="cardData">{{ $item->dateOut() }}</span>
             @endif
 
         </div>
@@ -116,12 +116,12 @@
         <div class="start1 underline">
             <span class="cardLabel">Оплачено на данный момент:</span>
             @if ($item->sumNow() > 0)
-                <span class="cardData">{{$item->sumNow()}} руб.</span>
+                <span class="cardData">{{ $item->sumNow() }} руб.</span>
             @else
                 <span class="cardData">0 руб.</span>
             @endif
         </div>
-                <div class=" underline">
+        <div class=" underline">
             @if ($item->isPaid)
                 <span class="cardData isDone done">Оплачено</span>
             @else
@@ -129,7 +129,7 @@
             @endif
         </div>
 
-        
+
         <a href="{{ url('receipt/' . strval($item->id) . '/edit', []) }}" class="start3 end4 ">
             <button class="addButton beautyButton right">Редактировать</button>
         </a>
@@ -143,9 +143,11 @@
 
         <x-order-out :order="$item->order" class="col1-2" />
 
+        @if ($item->order->isHanded == 0)
             <a href="{{ url('receipt/' . strval($item->id) . '/hand_over', []) }}">
-            <button class="addButton beautyButton">Выдать</button>
-        </a>
+                <button class="addButton beautyButton">Выдать</button>
+            </a>
+        @endif
 
         <h3 class="col1-4">Оплата:</h3>
 

@@ -1,12 +1,12 @@
 @extends('List')
 @section('title')
-    <title>Расход материалов</title>
+    <title>Расходы материалов</title>
 
     <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src=" {{ asset('assets/js/filter/filter.js') }}"></script>
 @endsection
 @section('header')
-    Расход материалов
+    Расходы материалов
 @endsection
 
 

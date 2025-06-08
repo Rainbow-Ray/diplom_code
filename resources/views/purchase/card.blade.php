@@ -1,11 +1,11 @@
 @extends('List')
 @section('title')
-    <title>Закупка</title>
+    <title>Закупки</title>
     <script src=" {{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 @endsection
 
 @section('header')
-Закупка
+Закупки
 @endsection
 
 @section('addButton')
@@ -17,6 +17,15 @@
 @endsection
 
 @section('dictCard')
+
+    <input type="date" class="filter" id="dateStart"
+        value="{{ (new DateTime('yesterday', new DateTimeZone('Asia/Yekaterinburg')))->format('Y-m-d') }}">
+    <input type="date" class="filter" id="dateEnd"
+        value="{{ (new DateTime('now', new DateTimeZone('Asia/Yekaterinburg')))->format('Y-m-d') }}">
+
+    <button class="filter mine" id="date">Показать за даты</button>
+    <button class="filter allItems" id="all">Все</button>
+
     @foreach ($items as $item)
         <div class="card">
             <div>

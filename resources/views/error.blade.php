@@ -1,16 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    {{$request}}
-<br>
-<hr>
+@extends('index')
 
+@section('title')
+    <title>
+        Ошибка
+    </title>
+@endsection
+
+
+
+@section('main')
+    <h2 class="notDone center">
+
+{{-- {{$request}} --}}
 {{$message}}
-</body>
-</html>
+
+    </h2>
+
+@endsection

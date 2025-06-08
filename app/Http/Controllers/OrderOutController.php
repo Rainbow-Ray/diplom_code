@@ -80,6 +80,12 @@ class OrderOutController extends Controller
             ExpenseController::CreateExternal($request['date'], $request['amount'], $receipt->worker->id, $order->id);
         }
 
+        if($request['isFail'] == 1){
+            $order->order->countDone -= $order->count;
+            $order->order->isDone = 0;
+            $order->order->save();
+        }
+
         if($request['isHanded'] == 1){
             $receipt->order->handOver();
         }

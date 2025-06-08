@@ -252,11 +252,6 @@ class ReceiptController extends Controller
                 ->withInput();
         }
 
-
-
-
-
-
         $receipt = Receipt::findOrFail($id);
 
         if (!is_null($receipt)) {
